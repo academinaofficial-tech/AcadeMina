@@ -1,0 +1,50 @@
+/* =========================================
+   AcadeMina 共通ヘッダー・フッター CSS
+   全ページで <link rel="stylesheet" href="common.css"> として読み込み
+   ========================================= */
+
+/* Header */
+header{position:fixed;top:0;left:0;width:100%;padding:0 40px;display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.97);z-index:1000;border-bottom:1px solid var(--border);height:80px;backdrop-filter:blur(10px)}
+.logo-link{display:flex;align-items:center;gap:8px}
+.logo-img{height:100px;width:auto}
+nav{display:flex;align-items:center;gap:30px}
+nav a{font-size:.9rem;font-weight:600}
+nav a.nav-active{color:var(--accent)}
+.nav-cta{background:var(--text);color:#fff;padding:8px 22px;border-radius:50px;font-size:.85rem;font-weight:700}
+.nav-cta:hover{background:var(--accent);opacity:1}
+
+/* Nav Icons */
+.nav-icons{display:flex;align-items:center;gap:15px}
+.nav-icon{font-size:1rem;color:var(--text);display:flex;align-items:center;transition:color .2s}
+.nav-icon:hover{color:var(--accent);opacity:1}
+.nav-icon svg{width:18px;height:18px;fill:currentColor}
+.cart-icon{position:relative}
+.cart-badge{position:absolute;top:-8px;right:-10px;background:#ff4757;color:#fff;font-size:.65rem;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700}
+.social-divider{width:1px;height:20px;background:var(--border);margin:0 5px}
+.sns-link{display:flex;align-items:center;transition:transform .2s}
+.sns-link:hover{transform:scale(1.1);opacity:1}
+.sns-img{width:26px;height:26px;border-radius:6px;display:block}
+
+/* Hamburger */
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;z-index:1100}
+.hamburger span{display:block;width:24px;height:2px;background:var(--text);transition:.3s}
+
+/* Footer */
+footer{padding:60px 40px;background:#fff;color:var(--text);border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start}
+.footer-logo{font-size:1.3rem;font-weight:800;color:var(--accent)}
+.footer-links{display:flex;gap:50px}
+.footer-links ul{list-style:none}
+.footer-links li:first-child{font-weight:700;margin-bottom:12px;font-size:.85rem;color:#999;text-transform:uppercase;letter-spacing:.05em}
+.footer-links li{margin-bottom:8px;font-size:.9rem}
+.footer-links a:hover{text-decoration:underline;opacity:1}
+.footer-copy{text-align:center;padding:20px 40px;font-size:.8rem;color:#999;border-top:1px solid var(--border)}
+
+/* Mobile */
+@media(max-width:768px){
+    header{padding:0 20px}
+    .hamburger{display:flex}
+    nav{position:fixed;top:0;right:-100%;width:70%;height:100vh;background:#fff;flex-direction:column;padding:80px 40px;gap:25px;transition:right .3s;box-shadow:-5px 0 20px rgba(0,0,0,.1)}
+    nav.open{right:0}
+    .nav-icons{flex-wrap:wrap}
+    footer{flex-direction:column;gap:30px;padding:40px 20px}
+}

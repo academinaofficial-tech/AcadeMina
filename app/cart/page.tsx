@@ -1,0 +1,24 @@
+import type { Metadata } from "next";
+import LegacyPage from "@/components/LegacyPage";
+
+export const metadata: Metadata = {
+  title: "カート | AcadeMina",
+};
+
+const html = "\n<div id=\"common-header\"></div>\n<div class=\"page-header\"><h1 class=\"page-title\">ショッピングカート</h1></div>\n<div class=\"cart-layout\">\n<div class=\"cart-main\" id=\"cart-main\"></div>\n<div class=\"cart-sidebar\" id=\"cart-sidebar\"></div>\n</div>\n<div class=\"recommend-section\" id=\"recommend-section\"></div>\n<div id=\"common-footer\"></div>\n\n\n\n";
+const css = ":root{--bg:#fff;--text:#111;--text-inv:#fff;--accent:#0044cc;--gray:#f4f4f4;--border:#e0e0e0;--font:\"Helvetica Neue\",Arial,\"Hiragino Kaku Gothic ProN\",\"Hiragino Sans\",Meiryo,sans-serif}\n        *{box-sizing:border-box;margin:0;padding:0}body{font-family:var(--font);background:#f9f9f9;color:var(--text);line-height:1.6}a{text-decoration:none;color:inherit;transition:opacity .3s}a:hover{opacity:.7}\n\n        .page-header{margin-top:70px;padding:40px 40px 30px;background:#fff;border-bottom:1px solid var(--border)}\n        .page-title{font-size:2rem;font-weight:800}\n\n        .cart-layout{display:flex;max-width:1100px;margin:30px auto;padding:0 20px;gap:30px;align-items:flex-start}\n        .cart-main{flex:1;min-width:0}\n        .cart-sidebar{width:340px;flex-shrink:0;position:sticky;top:100px}\n\n        .cart-item{display:flex;gap:20px;background:#fff;padding:20px;border-radius:8px;border:1px solid var(--border);margin-bottom:15px;align-items:center}\n        .cart-item-img{width:100px;height:80px;border-radius:6px;background:#eee;background-size:cover;flex-shrink:0}\n        .cart-item-info{flex:1;min-width:0}\n        .cart-item-title{font-size:.95rem;font-weight:700;margin-bottom:5px}\n        .cart-item-author{font-size:.8rem;color:#888;margin-bottom:8px}\n        .cart-item-actions{display:flex;gap:15px}\n        .cart-item-actions button{background:none;border:none;font-size:.85rem;cursor:pointer;color:#666;font-weight:600}\n        .cart-item-actions button:hover{color:var(--accent)}\n        .cart-item-actions .remove:hover{color:#ff4757}\n        .cart-item-price{font-size:1.1rem;font-weight:800;white-space:nowrap}\n\n        .cart-empty{text-align:center;padding:80px 20px}\n        .cart-empty h2{font-size:1.5rem;font-weight:800;margin-bottom:15px}\n        .cart-empty p{color:#666;margin-bottom:30px}\n        .cart-empty a{display:inline-block;padding:14px 40px;background:var(--text);color:#fff;border-radius:50px;font-weight:700}\n\n        .summary-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:30px;box-shadow:0 4px 20px rgba(0,0,0,.05)}\n        .summary-row{display:flex;justify-content:space-between;margin-bottom:12px;font-size:.95rem}\n        .summary-total{display:flex;justify-content:space-between;font-size:1.3rem;font-weight:800;padding-top:15px;border-top:2px solid var(--text);margin:20px 0}\n        .coupon-input{display:flex;gap:8px;margin-bottom:20px}\n        .coupon-input input{flex:1;padding:10px;border:1px solid var(--border);border-radius:6px;font-size:.9rem}\n        .coupon-input button{padding:10px 16px;background:var(--gray);border:1px solid var(--border);border-radius:6px;font-weight:700;font-size:.85rem;cursor:pointer}\n        .checkout-btn{display:block;width:100%;padding:16px;background:var(--accent);color:#fff;border:none;border-radius:50px;font-size:1.1rem;font-weight:700;cursor:pointer;text-align:center;transition:all .2s}\n        .checkout-btn:hover{background:#003399;transform:translateY(-1px)}\n\n        .recommend-section{max-width:1100px;margin:50px auto;padding:0 20px}\n        .rec-title{font-size:1.3rem;font-weight:800;margin-bottom:20px}\n        .rec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:15px}\n        .rec-card{background:#fff;border:1px solid var(--border);border-radius:8px;overflow:hidden;cursor:pointer;transition:transform .2s}.rec-card:hover{transform:translateY(-3px)}\n        .rec-img{height:120px;background:#eee;background-size:cover;background-position:center}\n        .rec-body{padding:12px}.rec-cat{font-size:.7rem;color:var(--accent);font-weight:700;margin-bottom:3px}.rec-name{font-size:.85rem;font-weight:700;margin-bottom:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.rec-price{font-weight:800;font-size:.9rem}\n        @media(max-width:768px){\n        .page-header{padding:30px 20px}.cart-layout{flex-direction:column}.cart-sidebar{width:100%;position:static}.cart-item{flex-wrap:wrap}}";
+const scripts = [
+  {
+    "src": "/store-data.js"
+  },
+  {
+    "src": "/scripts/cart__inline1.js"
+  },
+  {
+    "src": "/common.js"
+  }
+];
+
+export default function Page() {
+  return <LegacyPage html={html} css={css} scripts={scripts} />;
+}
