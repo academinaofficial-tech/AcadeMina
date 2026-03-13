@@ -16,7 +16,7 @@ export default async function Page() {
         <div className="max-w-[1200px] w-full mx-auto">
           <h1 className="text-[2.8rem] md:text-[4.5rem] leading-[1.1] font-extrabold mb-[30px] tracking-[-0.02em]">次世代の研究者へ、<br />最高の選択肢を。</h1>
           <p className="text-[1.15rem] max-w-[600px] mb-[50px] font-medium leading-[1.8]">学問の最前線を目指すあなたへ。<br />研究室選びから大学院入試突破、その先のキャリアまで。アカデミアへの挑戦をトータルプロデュースします。</p>
-          <Link className="inline-block bg-white text-text px-10 py-[15px] rounded-full font-bold text-[1rem] transition-transform duration-200 hover:-translate-y-0.5" href="/about">私たちについて</Link>
+          <Link className="inline-block bg-white text-text px-10 py-[15px] rounded-full font-bold text-[1rem] transition-transform duration-200 hover:-translate-y-0.5" href="/about">AcadeMinaとは</Link>
         </div>
       </section>
 

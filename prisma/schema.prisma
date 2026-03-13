@@ -27,6 +27,7 @@ model Profile {
   careerPath      String   // 希望するキャリアパス
   phone           String?
   address         String?
+  purchases       Purchase[]
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }
@@ -35,17 +36,56 @@ model Exam {
   id          String   @id @default(cuid())
   title       String
   price       Int
-  category    String
-  image       String   // 画像URL
+  category    String   // past-exam, practice, forecast, etc.
+  image       String
   description String?
-  link        String?  // 購入・詳細リンク
+  author      String?
+  contents    String[]
+  preview     String?
+  deptId      String?  // 関連する学科ID
+  purchases   Purchase[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
+model Purchase {
+  id        String   @id @default(cuid())
+  profileId String   // Clerk User ID
+  profile   Profile  @relation(fields: [profileId], references: [id])
+  examId    String
+  exam      Exam     @relation(fields: [examId], references: [id])
+  stripeId  String?  // Stripe Session ID or Payment Intent ID
+  createdAt DateTime @default(now())
+}
+
+model University {
+  id          String   @id @default(cuid())
+  name        String
+  tags        String[] // 国立, 私立, 偏差値帯 etc.
+  level       String   // A, B, C etc.
+  area        String   // 東京, 大阪 etc.
+  departments Department[]
+  labs        Lab[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Department {
+  id           String     @id @default(cuid())
+  name         String
+  theme        String     // 研究テーマ
+  universityId String
+  university   University @relation(fields: [universityId], references: [id])
+  labs         Lab[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
 model Lab {
-  id              String   @id @default(cuid())
-  university      String
+  id              String     @id @default(cuid())
+  universityId    String?
+  university      University? @relation(fields: [universityId], references: [id])
+  universityName  String?    // 冗長だが検索・一覧用に保持
   name            String
   tags            String[]
   heroImage       String
@@ -54,7 +94,11 @@ model Lab {
   profName        String?
   profImage       String?
   message         String?
-  contact         String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  contact         Json?      // { prof: string, assistant: string }
+  papers          Json?      // list of { title: string, summary: string, link: string }
+  stats           Json?      // { gender: number, international: number, working: number }
+  departmentId    String?
+  department      Department? @relation(fields: [departmentId], references: [id])
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
 }

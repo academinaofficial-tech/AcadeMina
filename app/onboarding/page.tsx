@@ -2,7 +2,7 @@ import { submitOnboarding } from "./action";
 
 export default function OnboardingPage() {
     return (
-        <main className="mt-[100px] mb-[100px] px-5">
+        <main className="min-h-screen pt-[180px] pb-[100px] px-5 bg-white">
             <div className="max-w-[700px] mx-auto bg-white p-10 rounded-2xl shadow-xl">
                 <h1 className="text-3xl font-extrabold text-center mb-8">Welcome! アンケートにご協力ください</h1>
                 <p className="text-center text-gray-600 mb-10">

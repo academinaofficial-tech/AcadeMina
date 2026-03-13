@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Lab } from "@prisma/client";
 
 interface LabInsightClientProps {
@@ -11,13 +12,13 @@ export default function LabInsightClient({ initialLabs }: LabInsightClientProps)
     const [selectedUniv, setSelectedUniv] = useState<string>("すべて");
     const [searchQuery, setSearchQuery] = useState("");
 
-    const universities = ["すべて", ...Array.from(new Set(initialLabs.map((l) => l.university)))];
+    const universities = ["すべて", ...Array.from(new Set(initialLabs.map((l) => l.universityName || "")))];
 
     const filteredLabs = initialLabs.filter((lab) => {
-        const matchesUniv = selectedUniv === "すべて" || lab.university === selectedUniv;
+        const matchesUniv = selectedUniv === "すべて" || lab.universityName === selectedUniv;
         const matchesSearch =
             lab.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            lab.university.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (lab.universityName || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
             lab.tags.some((tag: string) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
         return matchesUniv && matchesSearch;
     });
@@ -60,16 +61,20 @@ export default function LabInsightClient({ initialLabs }: LabInsightClientProps)
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {filteredLabs.map((lab) => (
-                    <div key={lab.id} className="bg-white border rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all group border-gray-100">
+                    <Link
+                        key={lab.id}
+                        href={`/lab/${lab.id}`}
+                        className="bg-white border rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all group border-gray-100 flex flex-col"
+                    >
                         <div
                             className="h-52 bg-gray-200 bg-cover bg-center relative"
                             style={{ backgroundImage: `url(${lab.heroImage})` }}
                         >
                             <div className="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-accent">
-                                {lab.university}
+                                {lab.universityName}
                             </div>
                         </div>
-                        <div className="p-8">
+                        <div className="p-8 flex-1 flex flex-col">
                             <h2 className="text-xl font-extrabold mb-4 group-hover:text-accent transition-colors">
                                 {lab.name}
                             </h2>
@@ -83,7 +88,7 @@ export default function LabInsightClient({ initialLabs }: LabInsightClientProps)
                             <p className="text-gray-600 text-sm line-clamp-3 mb-8 h-[4.5em] leading-relaxed">
                                 {lab.about}
                             </p>
-                            <div className="flex items-center gap-4 pt-6 border-t border-gray-50">
+                            <div className="flex items-center gap-4 pt-6 border-t border-gray-50 mt-auto">
                                 <div
                                     className="w-12 h-12 rounded-2xl bg-gray-100 bg-cover"
                                     style={{ backgroundImage: `url(${lab.profImage})` }}
@@ -92,12 +97,12 @@ export default function LabInsightClient({ initialLabs }: LabInsightClientProps)
                                     <div className="text-xs text-gray-400 font-bold uppercase tracking-tight">教授 / Professor</div>
                                     <div className="font-extrabold text-sm">{lab.profName}</div>
                                 </div>
-                                <button className="ml-auto w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center hover:bg-accent hover:text-white transition-all">
+                                <div className="ml-auto w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-accent group-hover:text-white transition-all">
                                     →
-                                </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </Link>
                 ))}
             </div>
 

@@ -7,7 +7,7 @@ export const metadata = {
 
 export default async function Page() {
   const labs = await prisma.lab.findMany({
-    orderBy: { university: "asc" },
+    orderBy: { universityName: "asc" },
   });
 
   return (

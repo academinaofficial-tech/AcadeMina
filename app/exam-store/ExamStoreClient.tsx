@@ -85,7 +85,7 @@ export default function ExamStoreClient({ initialExams }: ExamStoreClientProps) 
 
     return (
         <>
-            <div className="pt-[60px] pb-[50px] px-10 bg-[linear-gradient(135deg,#0044cc,#1a5cd8)] text-white text-center relative overflow-hidden">
+            <div className="pt-[60px] pb-[50px] px-10  text-center relative overflow-hidden">
                 <h1 className="text-[2.5rem] font-extrabold mb-[15px] relative">教材ストア</h1>
                 <div className="max-w-[650px] mx-auto relative">
                     <div className="flex flex-wrap gap-2 mb-3 min-h-[0px]">
@@ -157,7 +157,7 @@ export default function ExamStoreClient({ initialExams }: ExamStoreClientProps) 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {filteredExams.map((exam) => (
                             <div key={exam.id} className="bg-white border rounded-xl overflow-hidden hover:shadow-xl transition-all group">
-                                <Link href={`/product?id=${exam.id}`}>
+                                <Link href={`/exam/product/${exam.id}`}>
                                     <div
                                         className="h-48 bg-gray-200 bg-cover bg-center"
                                         style={{ backgroundImage: `url(${exam.image})` }}
