@@ -33,8 +33,7 @@ export default function Footer() {
                     </ul>
                     <ul className="list-none">
                         <li className="font-bold mb-3 text-[0.85rem] text-[#999] uppercase tracking-wider">規約・ポリシー / Legal</li>
-                        <li className="mb-2 text-[0.9rem]"><Link href="/legal" className="transition-opacity duration-300 hover:opacity-70 hover:underline">利用規約</Link></li>
-                        <li className="mb-2 text-[0.9rem]"><Link href="/legal" className="transition-opacity duration-300 hover:opacity-70 hover:underline">プライバシーポリシー</Link></li>
+                        <li className="mb-2 text-[0.9rem]"><Link href="/legal" className="transition-opacity duration-300 hover:opacity-70 hover:underline">利用規約・プライバシーポリシー</Link></li>
                     </ul>
                 </div>
             </footer>
