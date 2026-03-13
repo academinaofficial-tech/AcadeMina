@@ -1,24 +1,109 @@
 import type { Metadata } from "next";
-import LegacyPage from "@/components/LegacyPage";
+import Link from "next/link";
+import { getFeaturedColumns, getLatestNews, formatDate } from "@/lib/cms";
 
 export const metadata: Metadata = {
   title: "AcadeMina | 次世代の研究者へ",
 };
 
-const html = "\n<div id=\"common-header\"></div>\n<main>\n<section class=\"hero\">\n<div class=\"hero-content\">\n<h1>We Support<br/>The Next Generation<br/>of Researchers.</h1>\n<p>学問の最前線を目指すあなたへ。<br/>研究室選びから大学院入試突破まで、アカデミアへの挑戦をトータルプロデュース。</p>\n<a class=\"hero-btn\" href=\"about.html\">About Us</a>\n</div>\n</section>\n<section class=\"services-section\" id=\"services\">\n<div class=\"service-row\">\n<article class=\"service-panel lab\">\n<a class=\"panel-link-overlay\" href=\"lab.html\"></a>\n<div>\n<span class=\"service-label\">01 / Research Database</span>\n<h2 class=\"service-title\">Lab Insight</h2>\n<p class=\"service-desc\">ブラックボックス化しがちな「研究室の実態」を可視化。</p>\n<ul class=\"features-list\">\n<li>研究内容・プロジェクトの詳細</li>\n<li>教授・研究室へのコンタクト先</li>\n<li>研究室ごとの特徴</li>\n</ul>\n</div>\n<a class=\"service-link\" href=\"lab.html\" style=\"position:relative;z-index:10\">Find a Lab →</a>\n</article>\n<article class=\"service-panel exam\">\n<a class=\"panel-link-overlay\" href=\"exam.html\"></a>\n<div>\n<span class=\"service-label\">02 / Exam Strategy</span>\n<h2 class=\"service-title\">Exam Master</h2>\n<p class=\"service-desc\">過去問解説から合格体験記まで、院試突破のナレッジを集約。</p>\n<ul class=\"features-list\">\n<li>院試過去問の解答・解説</li>\n<li>オリジナル対策・予想問題</li>\n<li>合格者の体験記・研究計画書</li>\n</ul>\n</div>\n<a class=\"service-link\" href=\"exam.html\" style=\"position:relative;z-index:10\">Start Learning →</a>\n</article>\n</div>\n</section>\n<section class=\"section-container\" id=\"column\">\n<div class=\"section-header\">\n<h2 class=\"section-title\">Column</h2>\n</div>\n<div class=\"column-grid\" id=\"column-grid\">\n<!-- CMS（microCMS）から動的に読み込み -->\n</div>\n<div class=\"column-btn-area\"><a class=\"btn-outline\" href=\"column.html\">コラム一覧へ</a></div>\n</section>\n<section class=\"section-container\" id=\"news\" style=\"background:#fafafa\">\n<div class=\"section-header\">\n<h2 class=\"section-title\">News</h2>\n<a class=\"view-all\" href=\"#\">View All →</a>\n</div>\n<ul class=\"news-list\" id=\"news-list\"></ul>\n</section>\n<section class=\"cta-section\">\n<div class=\"cta-container\">\n<h2 class=\"cta-title\">Start Your Journey</h2>\n<p class=\"cta-text\">サービスに関するご質問や、掲載希望の研究室関係者様はこちらからお問い合わせください。</p>\n<a class=\"cta-btn\" href=\"contact.html\">Contact Us</a>\n</div>\n</section>\n</main>\n<div id=\"common-footer\"></div>\n\n\n\n";
-const css = ":root{--bg:#fff;--text:#111;--text-inv:#fff;--accent:#0044cc;--accent-light:#4da6ff;--gray:#f4f4f4;--border:#e0e0e0;--font:\"Helvetica Neue\",Arial,\"Hiragino Kaku Gothic ProN\",\"Hiragino Sans\",Meiryo,sans-serif}\n        *{box-sizing:border-box;margin:0;padding:0}\n        body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}\n        a{text-decoration:none;color:inherit;transition:opacity .3s}a:hover{opacity:.7}\n\n        /* === HERO === */\n        .hero{position:relative;height:92vh;display:flex;align-items:center;padding:0 40px;color:var(--text-inv);background-image:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.35)),url('images/hero.png');background-size:cover;background-position:center;background-color:#333;margin-top:70px}\n        .hero-content{max-width:1200px;width:100%;margin:0 auto}\n        .hero h1{font-size:4.5rem;line-height:1.1;font-weight:800;margin-bottom:30px;letter-spacing:-.02em}\n        .hero p{font-size:1.15rem;max-width:600px;margin-bottom:50px;font-weight:500;line-height:1.8}\n        .hero-btn{display:inline-block;background:var(--text-inv);color:var(--text);padding:15px 40px;border-radius:50px;font-weight:bold;font-size:1rem;transition:transform .2s}\n        .hero-btn:hover{transform:translateY(-2px);opacity:1}\n\n        /* === SERVICES === */\n        .services-section{width:100%}\n        .service-row{display:flex;flex-wrap:wrap;min-height:70vh}\n        .service-panel{flex:1;min-width:300px;position:relative;padding:80px 40px;display:flex;flex-direction:column;justify-content:space-between;color:var(--text-inv);background-size:cover;background-position:center;background-color:#444;transition:filter .3s}\n        .service-panel.lab{background-image:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.45)),url('images/lab.png');cursor:pointer}\n        .service-panel.exam{background-image:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.45)),url('images/exam.png');border-left:1px solid rgba(255,255,255,.2);cursor:pointer}\n        .service-panel:hover{filter:brightness(1.1)}\n        .service-label{font-size:.85rem;font-weight:bold;color:var(--accent-light);margin-bottom:20px;text-transform:uppercase;letter-spacing:.1em}\n        .service-title{font-size:2.8rem;font-weight:800;line-height:1.2;margin-bottom:20px}\n        .service-desc{font-size:1.05rem;margin-bottom:40px;opacity:.9;max-width:400px}\n        .features-list{list-style:none;border-top:1px solid rgba(255,255,255,.3);padding-top:20px}\n        .features-list li{margin-bottom:10px;display:flex;align-items:center;font-weight:600}\n        .features-list li::before{content:\"→\";margin-right:10px;color:var(--accent-light)}\n        .service-link{margin-top:auto;font-weight:bold;font-size:1.1rem;text-decoration:underline;text-underline-offset:5px}\n        .panel-link-overlay{position:absolute;top:0;left:0;width:100%;height:100%;z-index:5}\n\n        /* === SECTION COMMON === */\n        .section-container{padding:100px 40px;max-width:1200px;margin:0 auto}\n        .section-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px;border-bottom:2px solid var(--text);padding-bottom:20px}\n        .section-title{font-size:2.5rem;font-weight:800}\n        .view-all{font-weight:600;font-size:.9rem}\n\n        /* === COLUMN === */\n        .column-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:40px;margin-bottom:60px}\n        .column-card{display:flex;flex-direction:column;cursor:pointer;transition:transform .3s}\n        .column-card:hover{transform:translateY(-5px)}\n        .card-img{height:200px;background-color:var(--gray);background-size:cover;background-position:center;border-radius:6px 6px 0 0}\n        .card-content{padding:20px;border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px;flex:1}\n        .card-meta{font-size:.8rem;color:#888;margin-bottom:8px}\n        .card-title{font-size:1rem;font-weight:700;line-height:1.6}\n        .column-btn-area{text-align:center}\n        .btn-outline{display:inline-block;border:1px solid var(--text);padding:12px 40px;border-radius:50px;font-weight:600;transition:all .2s}\n        .btn-outline:hover{background:var(--text);color:#fff;opacity:1}\n\n        /* === NEWS === */\n        .news-list{list-style:none}\n        .news-item{display:flex;padding:25px 0;border-bottom:1px solid var(--border);align-items:baseline;transition:background .2s}\n        .news-item:hover{background:#fafafa}\n        .news-date{width:120px;font-weight:bold;font-size:.9rem;color:#666}\n        .news-tag{background:#333;color:#fff;padding:4px 10px;font-size:.75rem;margin-right:20px;border-radius:2px;min-width:80px;text-align:center}\n        .news-title-text{font-size:1rem;font-weight:600;flex:1}\n        .news-arrow{margin-left:20px;font-size:1.2rem}\n\n        /* === CTA === */\n        .cta-section{background:var(--text);color:var(--text-inv);padding:100px 40px;text-align:center}\n        .cta-container{max-width:800px;margin:0 auto}\n        .cta-title{font-size:2.5rem;font-weight:800;margin-bottom:20px}\n        .cta-text{font-size:1.1rem;margin-bottom:40px;opacity:.8}\n        .cta-btn{display:inline-block;background:var(--text-inv);color:var(--text);padding:15px 50px;border-radius:50px;font-weight:bold;font-size:1.1rem;transition:transform .2s}\n        .cta-btn:hover{transform:scale(1.05);opacity:1}\n\n        @media(max-width:768px){\n            .hero{height:80vh;padding:0 20px}.hero h1{font-size:2.8rem}\n            .service-row{flex-direction:column}.service-panel{border-left:none;border-bottom:1px solid rgba(255,255,255,.2)}\n            .service-title{font-size:2rem}\n            .news-item{flex-direction:column;gap:10px}\n            .column-grid{grid-template-columns:1fr}\n            .section-container,.cta-section{padding-left:20px;padding-right:20px}\n            \n        }";
-const scripts = [
-  {
-    "src": "/cms-config.js"
-  },
-  {
-    "src": "/scripts/index__inline1.js"
-  },
-  {
-    "src": "/common.js"
-  }
-];
+export default async function Page() {
+  const colData = await getFeaturedColumns(3);
+  const newsData = await getLatestNews(3);
 
-export default function Page() {
-  return <LegacyPage html={html} css={css} scripts={scripts} />;
+  return (
+    <main>
+      <section className="relative h-[92vh] flex items-center px-5 md:px-10 text-white bg-[#333] bg-[linear-gradient(rgba(0,0,0,0.35),rgba(0,0,0,0.35)),url('/images/hero.png')] bg-cover bg-center mt-20 md:mt-[134px]">
+        <div className="max-w-[1200px] w-full mx-auto">
+          <h1 className="text-[2.8rem] md:text-[4.5rem] leading-[1.1] font-extrabold mb-[30px] tracking-[-0.02em]">次世代の研究者へ、<br />最高の選択肢を。</h1>
+          <p className="text-[1.15rem] max-w-[600px] mb-[50px] font-medium leading-[1.8]">学問の最前線を目指すあなたへ。<br />研究室選びから大学院入試突破、その先のキャリアまで。アカデミアへの挑戦をトータルプロデュースします。</p>
+          <Link className="inline-block bg-white text-text px-10 py-[15px] rounded-full font-bold text-[1rem] transition-transform duration-200 hover:-translate-y-0.5" href="/about">私たちについて</Link>
+        </div>
+      </section>
+
+      <section className="w-full" id="services">
+        <div className="flex flex-col md:flex-row flex-wrap min-h-[70vh]">
+          <article className="flex-1 min-w-[300px] relative p-20 md:p-[80px_40px] flex flex-col justify-between text-white bg-[#444] bg-cover bg-center transition-all duration-300 hover:brightness-110 cursor-pointer bg-[linear-gradient(rgba(0,0,0,0.45),rgba(0,0,0,0.45)),url('/images/lab.png')] border-b border-white/20 md:border-b-0 md:border-r border-white/20">
+            <Link className="absolute top-0 left-0 w-full h-full z-10" href="/lab"></Link>
+            <div className="relative z-20">
+              <span className="block text-[0.85rem] font-bold text-accent-light mb-5 uppercase tracking-widest">01 / Research Database</span>
+              <h2 className="text-[2rem] md:text-[2.8rem] font-extrabold leading-[1.2] mb-5">研究室検索</h2>
+              <p className="text-[1.05rem] mb-10 opacity-90 max-w-[400px]">ブラックボックス化しがちな「研究室の実態」を可視化。自分にぴったりの環境を見つけましょう。</p>
+              <ul className="list-none border-t border-white/30 pt-5">
+                <li className="mb-2.5 flex items-center font-semibold before:content-['→'] before:mr-2.5 before:text-accent-light">研究内容・プロジェクトの詳細</li>
+                <li className="mb-2.5 flex items-center font-semibold before:content-['→'] before:mr-2.5 before:text-accent-light">教授・研究室へのコンタクト先</li>
+                <li className="mb-2.5 flex items-center font-semibold before:content-['→'] before:mr-2.5 before:text-accent-light">研究室ごとの特徴</li>
+              </ul>
+            </div>
+            <Link className="relative z-20 mt-auto font-bold text-[1.1rem] underline underline-offset-4" href="/lab">研究室を探す →</Link>
+          </article>
+          <article className="flex-1 min-w-[300px] relative p-20 md:p-[80px_40px] flex flex-col justify-between text-white bg-[#444] bg-cover bg-center transition-all duration-300 hover:brightness-110 cursor-pointer bg-[linear-gradient(rgba(0,0,0,0.45),rgba(0,0,0,0.45)),url('/images/exam.png')] border-b border-white/20 md:border-b-0">
+            <Link className="absolute top-0 left-0 w-full h-full z-10" href="/exam"></Link>
+            <div className="relative z-20">
+              <span className="block text-[0.85rem] font-bold text-accent-light mb-5 uppercase tracking-widest">02 / Exam Strategy</span>
+              <h2 className="text-[2rem] md:text-[2.8rem] font-extrabold leading-[1.2] mb-5">院試マスター</h2>
+              <p className="text-[1.05rem] mb-10 opacity-90 max-w-[400px]">過去問解説から合格体験記まで、院試突破に必要なナレッジをすべて凝縮。</p>
+              <ul className="list-none border-t border-white/30 pt-5">
+                <li className="mb-2.5 flex items-center font-semibold before:content-['→'] before:mr-2.5 before:text-accent-light">院試過去問の解答・解説</li>
+                <li className="mb-2.5 flex items-center font-semibold before:content-['→'] before:mr-2.5 before:text-accent-light">オリジナル対策・予想問題</li>
+                <li className="mb-2.5 flex items-center font-semibold before:content-['→'] before:mr-2.5 before:text-accent-light">合格者の体験記・研究計画書</li>
+              </ul>
+            </div>
+            <Link className="relative z-20 mt-auto font-bold text-[1.1rem] underline underline-offset-4" href="/exam">対策を始める →</Link>
+          </article>
+        </div>
+      </section>
+
+      <section className="px-5 md:px-10 py-[100px] max-w-[1200px] w-full mx-auto" id="column">
+        <div className="flex justify-between items-end mb-10 border-b-2 border-text pb-5">
+          <h2 className="text-[2.5rem] font-extrabold">コラム</h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-10 mb-[60px]">
+          {colData.contents.map((a: any) => {
+            const imgUrl = a.thumbnail ? a.thumbnail.url : '/images/col-placeholder.jpg';
+            return (
+              <Link href={`/column-detail?id=${a.id}`} key={a.id} className="flex flex-col cursor-pointer transition-transform duration-300 hover:-translate-y-1.5 group">
+                <div className="h-[200px] bg-gray bg-cover bg-center rounded-t-md" style={{ backgroundImage: `url('${imgUrl}')` }}></div>
+                <div className="p-5 border border-border border-t-0 rounded-b-md flex-1">
+                  <div className="text-[0.8rem] text-gray-500 mb-2">{formatDate(a.publishedAt)} / {a.subcategory || 'Column'}</div>
+                  <h3 className="text-[1rem] font-bold leading-[1.6]">{a.title}</h3>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+        <div className="text-center">
+          <Link className="inline-block border border-text px-10 py-3 rounded-full font-semibold transition-all duration-200 hover:bg-text hover:text-white" href="/column">コラム一覧へ</Link>
+        </div>
+      </section>
+
+      <div className="w-full bg-[#fafafa]">
+        <section className="px-5 md:px-10 py-[100px] max-w-[1200px] w-full mx-auto" id="news">
+          <div className="flex justify-between items-end mb-10 border-b-2 border-text pb-5">
+            <h2 className="text-[2.5rem] font-extrabold">お知らせ</h2>
+            <Link className="font-semibold text-[0.9rem] hover:opacity-70 transition-opacity" href="/news">一覧を見る →</Link>
+          </div>
+          <ul className="list-none">
+            {newsData.contents.map((n: any) => (
+              <li key={n.id} className="flex flex-col md:flex-row md:items-baseline py-[25px] border-b border-border transition-colors duration-200 hover:bg-white gap-2.5 md:gap-0 group">
+                <Link href={`/column-detail?id=${n.id}`} className="flex flex-col md:flex-row md:items-baseline w-full">
+                  <span className="font-bold text-[0.9rem] text-[#666] md:w-[120px] shrink-0">{formatDate(n.publishedAt)}</span>
+                  <span className="bg-[#333] text-white py-1 px-2.5 text-[0.75rem] md:mr-5 rounded-[2px] min-w-[80px] text-center w-fit mb-2 md:mb-0 shrink-0">{n.subcategory || 'Info'}</span>
+                  <span className="text-[1rem] font-semibold flex-1">{n.title}</span>
+                  <span className="ml-0 md:ml-5 text-[1.2rem] hidden md:block opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </div>
+
+      <section className="bg-text text-white py-[100px] px-5 md:px-10 text-center">
+        <div className="max-w-[800px] mx-auto">
+          <h2 className="text-[2.5rem] font-extrabold mb-5">未来を描こう</h2>
+          <p className="text-[1.1rem] mb-10 opacity-80">サービスに関するご質問や、掲載希望の研究室関係者様はこちらからお問い合わせください。</p>
+          <Link className="inline-block bg-white text-text px-[50px] py-[15px] rounded-full font-bold text-[1.1rem] transition-transform duration-200 hover:scale-105" href="/contact">お問い合わせ</Link>
+        </div>
+      </section>
+    </main>
+  );
 }

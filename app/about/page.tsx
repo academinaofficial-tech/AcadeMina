@@ -1,14 +1,75 @@
 import type { Metadata } from "next";
-import LegacyPage from "@/components/LegacyPage";
 
 export const metadata: Metadata = {
   title: "About Us | AcadeMina",
 };
 
-const html = "\n<header>\n<a class=\"logo\" href=\"index.html\">AcadeMina</a>\n<nav>\n<ul>\n<li><a href=\"lab.html\">Services</a></li>\n<li><a href=\"#\">Column</a></li>\n<li><a href=\"about.html\" style=\"color: var(--accent-color);\">About Us</a></li>\n</ul>\n</nav>\n</header>\n<section class=\"about-hero\">\n<h1 class=\"vertical-copy\">\n            研究者を、<br/>増やす。\n        </h1>\n<div class=\"hero-sub\">AcadeMina / MISSION</div>\n</section>\n<section class=\"philosophy-section\">\n<span class=\"section-lead\">Our Core Purpose</span>\n<div class=\"philosophy-text\">\n<p>\n                先進国の中で、日本の大学院進学率は異常なほど低い水準にあります。<br/>\n                「知」への探求心を持ちながらも、情報の非対称性や将来への不安から、<br/>\n                研究の道を諦めてしまう学生があまりにも多いのが現状です。\n            </p>\n<br/>\n<p>\n                私たちは、<strong>院進における学生の「不」をなくす</strong>ために存在します。<br/>\n                わからない、見つからない、対策できない。<br/>\n                そんな障壁を取り除き、誰でも気軽に、当たり前のように大学院進学に挑戦できる。<br/>\n                そんな環境を作ることで、次世代の研究者を増やしていきます。\n            </p>\n</div>\n</section>\n<section class=\"who-section\">\n<div class=\"who-container\">\n<div class=\"who-content\">\n<h2 class=\"who-title\">Who We Are</h2>\n<p class=\"who-text\">\n                    このサービスを運営しているのは、実際に院試を経験し、<br/>\n                    アカデミアの道を選んだ現役の大学院生たちです。<br/><br/>\n                    私たち自身もかつて、情報の少なさや研究室選びの難しさに苦悩しました。<br/>\n                    同じ痛みを経験した当事者だからこそ、<br/>\n                    本当に必要な情報、本当に欲しかった支援を届けることができます。<br/>\n                    私たちは、あなたの挑戦の、一番近くにいる伴走者です。\n                </p>\n</div>\n</div>\n</section>\n<section class=\"solutions-section\">\n<div class=\"sol-header\">\n<h2 class=\"sol-title\">Our Solutions</h2>\n<p>2つのアプローチで、院進のペインを解消します。</p>\n</div>\n<div class=\"sol-grid\">\n<div class=\"sol-card\">\n<span class=\"sol-name\">Lab Insight</span>\n<span class=\"pain-point\">「やりたい研究はあるが、<br/>自分に合う研究室が見つからない」</span>\n<p class=\"sol-desc\">\n                    研究室の実態は、外からはブラックボックスになりがちです。Lab Insightは、テーマや条件から最適な研究室を横断的に検索できるデータベース。教授の人柄や研究環境など、リアルな情報でミスマッチを防ぎます。\n                </p>\n</div>\n<div class=\"sol-card\">\n<span class=\"sol-name\">Exam Master</span>\n<span class=\"pain-point\">「院試の情報が閉鎖的で、<br/>十分な対策ができない」</span>\n<p class=\"sol-desc\">\n                    大学受験と違い、院試は圧倒的に情報不足です。Exam Masterは、過去問の解答解説から合格者の体験記、研究計画書の書き方まで、合格に必要な「武器」を網羅的に提供します。\n                </p>\n</div>\n</div>\n</section>\n<footer>\n<div class=\"footer-logo\">AcadeMina</div>\n<div class=\"footer-links\">\n<ul>\n<li><a href=\"about.html\">About Us</a></li>\n<li><a href=\"lab.html\">Services</a></li>\n<li><a href=\"#\">Contact</a></li>\n</ul>\n</div>\n</footer>\n";
-const css = "/* --- Base Settings --- */\n        :root {\n            --bg-color: #ffffff;\n            --text-color: #111111;\n            --accent-color: #0044cc;\n            --gray-light: #f4f4f4;\n            --gray-border: #e0e0e0;\n            /* 明朝体（メッセージ用） */\n            --font-serif: \"Yu Mincho\", \"YuMincho\", \"Hiragino Mincho ProN\", \"HGS Mincho E\", serif;\n            /* ゴシック体（本文用） */\n            --font-main: \"Helvetica Neue\", Arial, \"Hiragino Kaku Gothic ProN\", \"Hiragino Sans\", Meiryo, sans-serif;\n        }\n\n        * { box-sizing: border-box; margin: 0; padding: 0; }\n\n        body {\n            font-family: var(--font-main);\n            background-color: var(--bg-color);\n            color: var(--text-color);\n            line-height: 2;\n            -webkit-font-smoothing: antialiased;\n        }\n\n        a { text-decoration: none; color: inherit; transition: opacity 0.3s; }\n        a:hover { opacity: 0.7; }\n\n        /* --- Header (共通) --- */\n        header {\n            position: fixed; top: 0; left: 0; width: 100%;\n            padding: 20px 40px;\n            display: flex; justify-content: space-between; align-items: center;\n            background-color: rgba(255, 255, 255, 0.95);\n            z-index: 1000;\n            border-bottom: 1px solid var(--gray-border);\n        }\n        .logo { font-size: 1.2rem; font-weight: 800; letter-spacing: 0.05em; font-family: var(--font-main); }\n        nav ul { display: flex; list-style: none; gap: 30px; }\n        nav li a { font-size: 0.9rem; font-weight: 600; font-family: var(--font-main); }\n\n        /* --- About Hero (中田工芸風) --- */\n        .about-hero {\n            height: 85vh;\n            display: flex;\n            align-items: center;\n            justify-content: center;\n            position: relative;\n            background-color: #fafafa;\n        }\n\n        /* 縦書きのキャッチコピー */\n        .vertical-copy {\n            writing-mode: vertical-rl;\n            font-family: var(--font-serif);\n            font-size: 3.5rem;\n            letter-spacing: 0.2em;\n            font-weight: 500;\n            line-height: 2;\n            margin-right: -2em; /* バランス調整 */\n        }\n\n        /* 英語のサブタイトル */\n        .hero-sub {\n            position: absolute;\n            bottom: 40px;\n            right: 40px;\n            font-size: 0.8rem;\n            letter-spacing: 0.1em;\n            color: #666;\n            font-family: var(--font-main);\n        }\n\n        /* --- Philosophy Section --- */\n        .philosophy-section {\n            padding: 120px 20px;\n            max-width: 800px;\n            margin: 0 auto;\n            text-align: center;\n        }\n\n        .section-lead {\n            font-size: 1.2rem;\n            font-weight: bold;\n            margin-bottom: 60px;\n            \n            /* ▼▼ ここを変更（本家の仕様に合わせる） ▼▼ */\n            display: inline-block;  /* 文字の幅に合わせて枠を作る */\n            /* ▲▲ ここまで ▲▲ */\n            \n            /* ※以前の display: table; や margin: auto; は削除してください */\n\n            border-bottom: 1px solid #000;\n            padding-bottom: 10px;\n        }\n\n        .philosophy-text {\n            font-family: var(--font-serif);\n            font-size: 1.1rem;\n            line-height: 2.4;\n            margin-bottom: 40px;\n            text-align: center; /* 両端揃え */\n        }\n        \n        .philosophy-text strong {\n            font-weight: bold;\n            background: linear-gradient(transparent 70%, #e6eeff 70%); /* マーカー風 */\n        }\n\n        /* --- Who We Are (運営者) --- */\n        .who-section {\n            background-color: #111;\n            color: #fff;\n            padding: 100px 40px;\n        }\n        \n        .who-container {\n            max-width: 1000px;\n            margin: 0 auto;\n            display: flex;\n            align-items: center;\n            gap: 60px;\n        }\n\n        .who-content { flex: 1; }\n        \n        .who-title {\n            font-size: 2.5rem;\n            font-weight: 800;\n            margin-bottom: 30px;\n            font-family: var(--font-main);\n        }\n\n        .who-text {\n            font-size: 1rem;\n            line-height: 2;\n            opacity: 0.9;\n        }\n\n        /* --- Our Solutions (What) --- */\n        .solutions-section {\n            padding: 120px 40px;\n            max-width: 1200px;\n            margin: 0 auto;\n        }\n\n        .sol-header {\n            text-align: center;\n            margin-bottom: 80px;\n        }\n        .sol-title {\n            font-size: 2rem;\n            font-weight: 800;\n            margin-bottom: 10px;\n        }\n\n        .sol-grid {\n            display: grid;\n            grid-template-columns: 1fr 1fr;\n            gap: 60px;\n        }\n\n        .sol-card {\n            background: #fff;\n            padding: 50px;\n            border: 1px solid var(--gray-border);\n            transition: transform 0.3s;\n        }\n        \n        .sol-card:hover { transform: translateY(-5px); }\n\n        .sol-name {\n            font-size: 1.5rem;\n            font-weight: 800;\n            margin-bottom: 20px;\n            display: block;\n            color: var(--accent-color);\n        }\n        \n        .pain-point {\n            font-weight: bold;\n            font-family: var(--font-serif);\n            font-size: 1.1rem;\n            margin-bottom: 20px;\n            display: block;\n        }\n\n        .sol-desc {\n            font-size: 0.95rem;\n            color: #555;\n            line-height: 1.8;\n        }\n\n        /* --- Footer (共通) --- */\n        footer {\n            padding: 60px 40px;\n            background-color: #fff;\n            color: var(--text-color);\n            border-top: 1px solid var(--gray-border);\n            display: flex;\n            justify-content: space-between;\n        }\n        .footer-logo { font-size: 1.5rem; font-weight: bold; }\n        .footer-links { display: flex; gap: 40px; }\n        .footer-links ul { list-style: none; }\n        .footer-links li { margin-bottom: 10px; font-size: 0.9rem; }\n\n        @media (max-width: 768px) {\n            .vertical-copy { writing-mode: horizontal-tb; font-size: 2rem; }\n            .who-container { flex-direction: column; gap: 30px; }\n            .sol-grid { grid-template-columns: 1fr; }\n            header { padding: 20px; }\n            .about-hero, .philosophy-section, .who-section, .solutions-section, footer { padding-left: 20px; padding-right: 20px; }\n        }";
-const scripts = [];
-
 export default function Page() {
-  return <LegacyPage html={html} css={css} scripts={scripts} />;
+  return (
+    <main>
+      <section className="h-[85vh] flex items-center justify-center relative bg-[#fafafa] mt-20 md:mt-[134px]">
+        <h1 className="[writing-mode:vertical-rl] font-serif text-[2rem] md:text-[3.5rem] tracking-[0.2em] font-medium leading-[2] -mr-[2em]">
+          研究者を、<br />増やす。
+        </h1>
+        <div className="absolute bottom-10 right-10 text-[0.8rem] tracking-[0.1em] text-[#666] font-sans">AcadeMina / MISSION</div>
+      </section>
+
+      <section className="py-[120px] px-5 sm:px-10 max-w-[800px] mx-auto text-center">
+        <span className="text-[1.2rem] font-bold mb-[60px] inline-block border-b border-black pb-2.5">Our Core Purpose</span>
+        <div className="font-serif text-[1.1rem] leading-[2.4] mb-10 text-center">
+          <p>
+            先進国の中で、日本の大学院進学率は異常なほど低い水準にあります。<br />
+            「知」への探求心を持ちながらも、情報の非対称性や将来への不安から、<br />
+            研究の道を諦めてしまう学生があまりにも多いのが現状です。
+          </p>
+          <br />
+          <p>
+            私たちは、<strong className="font-bold bg-[linear-gradient(transparent_70%,#e6eeff_70%)]">院進における学生の「不」をなくす</strong>ために存在します。<br />
+            わからない、見つからない、対策できない。<br />
+            そんな障壁を取り除き、誰でも気軽に、当たり前のように大学院進学に挑戦できる。<br />
+            そんな環境を作ることで、次世代の研究者を増やしていきます。
+          </p>
+        </div>
+      </section>
+
+      <section className="bg-[#111] text-white py-[100px] px-5 sm:px-10">
+        <div className="max-w-[1000px] mx-auto flex flex-col md:flex-row items-center gap-[30px] md:gap-[60px]">
+          <div className="flex-1">
+            <h2 className="text-[2.5rem] font-extrabold mb-[30px] font-sans">Who We Are</h2>
+            <p className="text-[1rem] leading-[2] opacity-90">
+              このサービスを運営しているのは、実際に院試を経験し、<br />
+              アカデミアの道を選んだ現役の大学院生たちです。<br /><br />
+              私たち自身もかつて、情報の少なさや研究室選びの難しさに苦悩しました。<br />
+              同じ痛みを経験した当事者だからこそ、<br />
+              本当に必要な情報、本当に欲しかった支援を届けることができます。<br />
+              私たちは、あなたの挑戦の、一番近くにいる伴走者です。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-[120px] px-5 sm:px-10 max-w-[1200px] mx-auto">
+        <div className="text-center mb-[80px]">
+          <h2 className="text-[2rem] font-extrabold mb-2.5">Our Solutions</h2>
+          <p>2つのアプローチで、院進のペインを解消します。</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-[60px]">
+          <div className="bg-white p-[50px] border border-border transition-transform duration-300 hover:-translate-y-1.5">
+            <span className="text-[1.5rem] font-extrabold mb-5 block text-accent">Lab Insight</span>
+            <span className="font-bold font-serif text-[1.1rem] mb-5 block">「やりたい研究はあるが、<br />自分に合う研究室が見つからない」</span>
+            <p className="text-[0.95rem] text-[#555] leading-[1.8]">
+              研究室の実態は、外からはブラックボックスになりがちです。Lab Insightは、テーマや条件から最適な研究室を横断的に検索できるデータベース。教授の人柄や研究環境など、リアルな情報でミスマッチを防ぎます。
+            </p>
+          </div>
+          <div className="bg-white p-[50px] border border-border transition-transform duration-300 hover:-translate-y-1.5">
+            <span className="text-[1.5rem] font-extrabold mb-5 block text-accent">Exam Master</span>
+            <span className="font-bold font-serif text-[1.1rem] mb-5 block">「院試の情報が閉鎖的で、<br />十分な対策ができない」</span>
+            <p className="text-[0.95rem] text-[#555] leading-[1.8]">
+              大学受験と違い、院試は圧倒的に情報不足です。Exam Masterは、過去問の解答解説から合格者の体験記、研究計画書の書き方まで、合格に必要な「武器」を網羅的に提供します。
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
 }

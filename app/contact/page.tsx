@@ -1,19 +1,165 @@
-import type { Metadata } from "next";
-import LegacyPage from "@/components/LegacyPage";
+import Script from "next/script";
 
-export const metadata: Metadata = {
+export const metadata = {
   title: "Contact | AcadeMina",
 };
 
-const html = "\n<header>\n<a class=\"logo\" href=\"index.html\" style=\"display: flex; align-items: center; gap: 5px; text-decoration: none;\">\n<svg fill=\"none\" height=\"36\" viewbox=\"0 0 100 100\" width=\"36\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M20 55 Q20 85 50 85 Q80 85 80 55\" fill=\"none\" stroke=\"#0044cc\" stroke-linecap=\"round\" stroke-width=\"8\"></path>\n<path d=\"M50 10 L30 45 H70 L50 10 Z\" fill=\"#0044cc\"></path>\n<path d=\"M50 10 V75\" stroke=\"white\" stroke-width=\"3\"></path>\n<circle cx=\"50\" cy=\"85\" fill=\"#4da6ff\" r=\"6\"></circle>\n</svg>\n<span style=\"font-size: 1.5rem; font-weight: 800; letter-spacing: 0.02em; color: #0044cc;\">AcadeMina</span>\n</a>\n<nav>\n<ul>\n<li><a href=\"lab.html\">Services</a></li>\n<li><a href=\"about.html\">About Us</a></li>\n<li><a href=\"contact.html\" style=\"color: var(--accent-color);\">Contact</a></li>\n</ul>\n</nav>\n</header>\n<div class=\"contact-hero\">\n<h1 class=\"page-title\">Contact Us</h1>\n<p class=\"page-desc\">\n            サービスに関するご質問、研究室掲載のご依頼、<br/>\n            大学・企業様からの提携に関するお問い合わせはこちらから承ります。\n        </p>\n</div>\n<div class=\"form-container\">\n<form id=\"contact-form\">\n<div class=\"form-group\">\n<label class=\"form-label\">お問い合わせの種類 <span class=\"tag-required\">必須</span></label>\n<div class=\"radio-group\">\n<label class=\"radio-label\">\n<input checked=\"\" class=\"radio-input\" name=\"type\" required=\"\" type=\"radio\" value=\"student\"/> <span>学生として</span>\n</label>\n<label class=\"radio-label\">\n<input class=\"radio-input\" name=\"type\" type=\"radio\" value=\"lab\"/> <span>研究室・教員として</span>\n</label>\n<label class=\"radio-label\">\n<input class=\"radio-input\" name=\"type\" type=\"radio\" value=\"univ_corp\"/> <span>大学・企業として</span>\n</label>\n<label class=\"radio-label\">\n<input class=\"radio-input\" name=\"type\" type=\"radio\" value=\"other\"/> <span>その他</span>\n</label>\n</div>\n</div>\n<div class=\"form-row\">\n<div class=\"form-col form-group\">\n<label class=\"form-label\">氏名 <span class=\"tag-required\">必須</span></label>\n<input class=\"form-input\" id=\"name\" placeholder=\"山田 太郎\" required=\"\" type=\"text\"/>\n</div>\n<div class=\"form-col form-group\">\n<label class=\"form-label\">所属（大学・企業名） <span class=\"tag-required\">必須</span></label>\n<input class=\"form-input\" id=\"affiliation\" placeholder=\"〇〇大学 / 株式会社〇〇\" required=\"\" type=\"text\"/>\n</div>\n</div>\n<div class=\"form-group\">\n<label class=\"form-label\">メールアドレス <span class=\"tag-required\">必須</span></label>\n<input class=\"form-input\" id=\"email\" placeholder=\"yourname@example.com\" required=\"\" type=\"email\"/>\n</div>\n<div class=\"form-group\">\n<label class=\"form-label\">電話番号 <span class=\"tag-optional\">任意</span></label>\n<input class=\"form-input\" id=\"phone\" placeholder=\"090-1234-5678\" type=\"tel\"/>\n</div>\n<div class=\"form-group\">\n<label class=\"form-label\">件名 <span class=\"tag-required\">必須</span></label>\n<input class=\"form-input\" id=\"subject\" placeholder=\"例：研究室情報の掲載について\" required=\"\" type=\"text\"/>\n</div>\n<div class=\"form-group\">\n<label class=\"form-label\">お問い合わせ内容 <span class=\"tag-required\">必須</span></label>\n<textarea class=\"form-textarea\" id=\"message\" placeholder=\"詳細をご記入ください。\" required=\"\"></textarea>\n</div>\n<div style=\"margin-bottom: 30px;\">\n<label style=\"display: flex; align-items: center; cursor: pointer; font-size: 0.9rem;\">\n<input id=\"privacy\" required=\"\" style=\"margin-right: 10px;\" type=\"checkbox\"/>\n<span style=\"color: #666;\">プライバシーポリシーに同意する</span>\n</label>\n</div>\n<button class=\"submit-btn\" id=\"submit-btn\" type=\"submit\">送信する</button>\n</form>\n</div>\n<footer>\n<div class=\"footer-logo\">AcadeMina</div>\n<div class=\"footer-links\">\n<ul>\n<li><a href=\"about.html\">About Us</a></li>\n<li><a href=\"lab.html\">Services</a></li>\n<li><a href=\"contact.html\">Contact</a></li>\n</ul>\n</div>\n</footer>\n\n";
-const css = "/* Base Settings */\n        :root {\n            --bg-color: #ffffff;\n            --text-color: #111111;\n            --accent-color: #0044cc;\n            --gray-light: #f4f4f4;\n            --gray-border: #ddd;\n            --font-main: \"Helvetica Neue\", Arial, \"Hiragino Kaku Gothic ProN\", \"Hiragino Sans\", Meiryo, sans-serif;\n        }\n\n        * { box-sizing: border-box; margin: 0; padding: 0; }\n\n        body {\n            font-family: var(--font-main);\n            background-color: #f9f9f9;\n            color: var(--text-color);\n            line-height: 1.6;\n            -webkit-font-smoothing: antialiased;\n        }\n\n        a { text-decoration: none; color: inherit; transition: opacity 0.3s; }\n        a:hover { opacity: 0.7; }\n\n        /* --- Header --- */\n        header {\n            position: fixed; top: 0; left: 0; width: 100%;\n            padding: 15px 40px;\n            display: flex; justify-content: space-between; align-items: center;\n            background-color: #fff;\n            z-index: 1000;\n            border-bottom: 1px solid var(--gray-border);\n            height: 70px;\n        }\n        \n        /* Logo (Pattern A: Anchor Nib を採用) */\n        .logo svg { height: 36px; width: 36px; }\n        \n        nav ul { display: flex; list-style: none; gap: 30px; }\n        nav li a { font-size: 0.9rem; font-weight: 600; }\n\n        /* --- Contact Hero --- */\n        .contact-hero {\n            margin-top: 70px;\n            padding: 80px 20px;\n            text-align: center;\n            background-color: #fff;\n            border-bottom: 1px solid var(--gray-border);\n        }\n        .page-title {\n            font-size: 2.5rem; font-weight: 800; margin-bottom: 15px; letter-spacing: 0.05em;\n        }\n        .page-desc {\n            font-size: 1rem; color: #666; max-width: 600px; margin: 0 auto;\n        }\n\n        /* --- Form Section --- */\n        .form-container {\n            max-width: 800px;\n            margin: 60px auto;\n            background: #fff;\n            padding: 50px;\n            border-radius: 8px;\n            box-shadow: 0 10px 30px rgba(0,0,0,0.05);\n        }\n\n        .form-group { margin-bottom: 30px; }\n        \n        .form-label {\n            display: block; font-weight: bold; font-size: 0.95rem; margin-bottom: 10px;\n            display: flex; align-items: center;\n        }\n        .tag-required {\n            background: #ff4757; color: #fff; font-size: 0.7rem; padding: 2px 6px;\n            border-radius: 3px; margin-left: 8px;\n        }\n        .tag-optional {\n            background: #999; color: #fff; font-size: 0.7rem; padding: 2px 6px;\n            border-radius: 3px; margin-left: 8px;\n        }\n\n        .form-input, .form-select, .form-textarea {\n            width: 100%; padding: 15px; font-size: 1rem;\n            border: 1px solid var(--gray-border); border-radius: 4px;\n            background: #fafafa; transition: 0.3s;\n        }\n        .form-input:focus, .form-select:focus, .form-textarea:focus {\n            border-color: var(--accent-color); background: #fff; outline: none;\n        }\n        .form-textarea { height: 200px; resize: vertical; }\n\n        .form-row { display: flex; gap: 20px; }\n        .form-col { flex: 1; }\n\n        /* Radio Button Group (Subject) */\n        .radio-group { display: flex; flex-wrap: wrap; gap: 15px; }\n        .radio-label {\n            display: flex; align-items: center; gap: 8px; cursor: pointer;\n            padding: 10px 20px; border: 1px solid var(--gray-border); border-radius: 50px;\n            font-size: 0.9rem; transition: 0.2s;\n        }\n        .radio-label:hover { background: #f0f0f0; }\n        .radio-input { accent-color: var(--accent-color); }\n        \n        /* 選択されたラジオボタンのスタイル */\n        .radio-input:checked + span { font-weight: bold; color: var(--accent-color); }\n\n        .submit-btn {\n            width: 100%; padding: 18px;\n            background: var(--text-color); color: #fff;\n            border: none; border-radius: 50px;\n            font-size: 1.1rem; font-weight: bold; cursor: pointer;\n            transition: all 0.3s;\n        }\n        .submit-btn:hover {\n            background: var(--accent-color); transform: translateY(-2px);\n            box-shadow: 0 5px 15px rgba(0,68,204,0.3);\n        }\n        .submit-btn:disabled { background: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }\n\n        /* Footer */\n        footer {\n            padding: 60px 40px; background-color: #fff;\n            border-top: 1px solid var(--gray-border); display: flex; justify-content: space-between;\n        }\n        .footer-logo { font-size: 1.5rem; font-weight: bold; }\n        .footer-links { display: flex; gap: 40px; }\n        .footer-links ul { list-style: none; }\n        .footer-links li { margin-bottom: 10px; font-size: 0.9rem; }\n\n        @media (max-width: 768px) {\n            .form-row { flex-direction: column; gap: 0; }\n            .form-container { padding: 30px 20px; margin: 30px 20px; }\n            header { padding: 20px; }\n        }";
-const scripts = [
-  {
-    "src": "/scripts/contact__inline1.js",
-    "type": "module"
-  }
-];
-
 export default function Page() {
-  return <LegacyPage html={html} css={css} scripts={scripts} />;
+  return (
+    <main className="mt-20 md:mt-[134px]">
+      {/* 
+        Removed header & footer which were rendered in the page explicitly.
+        They are now handled by layout.tsx 
+      */}
+      <div className="py-20 px-5 text-center bg-white border-b border-border">
+        <h1 className="text-[2.5rem] font-extrabold mb-[15px] tracking-wider">Contact Us</h1>
+        <p className="text-[1rem] text-[#666] max-w-[600px] mx-auto">
+          サービスに関するご質問、研究室掲載のご依頼、<br />
+          大学・企業様からの提携に関するお問い合わせはこちらから承ります。
+        </p>
+      </div>
+
+      <div className="max-w-[800px] mx-auto my-[60px] bg-white p-[50px] rounded-lg shadow-[0_10px_30px_rgba(0,0,0,0.05)] md:p-[30px_20px] md:m-[30px_20px]">
+        <form id="contact-form">
+          <div className="mb-[30px]">
+            <label className="flex items-center font-bold text-[0.95rem] mb-2.5">
+              お問い合わせの種類 <span className="bg-[#ff4757] text-white text-[0.7rem] px-1.5 py-0.5 rounded-[3px] ml-2">必須</span>
+            </label>
+            <div className="flex flex-wrap gap-[15px]">
+              <label className="flex items-center gap-2 cursor-pointer py-2.5 px-5 border border-border rounded-full text-[0.9rem] transition-colors duration-200 hover:bg-[#f0f0f0]">
+                <input
+                  defaultChecked
+                  className="accent-accent peer"
+                  name="type"
+                  required
+                  type="radio"
+                  value="student"
+                />{" "}
+                <span className="peer-checked:font-bold peer-checked:text-accent">学生として</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer py-2.5 px-5 border border-border rounded-full text-[0.9rem] transition-colors duration-200 hover:bg-[#f0f0f0]">
+                <input className="accent-accent peer" name="type" type="radio" value="lab" />{" "}
+                <span className="peer-checked:font-bold peer-checked:text-accent">研究室・教員として</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer py-2.5 px-5 border border-border rounded-full text-[0.9rem] transition-colors duration-200 hover:bg-[#f0f0f0]">
+                <input
+                  className="accent-accent peer"
+                  name="type"
+                  type="radio"
+                  value="univ_corp"
+                />{" "}
+                <span className="peer-checked:font-bold peer-checked:text-accent">大学・企業として</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer py-2.5 px-5 border border-border rounded-full text-[0.9rem] transition-colors duration-200 hover:bg-[#f0f0f0]">
+                <input className="accent-accent peer" name="type" type="radio" value="other" />{" "}
+                <span className="peer-checked:font-bold peer-checked:text-accent">その他</span>
+              </label>
+            </div>
+          </div>
+
+          <div className="flex gap-5 md:flex-col md:gap-0">
+            <div className="flex-1 mb-[30px]">
+              <label className="flex items-center font-bold text-[0.95rem] mb-2.5">
+                氏名 <span className="bg-[#ff4757] text-white text-[0.7rem] px-1.5 py-0.5 rounded-[3px] ml-2">必須</span>
+              </label>
+              <input
+                className="w-full p-[15px] text-[1rem] border border-border rounded bg-[#fafafa] transition-all duration-300 focus:border-accent focus:bg-white focus:outline-none"
+                id="name"
+                placeholder="山田 太郎"
+                required
+                type="text"
+              />
+            </div>
+            <div className="flex-1 mb-[30px]">
+              <label className="flex items-center font-bold text-[0.95rem] mb-2.5">
+                所属（大学・企業名） <span className="bg-[#ff4757] text-white text-[0.7rem] px-1.5 py-0.5 rounded-[3px] ml-2">必須</span>
+              </label>
+              <input
+                className="w-full p-[15px] text-[1rem] border border-border rounded bg-[#fafafa] transition-all duration-300 focus:border-accent focus:bg-white focus:outline-none"
+                id="affiliation"
+                placeholder="〇〇大学 / 株式会社〇〇"
+                required
+                type="text"
+              />
+            </div>
+          </div>
+
+          <div className="mb-[30px]">
+            <label className="flex items-center font-bold text-[0.95rem] mb-2.5">
+              メールアドレス <span className="bg-[#ff4757] text-white text-[0.7rem] px-1.5 py-0.5 rounded-[3px] ml-2">必須</span>
+            </label>
+            <input
+              className="w-full p-[15px] text-[1rem] border border-border rounded bg-[#fafafa] transition-all duration-300 focus:border-accent focus:bg-white focus:outline-none"
+              id="email"
+              placeholder="yourname@example.com"
+              required
+              type="email"
+            />
+          </div>
+
+          <div className="mb-[30px]">
+            <label className="flex items-center font-bold text-[0.95rem] mb-2.5">
+              電話番号 <span className="bg-[#999] text-white text-[0.7rem] px-1.5 py-0.5 rounded-[3px] ml-2">任意</span>
+            </label>
+            <input
+              className="w-full p-[15px] text-[1rem] border border-border rounded bg-[#fafafa] transition-all duration-300 focus:border-accent focus:bg-white focus:outline-none"
+              id="phone"
+              placeholder="090-1234-5678"
+              type="tel"
+            />
+          </div>
+
+          <div className="mb-[30px]">
+            <label className="flex items-center font-bold text-[0.95rem] mb-2.5">
+              件名 <span className="bg-[#ff4757] text-white text-[0.7rem] px-1.5 py-0.5 rounded-[3px] ml-2">必須</span>
+            </label>
+            <input
+              className="w-full p-[15px] text-[1rem] border border-border rounded bg-[#fafafa] transition-all duration-300 focus:border-accent focus:bg-white focus:outline-none"
+              id="subject"
+              placeholder="例：研究室情報の掲載について"
+              required
+              type="text"
+            />
+          </div>
+
+          <div className="mb-[30px]">
+            <label className="flex items-center font-bold text-[0.95rem] mb-2.5">
+              お問い合わせ内容 <span className="bg-[#ff4757] text-white text-[0.7rem] px-1.5 py-0.5 rounded-[3px] ml-2">必須</span>
+            </label>
+            <textarea
+              className="w-full p-[15px] text-[1rem] border border-border rounded bg-[#fafafa] transition-all duration-300 focus:border-accent focus:bg-white focus:outline-none h-[200px] resize-y"
+              id="message"
+              placeholder="詳細をご記入ください。"
+              required
+            ></textarea>
+          </div>
+
+          <div style={{ marginBottom: 30 }}>
+            <label
+              style={{
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+                fontSize: "0.9rem",
+              }}
+            >
+              <input
+                id="privacy"
+                required
+                style={{ marginRight: 10 }}
+                type="checkbox"
+              />
+              <span style={{ color: "#666" }}>プライバシーポリシーに同意する</span>
+            </label>
+          </div>
+
+          <button className="w-full p-[18px] bg-text text-white border-none rounded-full text-[1.1rem] font-bold cursor-pointer transition-all duration-300 hover:bg-accent hover:-translate-y-[2px] hover:shadow-[0_5px_15px_rgba(0,68,204,0.3)] disabled:bg-[#ccc] disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none" id="submit-btn" type="submit">
+            送信する
+          </button>
+        </form>
+      </div>
+
+      <Script src="/scripts/contact__inline1.js" type="module" strategy="afterInteractive" />
+    </main>
+  );
 }

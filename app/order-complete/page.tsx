@@ -1,24 +1,47 @@
-import type { Metadata } from "next";
-import LegacyPage from "@/components/LegacyPage";
+import Link from "next/link";
+import Script from "next/script";
 
-export const metadata: Metadata = {
+export const metadata = {
   title: "購入完了 | AcadeMina",
 };
 
-const html = "\n<div id=\"common-header\"></div>\n<div class=\"steps-bar\">\n<div class=\"step done\"><span class=\"step-circle\">✓</span> カート</div>\n<div class=\"step-line done\"></div>\n<div class=\"step done\"><span class=\"step-circle\">✓</span> 決済情報</div>\n<div class=\"step-line done\"></div>\n<div class=\"step done\"><span class=\"step-circle\">✓</span> 完了</div>\n</div>\n<div class=\"complete-container\">\n<div class=\"complete-card\">\n<div class=\"check-icon\">✓</div>\n<h1 class=\"complete-title\">ご購入ありがとうございます！</h1>\n<p class=\"complete-sub\">決済が正常に完了しました。<br/>教材のダウンロードが可能です。</p>\n<div class=\"order-id\">注文番号: <span id=\"order-number\">AM-000000</span></div>\n<div class=\"download-section\">\n<div class=\"download-title\">購入した教材</div>\n<div id=\"download-items\"></div>\n</div>\n<div class=\"email-notice\">\n<span style=\"font-size:1.2rem\">📧</span>\n<span>ご登録のメールアドレスにもダウンロードURLをお送りしました。<br/><strong>メールが届かない場合は迷惑メールフォルダをご確認ください。</strong></span>\n</div>\n<div class=\"action-links\">\n<a class=\"btn-mypage\" href=\"#\">マイページで確認する</a>\n<a class=\"btn-store\" href=\"exam-store.html\">教材ストアに戻る</a>\n</div>\n</div>\n</div>\n<div class=\"crosssell-section\">\n<div class=\"crosssell-title\">こちらもおすすめ <span class=\"crosssell-tag\">この教材を買った人は掲示板も見ています</span></div>\n<div class=\"crosssell-grid\" id=\"crosssell-grid\"></div>\n</div>\n<div id=\"common-footer\"></div>\n\n\n\n";
-const css = ":root{--bg:#fff;--text:#111;--text-inv:#fff;--accent:#0044cc;--accent-light:#4da6ff;--gray:#f4f4f4;--border:#e0e0e0;--font:\"Helvetica Neue\",Arial,\"Hiragino Kaku Gothic ProN\",\"Hiragino Sans\",Meiryo,sans-serif}\n        *{box-sizing:border-box;margin:0;padding:0}body{font-family:var(--font);background:#f9f9f9;color:var(--text);line-height:1.6}a{text-decoration:none;color:inherit;transition:opacity .3s}a:hover{opacity:.7}\n\n        /* Steps */\n        .steps-bar{margin-top:70px;padding:20px 40px;background:#fff;border-bottom:1px solid var(--border);display:flex;justify-content:center}\n        .step{display:flex;align-items:center;gap:8px;font-size:.9rem;color:#999;font-weight:600}\n        .step.done{color:var(--text)}\n        .step-circle{width:28px;height:28px;border-radius:50%;border:2px solid #ddd;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700}\n        .step.done .step-circle{border-color:var(--accent);background:var(--accent);color:#fff}\n        .step-line{width:60px;height:2px;background:#ddd;margin:0 10px}\n        .step-line.done{background:var(--accent)}\n\n        /* Complete card */\n        .complete-container{max-width:700px;margin:50px auto;padding:0 20px}\n        .complete-card{background:#fff;border-radius:16px;padding:60px 50px;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.06);border:1px solid var(--border)}\n        .check-icon{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-light));display:flex;align-items:center;justify-content:center;margin:0 auto 25px;font-size:2.5rem;color:#fff;animation:popIn .5s ease}\n        @keyframes popIn{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}\n        .complete-title{font-size:2rem;font-weight:800;margin-bottom:10px}\n        .complete-sub{font-size:1.05rem;color:#555;margin-bottom:30px;line-height:1.8}\n        .order-id{display:inline-block;background:var(--gray);padding:10px 25px;border-radius:8px;font-size:.95rem;font-weight:700;margin-bottom:35px;letter-spacing:.03em}\n        .order-id span{color:var(--accent)}\n\n        /* Download section */\n        .download-section{background:#f5f8ff;border:2px solid #d6e4ff;border-radius:12px;padding:30px;margin-bottom:30px}\n        .download-title{font-size:1.1rem;font-weight:800;margin-bottom:15px}\n        .download-item{display:flex;align-items:center;gap:15px;padding:12px 0;border-bottom:1px solid #e8eeff}\n        .download-item:last-child{border-bottom:none}\n        .dl-icon{width:40px;height:40px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1rem;flex-shrink:0}\n        .dl-info{flex:1;text-align:left}\n        .dl-name{font-size:.9rem;font-weight:700;margin-bottom:2px}\n        .dl-size{font-size:.75rem;color:#999}\n        .dl-btn{padding:8px 20px;background:var(--accent);color:#fff;border:none;border-radius:50px;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s}\n        .dl-btn:hover{background:#003399;transform:translateY(-1px)}\n\n        .email-notice{background:var(--gray);padding:15px 20px;border-radius:8px;font-size:.9rem;color:#555;margin-bottom:25px;display:flex;align-items:center;gap:10px}\n        .email-notice strong{color:var(--text)}\n\n        .action-links{display:flex;gap:15px;justify-content:center;flex-wrap:wrap}\n        .btn-mypage{display:inline-block;padding:14px 36px;background:var(--text);color:#fff;border-radius:50px;font-weight:700;font-size:.95rem;transition:all .2s}\n        .btn-mypage:hover{background:var(--accent);opacity:1}\n        .btn-store{display:inline-block;padding:14px 36px;background:none;border:1px solid var(--border);border-radius:50px;font-weight:700;font-size:.95rem;transition:all .2s}\n        .btn-store:hover{border-color:var(--accent);color:var(--accent);opacity:1}\n\n        /* Cross-sell */\n        .crosssell-section{max-width:700px;margin:50px auto;padding:0 20px}\n        .crosssell-title{font-size:1.2rem;font-weight:800;margin-bottom:20px;display:flex;align-items:center;gap:10px}\n        .crosssell-tag{font-size:.75rem;font-weight:600;color:#999;background:var(--gray);padding:3px 10px;border-radius:4px}\n        .crosssell-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:15px}\n        .cs-card{background:#fff;border:1px solid var(--border);border-radius:8px;overflow:hidden;cursor:pointer;transition:transform .2s}.cs-card:hover{transform:translateY(-3px)}\n        .cs-img{height:110px;background:#eee;background-size:cover;background-position:center}\n        .cs-body{padding:12px}\n        .cs-cat{font-size:.7rem;color:var(--accent);font-weight:700;margin-bottom:3px}\n        .cs-name{font-size:.85rem;font-weight:700;margin-bottom:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}\n        .cs-price{font-weight:800;font-size:.9rem}\n        @media(max-width:768px){\n        .steps-bar{padding:15px 10px}.step{font-size:.75rem}.step-line{width:30px}.complete-card{padding:40px 25px}.complete-title{font-size:1.5rem}.action-links{flex-direction:column;align-items:center}}";
-const scripts = [
-  {
-    "src": "/store-data.js"
-  },
-  {
-    "src": "/scripts/order-complete__inline1.js"
-  },
-  {
-    "src": "/common.js"
-  }
-];
-
 export default function Page() {
-  return <LegacyPage html={html} css={css} scripts={scripts} />;
+  return (
+    <>
+      <div className="flex justify-center items-center gap-0 py-5 px-10 bg-white border-b border-border">
+        <div className="flex items-center gap-2 text-[0.75rem] md:text-[0.9rem] font-semibold text-text"><span className="w-7 h-7 rounded-full border-2 border-text bg-text text-white flex items-center justify-center text-[0.8rem] font-bold">✓</span> カート</div>
+        <div className="w-[30px] md:w-[60px] h-[2px] bg-accent mx-2.5"></div>
+        <div className="flex items-center gap-2 text-[0.75rem] md:text-[0.9rem] font-semibold text-text"><span className="w-7 h-7 rounded-full border-2 border-text bg-text text-white flex items-center justify-center text-[0.8rem] font-bold">✓</span> 決済情報</div>
+        <div className="w-[30px] md:w-[60px] h-[2px] bg-accent mx-2.5"></div>
+        <div className="flex items-center gap-2 text-[0.75rem] md:text-[0.9rem] font-semibold text-text"><span className="w-7 h-7 rounded-full border-2 border-text bg-text text-white flex items-center justify-center text-[0.8rem] font-bold">✓</span> 完了</div>
+      </div>
+      <div className="max-w-[700px] mx-auto my-[50px] px-5">
+        <div className="bg-white rounded-2xl p-10 md:p-[60px_50px] text-center border border-border shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
+          <div className="w-[80px] h-[80px] rounded-full bg-[linear-gradient(135deg,var(--accent),var(--accent-light))] flex items-center justify-center mx-auto mb-[25px] text-[2.5rem] text-white animate-[popIn_0.5s_ease] shadow-[0_4px_15px_rgba(0,102,255,0.3)]">✓</div>
+          <h1 className="text-[1.5rem] md:text-[2rem] font-extrabold mb-2.5">ご購入ありがとうございます！</h1>
+          <p className="text-[1.05rem] text-[#555] mb-[30px] leading-[1.8]">決済が正常に完了しました。<br />教材のダウンロードが可能です。</p>
+          <div className="inline-block bg-gray px-[25px] py-2.5 rounded-lg text-[0.95rem] font-bold mb-[35px] tracking-[0.03em]">注文番号: <span id="order-number" className="text-accent">AM-000000</span></div>
+          <div className="bg-[#f5f8ff] border-2 border-[#d6e4ff] rounded-xl p-[30px] mb-[30px] text-left text-text">
+            <div className="text-[1.1rem] font-extrabold mb-[15px]">購入した教材</div>
+            <div id="download-items"></div>
+          </div>
+          <div className="bg-gray px-5 py-[15px] rounded-lg text-[0.9rem] text-[#555] mb-[25px] flex items-center gap-2.5 text-left flex-wrap md:flex-nowrap">
+            <span className="text-[1.2rem] shrink-0">📧</span>
+            <span className="flex-1">ご登録のメールアドレスにもダウンロードURLをお送りしました。<br /><strong className="text-text">メールが届かない場合は迷惑メールフォルダをご確認ください。</strong></span>
+          </div>
+          <div className="flex flex-col md:flex-row gap-[15px] justify-center items-center flex-wrap">
+            <Link className="inline-block w-full md:w-auto px-[36px] py-[14px] bg-text text-white rounded-full font-bold text-[0.95rem] transition-all duration-200 hover:bg-accent" href="/mypage">マイページで確認する</Link>
+            <Link className="inline-block w-full md:w-auto px-[36px] py-[14px] bg-transparent border border-border rounded-full font-bold text-[0.95rem] transition-all duration-200 hover:border-accent hover:text-accent" href="/exam-store">教材ストアに戻る</Link>
+          </div>
+        </div>
+      </div>
+      <div className="max-w-[700px] mx-auto my-[50px] px-5">
+        <div className="text-[1.2rem] font-extrabold mb-5 flex flex-wrap md:flex-nowrap items-center gap-2.5">こちらもおすすめ <span className="text-[0.75rem] font-semibold text-[#999] bg-gray px-2.5 py-[3px] rounded">この教材を買った人は掲示板も見ています</span></div>
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-[15px]" id="crosssell-grid"></div>
+      </div>
+
+      <Script src="/store-data.js" strategy="afterInteractive" />
+      <Script src="/scripts/order-complete__inline1.js" strategy="afterInteractive" />
+    </>
+  );
 }

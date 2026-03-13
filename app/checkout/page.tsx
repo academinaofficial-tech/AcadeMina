@@ -1,24 +1,89 @@
-import type { Metadata } from "next";
-import LegacyPage from "@/components/LegacyPage";
+import Script from "next/script";
+import Link from "next/link";
 
-export const metadata: Metadata = {
+export const metadata = {
   title: "決済 | AcadeMina",
 };
 
-const html = "\n<div id=\"common-header\"></div>\n<div class=\"steps-bar\">\n<div class=\"step done\"><span class=\"step-circle\">✓</span> カート</div>\n<div class=\"step-line done\"></div>\n<div class=\"step active\"><span class=\"step-circle\">2</span> 決済情報</div>\n<div class=\"step-line\"></div>\n<div class=\"step\"><span class=\"step-circle\">3</span> 完了</div>\n</div>\n<div class=\"checkout-layout\">\n<div class=\"checkout-main\">\n<div class=\"section-card\">\n<h2 class=\"section-label\">お支払い方法</h2>\n<div class=\"pay-methods\">\n<label class=\"pay-option selected\" onclick=\"selectPay(this)\">\n<input checked=\"\" name=\"pay\" type=\"radio\" value=\"card\"/>\n<span class=\"pay-label\">クレジットカード</span>\n<div class=\"pay-icons\"><span class=\"pay-icon\">VISA</span><span class=\"pay-icon\">MC</span><span class=\"pay-icon\">AMEX</span></div>\n</label>\n<label class=\"pay-option\" onclick=\"selectPay(this)\">\n<input name=\"pay\" type=\"radio\" value=\"gpay\"/>\n<span class=\"pay-label\">Google Pay</span>\n</label>\n<label class=\"pay-option\" onclick=\"selectPay(this)\">\n<input name=\"pay\" type=\"radio\" value=\"applepay\"/>\n<span class=\"pay-label\">Apple Pay</span>\n</label>\n</div>\n<div class=\"stripe-placeholder\" id=\"stripe-area\">\n<strong>Stripe決済フォーム埋め込みエリア</strong>\n                    ここにStripe Elements（カード番号・有効期限・CVC）が挿入されます。<br/>\n                    実装時は <code>stripe.js</code> を読み込み、<code>Elements</code> をマウントします。\n                </div>\n</div>\n<div class=\"section-card\" id=\"profile-section\">\n<h2 class=\"section-label\">ご登録情報</h2>\n<!-- 登録済みの場合（JSで表示切替） -->\n<div id=\"profile-display\" style=\"display:none\">\n<div class=\"profile-row\"><span class=\"profile-label\">氏名</span><span class=\"profile-value\" id=\"prof-name\"></span></div>\n<div class=\"profile-row\"><span class=\"profile-label\">メールアドレス</span><span class=\"profile-value\" id=\"prof-email\"></span></div>\n<div class=\"profile-row\"><span class=\"profile-label\">所属</span><span class=\"profile-value\" id=\"prof-univ\"></span></div>\n<p style=\"margin-top:15px;font-size:.8rem;color:#999\">※ マイページで登録済みの情報を表示しています。<a href=\"mypage.html\" style=\"color:var(--accent);text-decoration:underline\">変更する</a></p>\n</div>\n<!-- 未登録の場合（入力フォーム） -->\n<div id=\"profile-form\">\n<p style=\"margin-bottom:20px;font-size:.9rem;color:#555\">購入に必要な情報を入力してください。</p>\n<div class=\"form-group\">\n<label class=\"form-label\">氏名 <span class=\"required\">*</span></label>\n<input class=\"form-input\" id=\"input-name\" placeholder=\"例：山田 太郎\" required=\"\" type=\"text\"/>\n</div>\n<div class=\"form-group\">\n<label class=\"form-label\">メールアドレス <span class=\"required\">*</span></label>\n<input class=\"form-input\" id=\"input-email\" placeholder=\"例：yamada@example.com\" required=\"\" type=\"email\"/>\n</div>\n<div class=\"form-group\">\n<label class=\"form-label\">所属（大学・学部・学年）</label>\n<input class=\"form-input\" id=\"input-univ\" placeholder=\"例：〇〇大学 理工学部 3年\" type=\"text\"/>\n</div>\n<label style=\"display:flex;align-items:center;gap:8px;margin-top:10px;font-size:.85rem;color:#555;cursor:pointer\"><input checked=\"\" id=\"save-profile\" style=\"accent-color:var(--accent)\" type=\"checkbox\"/> この情報をマイページに保存する</label>\n</div>\n</div>\n</div>\n<div class=\"checkout-sidebar\">\n<div class=\"summary-card\">\n<div class=\"summary-title\">注文内容</div>\n<div id=\"summary-items\"></div>\n<div class=\"summary-total\"><span>合計（税込）</span><span id=\"summary-total\">¥0</span></div>\n<div class=\"terms-check\">\n<input id=\"terms-agree\" type=\"checkbox\"/>\n<span><a href=\"legal.html\">利用規約</a>および<a href=\"legal.html\">プライバシーポリシー</a>に同意する</span>\n</div>\n<button class=\"pay-btn\" disabled=\"\" id=\"pay-btn\" onclick=\"processPayment()\">¥0 を支払って購入を確定する</button>\n</div>\n</div>\n</div>\n<div id=\"common-footer\"></div>\n\n\n\n";
-const css = ":root{--bg:#fff;--text:#111;--text-inv:#fff;--accent:#0044cc;--gray:#f4f4f4;--border:#e0e0e0;--font:\"Helvetica Neue\",Arial,\"Hiragino Kaku Gothic ProN\",\"Hiragino Sans\",Meiryo,sans-serif}\n        *{box-sizing:border-box;margin:0;padding:0}body{font-family:var(--font);background:#f9f9f9;color:var(--text);line-height:1.6}a{text-decoration:none;color:inherit;transition:opacity .3s}a:hover{opacity:.7}\n\n        /* Steps */\n        .steps-bar{margin-top:70px;padding:20px 40px;background:#fff;border-bottom:1px solid var(--border);display:flex;justify-content:center;gap:0}\n        .step{display:flex;align-items:center;gap:8px;font-size:.9rem;color:#999;font-weight:600}\n        .step.active{color:var(--accent)}.step.done{color:var(--text)}\n        .step-circle{width:28px;height:28px;border-radius:50%;border:2px solid #ddd;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700}\n        .step.active .step-circle{border-color:var(--accent);background:var(--accent);color:#fff}\n        .step.done .step-circle{border-color:var(--text);background:var(--text);color:#fff}\n        .step-line{width:60px;height:2px;background:#ddd;margin:0 10px}\n        .step-line.done{background:var(--text)}\n\n        .checkout-layout{display:flex;max-width:1100px;margin:30px auto;padding:0 20px;gap:30px;align-items:flex-start}\n        .checkout-main{flex:1;min-width:0}\n        .checkout-sidebar{width:360px;flex-shrink:0;position:sticky;top:100px}\n\n        .section-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:30px;margin-bottom:20px}\n        .section-label{font-size:1.1rem;font-weight:800;margin-bottom:20px;padding-bottom:10px;border-bottom:2px solid var(--text)}\n\n        /* Payment methods */\n        .pay-methods{display:flex;flex-direction:column;gap:10px;margin-bottom:25px}\n        .pay-option{display:flex;align-items:center;gap:12px;padding:15px;border:2px solid var(--border);border-radius:8px;cursor:pointer;transition:all .2s}\n        .pay-option:hover{border-color:#bbb}\n        .pay-option.selected{border-color:var(--accent);background:#f5f8ff}\n        .pay-option input{accent-color:var(--accent)}\n        .pay-label{font-weight:600;font-size:.95rem}\n        .pay-icons{margin-left:auto;display:flex;gap:5px}\n        .pay-icon{background:#eee;padding:3px 8px;border-radius:4px;font-size:.7rem;font-weight:700;color:#555}\n\n        /* Card form (Stripe placeholder) */\n        .stripe-placeholder{background:var(--gray);border:2px dashed var(--border);border-radius:8px;padding:30px;text-align:center;color:#999;font-size:.9rem;margin-bottom:20px}\n        .stripe-placeholder strong{color:var(--text);display:block;margin-bottom:5px}\n\n        /* Profile summary */\n        .profile-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:.9rem}\n        .profile-label{color:#888;font-weight:600}.profile-value{font-weight:600}\n\n        /* Profile form */\n        .form-group{margin-bottom:18px}\n        .form-label{display:block;font-size:.85rem;font-weight:700;margin-bottom:6px;color:#444}\n        .form-label .required{color:#ff4757}\n        .form-input{width:100%;padding:12px 15px;border:1px solid var(--border);border-radius:8px;font-size:.95rem;font-family:var(--font);transition:border-color .2s;outline:none}\n        .form-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,68,204,.08)}\n        .form-input.error{border-color:#ff4757}\n\n        /* Sidebar summary */\n        .summary-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:30px;box-shadow:0 4px 20px rgba(0,0,0,.05)}\n        .summary-title{font-size:1rem;font-weight:800;margin-bottom:15px}\n        .summary-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid #f0f0f0;align-items:center}\n        .summary-item-img{width:50px;height:50px;border-radius:4px;background:#eee;background-size:cover;flex-shrink:0}\n        .summary-item-title{font-size:.8rem;font-weight:600;flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}\n        .summary-item-price{font-weight:800;font-size:.85rem;white-space:nowrap}\n        .summary-total{display:flex;justify-content:space-between;font-size:1.3rem;font-weight:800;padding-top:15px;margin-top:10px;border-top:2px solid var(--text)}\n        .terms-check{display:flex;align-items:flex-start;gap:10px;margin:20px 0;font-size:.85rem;color:#666}\n        .terms-check input{margin-top:3px;accent-color:var(--accent)}\n        .terms-check a{color:var(--accent);text-decoration:underline}\n        .pay-btn{display:block;width:100%;padding:16px;background:var(--accent);color:#fff;border:none;border-radius:50px;font-size:1.1rem;font-weight:700;cursor:pointer;transition:all .2s}\n        .pay-btn:hover{background:#003399;transform:translateY(-1px)}\n        .pay-btn:disabled{background:#ccc;cursor:not-allowed;transform:none}\n        @media(max-width:768px){\n        .steps-bar{padding:15px 10px;gap:0;overflow-x:auto}.step{font-size:.75rem;white-space:nowrap}.step-line{width:30px}.checkout-layout{flex-direction:column}.checkout-sidebar{width:100%;position:static}}";
-const scripts = [
-  {
-    "src": "/store-data.js"
-  },
-  {
-    "src": "/scripts/checkout__inline1.js"
-  },
-  {
-    "src": "/common.js"
-  }
-];
-
 export default function Page() {
-  return <LegacyPage html={html} css={css} scripts={scripts} />;
+  return (
+    <>
+      <div className="flex justify-center items-center gap-0 py-5 px-10 bg-white border-b border-border overflow-x-auto whitespace-nowrap md:overflow-visible">
+        <div className="flex items-center gap-2 text-[0.75rem] md:text-[0.9rem] font-semibold text-text"><span className="w-7 h-7 rounded-full border-2 border-text bg-text text-white flex items-center justify-center text-[0.8rem] font-bold">✓</span> カート</div>
+        <div className="w-[30px] md:w-[60px] h-[2px] bg-text mx-2.5"></div>
+        <div className="flex items-center gap-2 text-[0.75rem] md:text-[0.9rem] font-semibold text-accent"><span className="w-7 h-7 rounded-full border-2 border-accent bg-accent text-white flex items-center justify-center text-[0.8rem] font-bold">2</span> 決済情報</div>
+        <div className="w-[30px] md:w-[60px] h-[2px] bg-[#ddd] mx-2.5"></div>
+        <div className="flex items-center gap-2 text-[0.75rem] md:text-[0.9rem] font-semibold text-[#999]"><span className="w-7 h-7 rounded-full border-2 border-[#ddd] flex items-center justify-center text-[0.8rem] font-bold">3</span> 完了</div>
+      </div>
+      <div className="flex flex-col md:flex-row max-w-[1100px] mx-auto my-[30px] px-5 gap-[30px] items-start">
+        <div className="flex-1 min-w-0 w-full">
+          <div className="bg-white border border-border rounded-xl p-[30px] mb-5">
+            <h2 className="text-[1.1rem] font-extrabold mb-5 pb-2.5 border-b-2 border-text">お支払い方法</h2>
+            <div className="flex flex-col gap-2.5 mb-[25px]">
+              <label className="flex items-center gap-3 p-[15px] border-2 border-accent rounded-lg cursor-pointer transition-colors hover:border-[#bbb] bg-[#f5f8ff]">
+                <input defaultChecked name="pay" type="radio" value="card" className="accent-accent" />
+                <span className="font-semibold text-[0.95rem]">クレジットカード</span>
+                <div className="ml-auto flex gap-1"><span className="bg-[#eee] px-2 py-1 rounded text-[0.7rem] font-bold text-[#555]">VISA</span><span className="bg-[#eee] px-2 py-1 rounded text-[0.7rem] font-bold text-[#555]">MC</span><span className="bg-[#eee] px-2 py-1 rounded text-[0.7rem] font-bold text-[#555]">AMEX</span></div>
+              </label>
+              <label className="flex items-center gap-3 p-[15px] border-2 border-border rounded-lg cursor-pointer transition-colors hover:border-[#bbb]">
+                <input name="pay" type="radio" value="gpay" className="accent-accent" />
+                <span className="font-semibold text-[0.95rem]">Google Pay</span>
+              </label>
+              <label className="flex items-center gap-3 p-[15px] border-2 border-border rounded-lg cursor-pointer transition-colors hover:border-[#bbb]">
+                <input name="pay" type="radio" value="applepay" className="accent-accent" />
+                <span className="font-semibold text-[0.95rem]">Apple Pay</span>
+              </label>
+            </div>
+            <div className="bg-gray border-2 border-dashed border-border rounded-lg p-[30px] text-center text-[#999] text-[0.9rem] mb-5" id="stripe-area">
+              <strong className="text-text block mb-1">Stripe決済フォーム埋め込みエリア</strong>
+              ここにStripe Elements（カード番号・有効期限・CVC）が挿入されます。<br />
+              実装時は <code className="bg-[#eee] px-1 py-0.5 rounded">stripe.js</code> を読み込み、<code className="bg-[#eee] px-1 py-0.5 rounded">Elements</code> をマウントします。
+            </div>
+          </div>
+          <div className="bg-white border border-border rounded-xl p-[30px] mb-5" id="profile-section">
+            <h2 className="text-[1.1rem] font-extrabold mb-5 pb-2.5 border-b-2 border-text">ご登録情報</h2>
+            <div id="profile-display" style={{ display: 'none' }}>
+              <div className="flex justify-between py-2.5 border-b border-[#f0f0f0] text-[0.9rem]"><span className="text-[#888] font-semibold">氏名</span><span className="font-semibold" id="prof-name"></span></div>
+              <div className="flex justify-between py-2.5 border-b border-[#f0f0f0] text-[0.9rem]"><span className="text-[#888] font-semibold">メールアドレス</span><span className="font-semibold" id="prof-email"></span></div>
+              <div className="flex justify-between py-2.5 border-b border-[#f0f0f0] text-[0.9rem]"><span className="text-[#888] font-semibold">所属</span><span className="font-semibold" id="prof-univ"></span></div>
+              <p className="mt-[15px] text-[0.8rem] text-[#999]">※ マイページで登録済みの情報を表示しています。<Link href="/mypage" className="text-accent underline text-accent underline">変更する</Link></p>
+            </div>
+            <div id="profile-form">
+              <p className="mb-5 text-[0.9rem] text-[#555]">購入に必要な情報を入力してください。</p>
+              <div className="mb-[18px]">
+                <label className="block text-[0.85rem] font-bold mb-1.5 text-[#444]">氏名 <span className="text-[#ff4757]">*</span></label>
+                <input className="w-full px-[15px] py-3 border border-border rounded-lg text-[0.95rem] font-sans outline-none focus:border-accent focus:shadow-[0_0_0_3px_rgba(0,68,204,0.08)] transition-colors" id="input-name" placeholder="例：山田 太郎" required type="text" />
+              </div>
+              <div className="mb-[18px]">
+                <label className="block text-[0.85rem] font-bold mb-1.5 text-[#444]">メールアドレス <span className="text-[#ff4757]">*</span></label>
+                <input className="w-full px-[15px] py-3 border border-border rounded-lg text-[0.95rem] font-sans outline-none focus:border-accent focus:shadow-[0_0_0_3px_rgba(0,68,204,0.08)] transition-colors" id="input-email" placeholder="例：yamada@example.com" required type="email" />
+              </div>
+              <div className="mb-[18px]">
+                <label className="block text-[0.85rem] font-bold mb-1.5 text-[#444]">所属（大学・学部・学年）</label>
+                <input className="w-full px-[15px] py-3 border border-border rounded-lg text-[0.95rem] font-sans outline-none focus:border-accent focus:shadow-[0_0_0_3px_rgba(0,68,204,0.08)] transition-colors" id="input-univ" placeholder="例：〇〇大学 理工学部 3年" type="text" />
+              </div>
+              <label className="flex items-center gap-2 mt-2.5 text-[0.85rem] text-[#555] cursor-pointer">
+                <input defaultChecked id="save-profile" className="accent-accent mt-[3px]" type="checkbox" /> この情報をマイページに保存する
+              </label>
+            </div>
+          </div>
+        </div>
+        <div className="w-full md:w-[360px] shrink-0 md:sticky md:top-[100px]">
+          <div className="bg-white border border-border rounded-xl p-[30px] shadow-[0_4px_20px_rgba(0,0,0,0.05)]">
+            <div className="text-[1rem] font-extrabold mb-[15px]">注文内容</div>
+            <div id="summary-items"></div>
+            <div className="flex justify-between text-[1.3rem] font-extrabold pt-[15px] mt-[10px] border-t-2 border-text text-[1.3rem] font-extrabold pt-[15px] mt-[10px] border-t-2 border-text"><span>合計（税込）</span><span id="summary-total">¥0</span></div>
+            <div className="flex items-start gap-2.5 my-5 text-[0.85rem] text-[#666]">
+              <input id="terms-agree" type="checkbox" className="mt-[3px] accent-accent" />
+              <span><Link href="/legal" className="text-accent underline">利用規約</Link>および<Link href="/legal" className="text-accent underline">プライバシーポリシー</Link>に同意する</span>
+            </div>
+            <button className="block w-full p-4 bg-accent text-white border-none rounded-full text-[1.1rem] font-bold cursor-pointer transition-all duration-200 hover:bg-[#003399] hover:-translate-y-[1px] disabled:bg-[#ccc] disabled:cursor-not-allowed disabled:transform-none" disabled id="pay-btn">¥0 を支払って購入を確定する</button>
+          </div>
+        </div>
+      </div>
+
+      <Script src="/store-data.js" strategy="afterInteractive" />
+      <Script src="/scripts/checkout__inline1.js" strategy="afterInteractive" />
+    </>
+  );
 }
