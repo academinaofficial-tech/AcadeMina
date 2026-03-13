@@ -8,10 +8,16 @@ export default function Page() {
   return (
     <main>
       <section className="h-[85vh] flex items-center justify-center relative bg-[#fafafa] mt-20 md:mt-[134px]">
-        <h1 className="[writing-mode:vertical-rl] font-serif text-[2rem] md:text-[3.5rem] tracking-[0.2em] font-medium leading-[2] -mr-[2em]">
-          研究者を、<br />増やす。
+        {/* -mr を削除し、flex の中で自然に中央配置されるように変更。
+          縦書き時の文字間隔と行間のバランスを微調整しました。
+        */}
+        <h1 className="[writing-mode:vertical-rl] font-serif text-[2.2rem] md:text-[3.8rem] tracking-[0.3em] font-medium leading-[1.5] text-center antialiased">
+          研究者を、<br />
+          <span className="mt-[0.5em]">増やす。</span>
         </h1>
-        <div className="absolute bottom-10 right-10 text-[0.8rem] tracking-[0.1em] text-[#666] font-sans">AcadeMina / MISSION</div>
+        <div className="absolute bottom-10 right-10 text-[0.8rem] tracking-[0.1em] text-[#666] font-sans uppercase">
+          AcadeMina / MISSION
+        </div>
       </section>
 
       <section className="py-[120px] px-5 sm:px-10 max-w-[800px] mx-auto text-center">
@@ -68,6 +74,22 @@ export default function Page() {
               大学受験と違い、院試は圧倒的に情報不足です。Exam Masterは、過去問の解答解説から合格者の体験記、研究計画書の書き方まで、合格に必要な「武器」を網羅的に提供します。
             </p>
           </div>
+        </div>
+      </section>
+      {/* お問い合わせへの誘導セクション */}
+      <section className="py-[120px] px-5 sm:px-10 bg-[#fafafa] text-center border-t border-border">
+        <div className="max-w-[800px] mx-auto">
+          <h2 className="text-[2rem] font-extrabold mb-5 font-sans">お問い合わせ</h2>
+          <p className="text-[1.1rem] text-[#666] mb-10 leading-[1.8]">
+            研究室掲載のご依頼、サービスへのご質問、<br className="hidden md:block" />
+            提携のご相談など、お気軽にお問い合わせください。
+          </p>
+          <a 
+            href="/contact" 
+            className="inline-block py-4 px-10 bg-[#2d2f31] text-white rounded-full font-bold text-[1.1rem] transition-all duration-300 hover:bg-[#0044cc] hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(0,68,204,0.2)]"
+          >
+            Contact Us
+          </a>
         </div>
       </section>
     </main>
