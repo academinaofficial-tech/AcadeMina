@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ClerkProvider } from "@clerk/nextjs";
+import AppProviders from "@/components/providers/AppProviders";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ClerkProvider>
+    <AppProviders>
       <html lang="ja">
         <head>
           <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -27,6 +27,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Footer />
         </body>
       </html>
-    </ClerkProvider>
+    </AppProviders>
   );
 }

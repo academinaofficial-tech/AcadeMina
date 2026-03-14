@@ -1,23 +1,17 @@
-import Script from "next/script";
+import { prisma } from "@/lib/prisma";
+import CartClient from "./CartClient";
 
 export const metadata = {
   title: "カート | AcadeMina",
 };
 
-export default function Page() {
-  return (
-    <>
-      <div className="bg-white py-[30px] md:py-10 px-5 md:px-10 border-b border-border">
-        <h1 className="text-[2rem] font-extrabold">ショッピングカート</h1>
-      </div>
-      <div className="flex flex-col md:flex-row max-w-[1100px] mx-auto my-[30px] px-5 gap-[30px] items-start">
-        <div className="flex-1 min-w-0 w-full" id="cart-main"></div>
-        <div className="w-full md:w-[340px] shrink-0 md:sticky md:top-[100px]" id="cart-sidebar"></div>
-      </div>
-      <div className="max-w-[1100px] mx-auto my-[50px] px-5" id="recommend-section"></div>
+export default async function Page() {
+  // カート内の商品情報を紐付けるために全商品データを取得（あるいは必要な分だけ）
+  const exams = await prisma.exam.findMany();
 
-      <Script src="/store-data.js" strategy="afterInteractive" />
-      <Script src="/scripts/cart__inline1.js" strategy="afterInteractive" />
-    </>
+  return (
+    <main className="mt-20 md:mt-[134px] min-h-screen bg-gray-50/30">
+      <CartClient allExams={exams} />
+    </main>
   );
 }

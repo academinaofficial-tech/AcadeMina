@@ -9,13 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/localizations": "^1.26.15",
     "@clerk/nextjs": "^5.7.5",
     "@prisma/client": "^5.22.0",
+    "@stripe/stripe-js": "^8.9.0",
     "@tailwindcss/postcss": "^4.2.1",
     "next": "14.2.5",
     "prisma": "^5.22.0",
     "react": "18.3.1",
-    "react-dom": "18.3.1"
+    "react-dom": "18.3.1",
+    "stripe": "^20.4.1"
   },
   "devDependencies": {
     "@types/node": "20.14.10",

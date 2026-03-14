@@ -59,11 +59,8 @@ export default function Header() {
                         </SignedOut>
                         <SignedIn>
                             <div className="flex items-center gap-5">
-                                <Link href="/mypage" className="text-[0.85rem] text-text font-bold hover:text-accent flex items-center gap-1.5">
-                                    <svg viewBox="0 0 24 24" width="18" height="18" className="fill-current">
-                                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                                    </svg>
-                                    <span>マイページ</span>
+                                <Link href="/mypage" className="bg-text text-white px-4 py-2 rounded-full text-[0.85rem] font-bold hover:bg-gray-800 transition-colors whitespace-nowrap">
+                                    マイページ
                                 </Link>
                                 <UserButton afterSignOutUrl="/" appearance={{ elements: { userButtonAvatarBox: "w-8 h-8" } }} />
                             </div>
@@ -80,16 +77,16 @@ export default function Header() {
 
             {/* Lower Tier: Navigation Bar (Dark/Black) */}
             <div className="hidden md:flex h-[54px] bg-text justify-center items-center px-10">
-                <nav className="flex items-center text-white/95">
-                    <span className="text-white/20 font-light mx-6">|</span>
-                    <Link href="/lab" className={`text-[0.9rem] font-bold tracking-wider hover:text-accent transition-colors ${isActive("/lab") ? "text-accent" : ""}`}>研究室検索</Link>
-                    <span className="text-white/20 font-light mx-6">|</span>
-                    <Link href="/exam" className={`text-[0.9rem] font-bold tracking-wider hover:text-accent transition-colors ${isActive("/exam") ? "text-accent" : ""}`}>院試サポート</Link>
-                    <span className="text-white/20 font-light mx-6">|</span>
-                    <Link href="/column" className={`text-[0.9rem] font-bold tracking-wider hover:text-accent transition-colors ${isActive("/column") ? "text-accent" : ""}`}>コラム</Link>
-                    <span className="text-white/20 font-light mx-6">|</span>
-                    <Link href="/about" className={`text-[0.9rem] font-bold tracking-wider hover:text-accent transition-colors ${isActive("/about") ? "text-accent" : ""}`}>私たちについて</Link>
-                    <span className="text-white/20 font-light mx-6">|</span>
+                <nav className="flex items-center text-white/95 h-full">
+                    <span className="text-white/20 font-light mx-4">|</span>
+                    <Link href="/lab" className={`h-full flex items-center px-12 text-[0.9rem] font-bold tracking-wider hover:bg-white/10 transition-colors ${isActive("/lab") ? "text-gray-300" : ""}`}>研究室検索</Link>
+                    <span className="text-white/20 font-light mx-4">|</span>
+                    <Link href="/exam" className={`h-full flex items-center px-12 text-[0.9rem] font-bold tracking-wider hover:bg-white/10 transition-colors ${isActive("/exam") ? "text-gray-300" : ""}`}>院試サポート</Link>
+                    <span className="text-white/20 font-light mx-4">|</span>
+                    <Link href="/column" className={`h-full flex items-center px-12 text-[0.9rem] font-bold tracking-wider hover:bg-white/10 transition-colors ${isActive("/column") ? "text-gray-300" : ""}`}>コラム</Link>
+                    <span className="text-white/20 font-light mx-4">|</span>
+                    <Link href="/about" className={`h-full flex items-center px-12 text-[0.9rem] font-bold tracking-wider hover:bg-white/10 transition-colors ${isActive("/about") ? "text-gray-300" : ""}`}>AcadeMinaとは</Link>
+                    <span className="text-white/20 font-light mx-4">|</span>
                 </nav>
             </div>
 
@@ -100,7 +97,7 @@ export default function Header() {
                         <Link href="/lab" onClick={() => setIsMenuOpen(false)} className="text-2xl font-bold">研究室検索</Link>
                         <Link href="/exam" onClick={() => setIsMenuOpen(false)} className="text-2xl font-bold">院試サポート</Link>
                         <Link href="/column" onClick={() => setIsMenuOpen(false)} className="text-2xl font-bold">コラム</Link>
-                        <Link href="/about" onClick={() => setIsMenuOpen(false)} className="text-2xl font-bold">私たちについて</Link>
+                        <Link href="/about" onClick={() => setIsMenuOpen(false)} className="text-2xl font-bold">AcadeMinaとは</Link>
 
                         <div className="pt-10 border-t border-white/10 flex flex-col gap-8">
                             <SignedOut>

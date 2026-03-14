@@ -21,7 +21,7 @@ export default function Footer() {
                 <div className="flex flex-col md:flex-row gap-[30px] md:gap-[50px]">
                     <ul className="list-none">
                         <li className="font-bold mb-3 text-[0.85rem] text-[#999] uppercase tracking-wider">運営 / Company</li>
-                        <li className="mb-2 text-[0.9rem]"><Link href="/about" className="transition-opacity duration-300 hover:opacity-70 hover:underline">私たちについて</Link></li>
+                        <li className="mb-2 text-[0.9rem]"><Link href="/about" className="transition-opacity duration-300 hover:opacity-70 hover:underline">AcadeMinaとは</Link></li>
                         <li className="mb-2 text-[0.9rem]"><Link href="/contact" className="transition-opacity duration-300 hover:opacity-70 hover:underline">お問い合わせ</Link></li>
                     </ul>
                     <ul className="list-none">
