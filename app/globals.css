@@ -6,164 +6,91 @@
   --color-accent: var(--accent-color);
   --color-accent-light: var(--accent-light);
   --color-border: var(--gray-border);
-
+  /* bg-text を有効にするための定義 */
+  --color-text: var(--text-color); 
+  
   --font-sans: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
-  --font-serif: "Yu Mincho", "YuMincho", "Hiragino Mincho ProN", "HGS Mincho E", serif;
 }
+
+/* カスタムユーティリティの再定義 */
+@utility bg-text { background-color: var(--text-color); }
+@utility text-text { color: var(--text-color); }
+@utility border-border { border-color: var(--gray-border); }
+@utility text-accent { color: var(--accent-color); }
+@utility bg-accent { background-color: var(--accent-color); }
+@utility border-accent { border-color: var(--accent-color); }
+@utility accent-accent { accent-color: var(--accent-color); }
 
 @layer base {
   :root {
     --bg-color: #ffffff;
     --text-color: #111111;
     --accent-color: #0044cc;
-    --accent-light: #4da6ff;
-    --gray-light: #f4f4f4;
     --gray-border: #e0e0e0;
   }
+  body { background-color: var(--bg-color); color: var(--text-color); }
+}
 
-  body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
+@layer components {
+  .column-content {
+    max-width: 860px;
+    margin: 0 auto;
+    color: #222;
+    font-size: 16px;
+    line-height: 1.9;
   }
-}
 
-@utility bg-text {
-  background-color: var(--text-color);
-}
+  /* 箇条書きの復活設定 */
+  .column-content ul.point-list {
+    list-style-type: disc !important;
+    padding-left: 1.5rem;
+    margin: 1rem 0;
+  }
+  .column-content ul.point-list li {
+    margin-bottom: 0.5rem;
+  }
 
-@utility text-text {
-  color: var(--text-color);
-}
+  /* ステップリストの構造修正 */
+  .column-content .step-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+  .column-content .step-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  .column-content .step-number {
+    flex: 0 0 32px;
+    width: 32px;
+    height: 32px;
+    background: var(--accent-color);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+  }
 
-@utility border-border {
-  border-color: var(--gray-border);
-}
+  /* 既存の特殊パーツ */
+  .column-content h2 { font-size: 1.5rem; margin: 3rem 0 1rem; border-bottom: 2px solid #eee; padding-bottom: 0.5rem; }
+  .column-content .section-lead { background: #f8fafc; border-left: 4px solid var(--accent-color); padding: 1rem; border-radius: 4px; margin-bottom: 1.5rem; }
+  .column-content .quote-box { background: #f9fafb; border: 1px solid #eee; padding: 1rem; border-radius: 8px; margin: 1.5rem 0; }
+  .column-content .table-scroll { overflow-x: auto; margin: 1.5rem 0; }
+  .column-content table { width: 100%; border-collapse: collapse; border: 1px solid #eee; }
+  .column-content th, .column-content td { border: 1px solid #eee; padding: 0.75rem; text-align: left; }
+  .column-content th { background: #f3f4f6; }
 
-@utility text-accent {
-  color: var(--accent-color);
-}
+  /* チェックリスト */
+  .column-content .check-card-list { list-style: none !important; padding: 0 !important; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .column-content .check-card-list li { position: relative; padding: 1rem 1rem 1rem 2.5rem; background: #f8fafc; border: 1px solid #eee; border-radius: 8px; }
+  .column-content .check-card-list li::before { content: "✓"; position: absolute; left: 1rem; color: var(--accent-color); font-weight: bold; }
+  .column-content .check-card-list.is-caution li::before { content: "!"; color: #ea580c; }
 
-@utility bg-accent {
-  background-color: var(--accent-color);
-}
-
-@utility border-accent {
-  border-color: var(--accent-color);
-}
-
-@utility accent-accent {
-  accent-color: var(--accent-color);
-}
-
-/* =========================================
-   Clerk Customization - Aggressive Override
-   ========================================= */
-
-/* GitHubボタンを完全に抹殺 */
-.cl-socialButtonsBlockButton__github,
-.cl-socialButtonsBlockButton[data-provider="github"] {
-  display: none !important;
-}
-
-/* 
-   コンテナ（箱）感を強制的に消し去る。
-   DevToolsで確認された "cl-cardBox" が諸悪の根源（幅25rem、シャドウ持ち）。
-*/
-.cl-rootBox,
-.cl-cardBox,
-.cl-card,
-.cl-main,
-.cl-footer,
-.cl-header {
-  box-shadow: none !important;
-  border: none !important;
-  background-color: transparent !important;
-  background: transparent !important;
-}
-
-/* 
-   横幅を最大限まで広げる。
-*/
-.cl-rootBox,
-.cl-cardBox,
-.cl-card,
-.cl-internal-ph677c,
-.cl-internal-p8bmz4 {
-  width: 100% !important;
-  max-width: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-/* 
-   メールアドレスフォーム、区切り線などを非表示にしてGoogle一本に絞る
-*/
-.cl-form,
-.cl-dividerRow,
-.cl-dividerText,
-.cl-formFieldRow,
-.cl-formButtonPrimary,
-.cl-headerTitle,
-.cl-headerSubtitle {
-  display: none !important;
-}
-
-/* 
-   Googleボタン自体の調整
-*/
-.cl-socialButtons {
-  width: 100% !important;
-  display: flex !important;
-}
-
-.cl-socialButtonsBlockButton {
-  width: 100% !important;
-  max-width: 100% !important;
-  border: 1px solid #e0e0e0 !important;
-  /* 少しアウトラインをつけて押しやすく */
-  border-radius: 12px !important;
-  height: 64px !important;
-  background-color: transparent !important;
-  transition: all 0.2s ease !important;
-  justify-content: center !important;
-}
-
-.cl-socialButtonsBlockButton:hover {
-  background-color: #f4f4f4 !important;
-}
-
-/* Googleボタンテキストのカスタム (サインアップ / ログイン別々) */
-.cl-socialButtonsBlockButtonText {
-  font-size: 0 !important;
-  /* Clerkのデフォルトテキストを非表示にする */
-  text-align: center !important;
-}
-
-/* サインアップ画面のGoogleボタンテキスト */
-.cl-signUp-start .cl-socialButtonsBlockButtonText::before {
-  content: "Googleで登録";
-  font-size: 1.2rem !important;
-  font-weight: normal !important;
-  /* 標準の太さにする */
-  color: black !important;
-}
-
-/* ログイン画面のGoogleボタンテキスト */
-.cl-signIn-start .cl-socialButtonsBlockButtonText::before {
-  content: "Googleでログイン";
-  font-size: 1.2rem !important;
-  font-weight: normal !important;
-  /* 標準の太さにする */
-  color: black !important;
-}
-
-/* フッター（ログインへのリンクなど） */
-.cl-footerActionLink {
-  color: black !important;
-  font-weight: 700 !important;
-  text-decoration: underline !important;
-}
-
-.cl-footerActionText {
-  color: #666 !important;
+  @media (max-width: 767px) {
+    .column-content .check-card-list { grid-template-columns: 1fr; }
+  }
 }

@@ -11,52 +11,62 @@ export default function ColumnDetailClient({ article }: ColumnDetailClientProps)
     if (!article) return <div className="text-center py-20">記事が見つかりませんでした。</div>;
 
     const imgUrl = article.eyecatch?.url;
+    const isNews = article.category?.article_type === "news";
 
     return (
-        <article className="max-w-[720px] mx-auto py-16 px-6 lg:px-0">
-            {/* Header Section */}
-            <header className="mb-12 text-center">
-                <div className="text-accent font-bold text-sm uppercase tracking-widest mb-4">
-                    {article.category?.name || "Column"}
-                </div>
-                <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight mb-6">
-                    {article.title}
-                </h1>
-                <div className="flex items-center justify-center gap-4 text-gray-400 font-medium">
-                    <span>{formatDate(article.publishedAt)}</span>
-                    <span className="w-1 h-1 bg-gray-300 rounded-full" />
-                    <span>{article.author || "AcadeMina編集部"}</span>
-                </div>
-            </header>
-
-            {/* Hero Image */}
+        <article className="max-w-[860px] mx-auto py-16 px-6 lg:px-0">
+            
+            {/* 1. アイキャッチ画像 (一番上) */}
             {imgUrl && (
-                <div className="mb-16 -mx-6 lg:-mx-24">
-                    <div
-                        className="w-full aspect-[16/9] bg-gray-100 rounded-3xl overflow-hidden shadow-2xl bg-cover bg-center"
-                        style={{ backgroundImage: `url(${imgUrl})` }}
+                <div className="mb-8 -mx-6 lg:-mx-10">
+                    <img
+                        src={imgUrl}
+                        alt={article.title}
+                        className="w-full h-auto max-h-[500px] bg-gray-100 rounded-3xl shadow-md object-cover"
                     />
                 </div>
             )}
 
-            {/* Content Section - "Note-like" Typography */}
-            <div className="prose prose-lg max-w-none prose-slate prose-headings:font-extrabold prose-h2:text-3xl prose-h2:mt-16 prose-h2:mb-8 prose-p:leading-relaxed prose-p:mb-8 prose-img:rounded-3xl prose-img:shadow-lg">
-                {/* 
-                  microCMSのリッチエディタから来るHTMLを注入します。
-                  note風のゆったりとした行間とフォントサイズを意識しています。
-                */}
+            {/* 2. ヘッダーセクション (タイトル → カテゴリ＆日付・著者) */}
+            <header className="mb-12">
+                {/* タイトル (左寄せ) */}
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight mb-8 text-gray-900">
+                    {article.title}
+                </h1>
+
+                {/* カテゴリ(左) と 日付・著者(右) を横並びに配置 */}
+                <div className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-100 pb-5">
+                    
+                    {/* 左側：カテゴリ (少し目立たせるために背景色と丸みを追加) */}
+                    <div className="text-accent font-bold text-sm uppercase tracking-widest bg-blue-50 px-4 py-1.5 rounded-full border border-blue-100">
+                        {article.category?.category || "Column"}
+                    </div>
+
+                    {/* 右側：日付・著者 */}
+                    <div className="flex items-center gap-4 text-gray-500 text-sm font-medium">
+                        <span>{formatDate(article.publishedAt)}</span>
+                        <span className="w-1 h-1 bg-gray-300 rounded-full" />
+                        <span>{article.author || "AcadeMina編集部"}</span>
+                    </div>
+                </div>
+            </header>
+
+            {/* Content Section */}
+            <div className="column-content">
                 <div
-                    dangerouslySetInnerHTML={{ __html: article.content || "<p>記事の中身がここに入ります。microCMSのリッチエディタで編集した内容が美しく反映されます。</p><p>noteのように画像を自由に配置したり、引用や箇条書きを使って、読み手にストレスのない読書体験を提供しましょう。</p><h2>見出しの例</h2><p>このように大きな見出しも綺麗に表示されます。研究の合間にサクッと読める、そんなコラムを目指しています。</p>" }}
+                    dangerouslySetInnerHTML={{ 
+                        __html: article.content || "<p>記事の中身がここに入ります。</p>" 
+                    }}
                 />
             </div>
 
             <footer className="mt-24 pt-10 border-t border-gray-100 text-center">
                 <p className="text-gray-400 mb-8 font-medium">最後まで読んでいただきありがとうございます。</p>
                 <Link
-                    href={article.category?.includes("news") ? "/news" : "/column"}
+                    href={isNews ? "/news" : "/column"}
                     className="inline-block px-12 py-4 border-2 border-black rounded-full font-bold transition-all duration-300 hover:bg-black hover:text-white"
                 >
-                    ← {article.category?.includes("news") ? "ニュース一覧に戻る" : "全てのコラムを見る"}
+                    ← {isNews ? "ニュース一覧に戻る" : "全てのコラムを見る"}
                 </Link>
             </footer>
         </article>

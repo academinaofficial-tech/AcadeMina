@@ -6,7 +6,13 @@ export const metadata = {
 };
 
 export default async function Page() {
-    const data = await getLatestNews(20);
+    // ニュース以外の記事が混ざっていても対応できるように多めに取得
+    const data = await getLatestNews(100);
+
+    // ① article_type が "news" のものだけを確実に抽出する
+    const newsArticles = data.contents.filter((n: any) => {
+        return n.category?.article_type === "news";
+    });
 
     return (
         <main className="mt-20 md:mt-[134px] bg-white min-h-screen">
@@ -19,7 +25,8 @@ export default async function Page() {
 
             <div className="max-w-[900px] mx-auto py-16 px-6">
                 <div className="space-y-2">
-                    {data.contents.map((n: any) => (
+                    {/* ② 絞り込んだ newsArticles を使ってループを回す */}
+                    {newsArticles.map((n: any) => (
                         <Link
                             key={n.id}
                             href={`/column-detail?id=${n.id}`}
@@ -28,7 +35,8 @@ export default async function Page() {
                             <div className="flex items-center gap-4 mb-4 md:mb-0 md:w-[200px] shrink-0">
                                 <span className="text-gray-400 font-bold text-sm tracking-tighter">{formatDate(n.publishedAt)}</span>
                                 <span className="bg-black text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                                    {n.subcategory || "Info"}
+                                    {/* ③ subcategory ではなく CMS構造に合わせた category.category を表示 */}
+                                    {n.category?.category || "Info"}
                                 </span>
                             </div>
                             <div className="flex-1">
@@ -43,7 +51,8 @@ export default async function Page() {
                     ))}
                 </div>
 
-                {data.contents.length === 0 && (
+                {/* 件数が0件の場合の表示も newsArticles.length に変更 */}
+                {newsArticles.length === 0 && (
                     <div className="text-center py-20 text-gray-400 font-bold">
                         現在、お知らせはありません。
                     </div>

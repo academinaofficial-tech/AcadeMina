@@ -1,4 +1,4 @@
-import { getArticles, getFeaturedColumns } from "@/lib/cms";
+import { getArticles } from "@/lib/cms";
 import Link from "next/link";
 import ColumnClient from "./ColumnClient";
 
@@ -7,8 +7,14 @@ export const metadata = {
 };
 
 export default async function Page() {
-  const data = await getArticles({ limit: 20 });
-  const featuredArticle = data.contents.length > 0 ? data.contents[0] : null;
+  const data = await getArticles({ limit: 100 });
+
+  // ① categoryの中にある article_type が "column" のものだけを抽出する
+  const columnArticles = data.contents.filter((a: any) => {
+    return a.category?.article_type === "column";
+  });
+
+  const featuredArticle = columnArticles.length > 0 ? columnArticles[0] : null;
 
   return (
     <main className="mt-20 md:mt-[134px] bg-gray-50/30 min-h-screen">
@@ -21,9 +27,8 @@ export default async function Page() {
       </section>
 
       <ColumnClient
-        initialArticles={data.contents}
+        initialArticles={columnArticles}
         featuredArticle={featuredArticle}
-        totalCount={data.totalCount}
       />
 
       <section className="bg-black text-white py-24 px-10 text-center">

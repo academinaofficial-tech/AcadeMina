@@ -7,35 +7,32 @@ import { formatDate } from "@/lib/cms";
 interface ColumnClientProps {
     initialArticles: any[];
     featuredArticle: any | null;
-    totalCount: number;
 }
 
-export default function ColumnClient({ initialArticles, featuredArticle, totalCount }: ColumnClientProps) {
+export default function ColumnClient({ initialArticles, featuredArticle }: ColumnClientProps) {
     const [articles, setArticles] = useState(initialArticles);
     const [selectedCategory, setSelectedCategory] = useState("all");
-    const [count, setCount] = useState(totalCount);
 
-    const categories = ["all", "Interview", "Strategy", "Story", "Tips"];
+    // ② `category.category` (例: "院試対策") を抽出してタブを作る
+    const dynamicCategories = Array.from(
+        new Set(initialArticles.map(a => a.category?.category).filter(Boolean))
+    ) as string[];
 
-    const filterByCategory = async (cat: string) => {
+    const categories = ["all", ...dynamicCategories];
+
+    const filterByCategory = (cat: string) => {
         setSelectedCategory(cat);
-        // In a real app, you might fetch more data here. 
-        // For now, we'll just filter what we have or show how the UI would look.
-        // Actually, since this is a client component, we should probably fetch from an API route if we wanted real filtering.
-        // But for the MVP, we can just filter the initial load.
         if (cat === "all") {
             setArticles(initialArticles);
-            setCount(totalCount);
         } else {
-            const filtered = initialArticles.filter(a => a.category?.name === cat);
+            const filtered = initialArticles.filter(a => a.category?.category === cat);
             setArticles(filtered);
-            setCount(filtered.length);
         }
     };
 
     return (
         <div className="max-w-[1100px] mx-auto py-10 px-5">
-            {/* 1. NEW Article Highlight - Always on top for maximum impact */}
+            {/* 1. NEW Article Highlight */}
             {featuredArticle && (
                 <div className="mb-20">
                     <div className="flex items-center gap-3 mb-6">
@@ -54,7 +51,7 @@ export default function ColumnClient({ initialArticles, featuredArticle, totalCo
                                 <h2 className="text-2xl md:text-3xl font-extrabold leading-tight mb-4 group-hover:text-accent transition-colors">{featuredArticle.title}</h2>
                                 <p className="text-gray-500 leading-relaxed mb-6 line-clamp-3">{featuredArticle.description || "院試に向けた緻密な戦略と、合格者たちのリアルな声をお届けします。"}</p>
                                 <div className="text-sm text-gray-400 font-medium">
-                                    {formatDate(featuredArticle.publishedAt)} / {featuredArticle.category?.name}
+                                    {formatDate(featuredArticle.publishedAt)} / {featuredArticle.category?.category}
                                 </div>
                             </div>
                         </div>
@@ -70,10 +67,9 @@ export default function ColumnClient({ initialArticles, featuredArticle, totalCo
                             <span className="text-gray-300 text-lg font-bold">Archive</span>
                             {selectedCategory === "all" ? "全ての記事" : selectedCategory}
                         </h2>
-                        <p className="text-gray-400 text-sm font-medium">{count} 件の記事があります</p>
+                        <p className="text-gray-400 text-sm font-medium">{articles.length} 件の記事があります</p>
                     </div>
 
-                    {/* Category tabs - Localized */}
                     <div className="flex gap-2 flex-wrap">
                         {categories.map(cat => (
                             <button
@@ -99,7 +95,7 @@ export default function ColumnClient({ initialArticles, featuredArticle, totalCo
                                     style={{ backgroundImage: `url(${a.eyecatch?.url || 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=800&auto=format&fit=crop'})` }}
                                 />
                                 <div className="p-6 flex-1 flex flex-col">
-                                    <div className="text-[10px] font-bold text-accent mb-2 uppercase tracking-widest">{a.category?.name || 'Column'}</div>
+                                    <div className="text-[10px] font-bold text-accent mb-2 uppercase tracking-widest">{a.category?.category || 'Column'}</div>
                                     <h3 className="text-lg font-bold leading-snug mb-3 group-hover:text-accent transition-colors line-clamp-2">{a.title}</h3>
                                     <p className="text-sm text-gray-500 leading-relaxed mb-4 line-clamp-2">{a.description || "記事の要約がここに入ります。読み応えのある内容をお楽しみください。"}</p>
                                     <div className="mt-auto text-xs text-gray-400 flex justify-between font-medium">
