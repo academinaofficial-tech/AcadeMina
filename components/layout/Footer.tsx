@@ -21,7 +21,8 @@ export default function Footer() {
                 <div className="flex flex-col md:flex-row gap-[30px] md:gap-[50px]">
                     <ul className="list-none">
                         <li className="font-bold mb-3 text-[0.85rem] text-[#999] uppercase tracking-wider">運営 / Company</li>
-                        <li className="mb-2 text-[0.9rem]"><Link href="/about" className="transition-opacity duration-300 hover:opacity-70 hover:underline">AcadeMinaとは</Link></li>
+                        {/* ここを About Us に変更しました */}
+                        <li className="mb-2 text-[0.9rem]"><Link href="/about" className="transition-opacity duration-300 hover:opacity-70 hover:underline">About Us</Link></li>
                         <li className="mb-2 text-[0.9rem]"><Link href="/contact" className="transition-opacity duration-300 hover:opacity-70 hover:underline">お問い合わせ</Link></li>
                     </ul>
                     <ul className="list-none">
@@ -30,6 +31,8 @@ export default function Footer() {
                         <li className="mb-2 text-[0.9rem]"><Link href="/exam" className="transition-opacity duration-300 hover:opacity-70 hover:underline">院試サポート</Link></li>
                         <li className="mb-2 text-[0.9rem]"><Link href="/exam-store" className="transition-opacity duration-300 hover:opacity-70 hover:underline">教材ストア</Link></li>
                         <li className="mb-2 text-[0.9rem]"><Link href="/column" className="transition-opacity duration-300 hover:opacity-70 hover:underline">コラム</Link></li>
+                        {/* ここに News を追加しました */}
+                        <li className="mb-2 text-[0.9rem]"><Link href="/news" className="transition-opacity duration-300 hover:opacity-70 hover:underline">News</Link></li>
                     </ul>
                     <ul className="list-none">
                         <li className="font-bold mb-3 text-[0.85rem] text-[#999] uppercase tracking-wider">規約・ポリシー / Legal</li>
@@ -37,7 +40,8 @@ export default function Footer() {
                     </ul>
                 </div>
             </footer>
-            <div className="text-center p-[20px_40px] text-[0.8rem] text-[#999] border-t border-border bg-white">&copy; 2025 AcadeMina. All rights reserved.</div>
+            {/* コピーライトの年を 2026 に更新 */}
+            <div className="text-center p-[20px_40px] text-[0.8rem] text-[#999] border-t border-border bg-white">&copy; 2026 AcadeMina. All rights reserved.</div>
         </>
     );
 }
