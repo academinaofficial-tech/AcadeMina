@@ -1,14 +1,24 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getFeaturedColumns, getLatestNews, formatDate } from "@/lib/cms";
+import { getArticles, formatDate } from "@/lib/cms"; // 💡 getArticlesに変更しました
 
 export const metadata: Metadata = {
   title: "AcadeMina | 次世代の研究者へ",
 };
 
 export default async function Page() {
-  const colData = await getFeaturedColumns(3);
-  const newsData = await getLatestNews(3);
+  // 💡 記事を少し多めに取得して、手元で「コラム」と「ニュース」に振り分けます
+  const data = await getArticles({ limit: 30 });
+
+  // コラム（column）のみを抽出して最新3件を取得
+  const columnArticles = data.contents
+    .filter((a: any) => a.category?.article_type === "column")
+    .slice(0, 3);
+
+  // ニュース（news）のみを抽出して最新3件を取得
+  const newsArticles = data.contents
+    .filter((a: any) => a.category?.article_type === "news")
+    .slice(0, 3);
 
   return (
     <main>
@@ -58,14 +68,15 @@ export default async function Page() {
           <h2 className="text-[2.5rem] font-extrabold">Column</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-10 mb-[60px]">
-          {colData.contents.map((a: any) => {
-            const imgUrl = a.thumbnail ? a.thumbnail.url : '/images/col-placeholder.jpg';
+          {/* 💡 コラムのみに絞った配列でマップします */}
+          {columnArticles.map((a: any) => {
+            const imgUrl = a.eyecatch ? a.eyecatch.url : '/images/col-placeholder.jpg'; // ※eyecatchに変更しました（エラー防止）
             return (
               <Link href={`/column-detail?id=${a.id}`} key={a.id} className="flex flex-col cursor-pointer transition-transform duration-300 hover:-translate-y-1.5 group">
-                <div className="h-[200px] bg-gray bg-cover bg-center rounded-t-md" style={{ backgroundImage: `url('${imgUrl}')` }}></div>
-                <div className="p-5 border border-border border-t-0 rounded-b-md flex-1">
-                  <div className="text-[0.8rem] text-gray-500 mb-2">{formatDate(a.publishedAt)} / {a.subcategory || 'Column'}</div>
-                  <h3 className="text-[1rem] font-bold leading-[1.6]">{a.title}</h3>
+                <div className="h-[200px] bg-gray bg-cover bg-center rounded-t-md border border-b-0 border-border" style={{ backgroundImage: `url('${imgUrl}')` }}></div>
+                <div className="p-5 border border-border rounded-b-md flex-1 bg-white">
+                  <div className="text-[0.8rem] text-gray-500 mb-2 font-medium">{formatDate(a.publishedAt)} / {a.category?.category || 'Column'}</div>
+                  <h3 className="text-[1rem] font-bold leading-[1.6] group-hover:text-blue-600 transition-colors">{a.title}</h3>
                 </div>
               </Link>
             );
@@ -82,14 +93,15 @@ export default async function Page() {
             <h2 className="text-[2.5rem] font-extrabold">News</h2>
             <Link className="font-semibold text-[0.9rem] hover:opacity-70 transition-opacity" href="/news">一覧を見る →</Link>
           </div>
-          <ul className="list-none">
-            {newsData.contents.map((n: any) => (
-              <li key={n.id} className="flex flex-col md:flex-row md:items-baseline py-[25px] border-b border-border transition-colors duration-200 hover:bg-white gap-2.5 md:gap-0 group">
-                <Link href={`/column-detail?id=${n.id}`} className="flex flex-col md:flex-row md:items-baseline w-full">
-                  <span className="font-bold text-[0.9rem] text-[#666] md:w-[120px] shrink-0">{formatDate(n.publishedAt)}</span>
-                  <span className="bg-[#333] text-white py-1 px-2.5 text-[0.75rem] md:mr-5 rounded-[2px] min-w-[80px] text-center w-fit mb-2 md:mb-0 shrink-0">{n.subcategory || 'Info'}</span>
-                  <span className="text-[1rem] font-semibold flex-1">{n.title}</span>
-                  <span className="ml-0 md:ml-5 text-[1.2rem] hidden md:block opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+          <ul className="list-none border-t border-border">
+            {/* 💡 ニュースのみに絞った配列でマップします */}
+            {newsArticles.map((n: any) => (
+              <li key={n.id} className="flex flex-col md:flex-row md:items-center py-[25px] border-b border-border transition-colors duration-200 hover:bg-white group px-4 -mx-4 rounded-lg">
+                {/* 💡 リンク先を news-detail に変更しました！ */}
+                <Link href={`/news-detail?id=${n.id}`} className="flex flex-col md:flex-row md:items-center w-full">
+                  <span className="font-bold text-[0.9rem] text-[#666] md:w-[120px] shrink-0 mb-2 md:mb-0">{formatDate(n.publishedAt)}</span>
+                  <span className="text-[1rem] font-semibold flex-1 group-hover:text-blue-600 transition-colors">{n.title}</span>
+                  <span className="ml-0 md:ml-5 text-[1.2rem] hidden md:block opacity-0 group-hover:opacity-100 transition-opacity text-blue-600">→</span>
                 </Link>
               </li>
             ))}
@@ -100,7 +112,7 @@ export default async function Page() {
       <section className="bg-text text-white py-[100px] px-5 md:px-10 text-center">
         <div className="max-w-[800px] mx-auto">
           <h2 className="text-[2.5rem] font-extrabold mb-5">お問い合わせ</h2>
-          <p className="text-[1.1rem] mb-10 opacity-80">サービスに関するご質問、研究室掲載のご依頼、提携のご相談など、<br />お気軽にお問い合わせください。</p>
+          <p className="text-[1.1rem] mb-10 opacity-80 leading-relaxed">サービスに関するご質問、研究室掲載のご依頼、提携のご相談など、<br />お気軽にお問い合わせください。</p>
           <Link className="inline-block bg-white text-text px-[50px] py-[15px] rounded-full font-bold text-[1.1rem] transition-transform duration-200 hover:scale-105" href="/contact">Contact Us</Link>
         </div>
       </section>
