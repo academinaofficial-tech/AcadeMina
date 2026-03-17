@@ -12,31 +12,48 @@ export async function submitOnboarding(formData: FormData) {
         throw new Error("Unauthorized");
     }
 
-    const university = formData.get("university") as string;
+    const finalUniversity = formData.get("finalUniversity") as string;
+    const finalDepartment = formData.get("finalDepartment") as string;
     const grade = formData.get("grade") as string;
-    const targetUniversity = formData.get("targetUniversity") as string;
-    const interests = formData.getAll("interests") as string[];
     const careerPath = formData.get("careerPath") as string;
+
+    // 志望校（最大3つ）を取得して結合
+    const targetList = [];
+    for (let i = 0; i < 3; i++) {
+        const targetStr = formData.get(`target_${i}`) as string;
+        if (targetStr && targetStr.trim() !== "") {
+            targetList.push(targetStr);
+        }
+    }
+    const targetUniversityString = targetList.join(" | ");
+
+    const themeIds = formData.getAll("themes") as string[];
 
     await prisma.profile.upsert({
         where: { id: userId },
         update: {
-            university,
+            university: finalUniversity,
+            department: finalDepartment,
             grade,
-            targetUniversity,
-            interests,
+            targetUniversity: targetUniversityString,
             careerPath,
+            interestThemes: {
+                set: themeIds.map((id) => ({ id })),
+            },
         },
         create: {
             id: userId,
             email: user.emailAddresses[0].emailAddress,
             firstName: user.firstName || "",
             lastName: user.lastName || "",
-            university,
+            university: finalUniversity,
+            department: finalDepartment,
             grade,
-            targetUniversity,
-            interests,
+            targetUniversity: targetUniversityString,
             careerPath,
+            interestThemes: {
+                connect: themeIds.map((id) => ({ id })),
+            },
         },
     });
 

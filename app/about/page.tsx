@@ -44,7 +44,7 @@ export default function Page() {
             <h2 className="text-[2.5rem] font-extrabold mb-[30px] font-sans">Who We Are</h2>
             <p className="text-[1rem] leading-[2] opacity-90">
               このサービスを運営しているのは、実際に院試を経験し、<br />
-              アカデミアの道を選んだ現役の大学院生たちです。<br /><br />
+              アカデミアの道を選んだ現役の東京大学や東京科学大学などの大学院生たちです。<br /><br />
               私たち自身もかつて、情報の少なさや研究室選びの難しさに苦悩しました。<br />
               同じ痛みを経験した当事者だからこそ、<br />
               本当に必要な情報、本当に欲しかった支援を届けることができます。<br />
