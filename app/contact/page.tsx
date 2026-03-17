@@ -54,7 +54,7 @@ export default function Page() {
       <div className="py-20 px-5 text-center bg-white border-b border-border">
         <h1 className="text-[2.5rem] font-extrabold mb-[15px] tracking-wider">Contact Us</h1>
         <p className="text-[1rem] text-[#666] max-w-[600px] mx-auto text-center leading-[1.8]">
-          サービスに関するご質問、研究室掲載のご依頼、<br />
+          サービスに関するご質問、希望コンテンツの掲載依頼、<br />
           大学・企業様からの提携に関するお問い合わせはこちらから承ります。
         </p>
       </div>
