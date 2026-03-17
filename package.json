@@ -21,7 +21,7 @@
     "stripe": "^20.4.1"
   },
   "devDependencies": {
-    "@types/node": "20.14.10",
+    "@types/node": "^20.14.10",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
     "autoprefixer": "^10.4.27",
@@ -30,9 +30,9 @@
     "postcss": "^8.5.8",
     "tailwindcss": "^4.2.1",
     "ts-node": "^10.9.2",
-    "typescript": "5.5.4"
+    "typescript": "^5.5.4"
   },
   "prisma": {
-    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+    "seed": "ts-node prisma/seed.ts"
   }
 }

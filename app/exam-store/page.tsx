@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prisma";
-import Link from "next/link";
 import ExamStoreClient from "./ExamStoreClient";
 
 export const metadata = {
@@ -9,6 +8,17 @@ export const metadata = {
 export default async function Page() {
   const exams = await prisma.exam.findMany({
     orderBy: { createdAt: "desc" },
+    include: {
+      department: {
+        include: {
+          faculty: {
+            include: {
+              university: true,
+            },
+          },
+        },
+      },
+    },
   });
 
   return (

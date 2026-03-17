@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,91 +8,107 @@ datasource db {
 }
 
 model Profile {
-  id               String   @id // Clerk User ID
-  email            String   @unique
+  id               String     @id
+  email            String     @unique
   firstName        String
   lastName         String
-  university       String   // 現在の大学
-  department       String?  // 現在の学部・学科
-  grade           String   // 学年
-  targetUniversity String?  // 志望大学院
-  targetDepartment String?  // 志望専攻
-  interests       String[] // 興味のある分野（タグ）
-  careerPath      String   // 希望するキャリアパス
-  phone           String?
-  address         String?
-  purchases       Purchase[]
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  university       String
+  department       String?
+  grade            String
+  targetUniversity String?
+  targetDepartment String?
+  interests        String[]
+  careerPath       String
+  phone            String?
+  address          String?
+  purchases        Purchase[]
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+}
+
+model University {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  tags      String[]
+  level     String?
+  area      String?
+  faculties Faculty[]
+  labs      Lab[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Faculty {
+  id           String       @id @default(cuid())
+  name         String
+  universityId String
+  university   University   @relation(fields: [universityId], references: [id], onDelete: Cascade)
+  departments  Department[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@unique([universityId, name])
+}
+
+model Department {
+  id        String   @id @default(cuid())
+  name      String
+  theme     String?
+  facultyId String
+  faculty   Faculty  @relation(fields: [facultyId], references: [id], onDelete: Cascade)
+  exams     Exam[]
+  labs      Lab[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([facultyId, name])
 }
 
 model Exam {
-  id          String   @id @default(cuid())
+  id          String      @id @default(cuid())
   title       String
   price       Int
-  category    String   // past-exam, practice, forecast, etc.
-  image       String
+  category    String
+  image       String?
   description String?
   author      String?
   contents    String[]
   preview     String?
-  deptId      String?  // 関連する学科ID
+  deptId      String?
+  department  Department? @relation(fields: [deptId], references: [id], onDelete: SetNull)
   purchases   Purchase[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 }
 
 model Purchase {
   id        String   @id @default(cuid())
-  profileId String   // Clerk User ID
+  profileId String
   profile   Profile  @relation(fields: [profileId], references: [id])
   examId    String
   exam      Exam     @relation(fields: [examId], references: [id])
-  stripeId  String?  // Stripe Session ID or Payment Intent ID
+  stripeId  String?
   createdAt DateTime @default(now())
 }
 
-model University {
-  id          String   @id @default(cuid())
-  name        String
-  tags        String[] // 国立, 私立, 偏差値帯 etc.
-  level       String   // A, B, C etc.
-  area        String   // 東京, 大阪 etc.
-  departments Department[]
-  labs        Lab[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-model Department {
-  id           String     @id @default(cuid())
-  name         String
-  theme        String     // 研究テーマ
-  universityId String
-  university   University @relation(fields: [universityId], references: [id])
-  labs         Lab[]
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-}
-
 model Lab {
-  id              String     @id @default(cuid())
-  universityId    String?
-  university      University? @relation(fields: [universityId], references: [id])
-  universityName  String?    // 冗長だが検索・一覧用に保持
-  name            String
-  tags            String[]
-  heroImage       String
-  website         String?
-  about           String?
-  profName        String?
-  profImage       String?
-  message         String?
-  contact         Json?      // { prof: string, assistant: string }
-  papers          Json?      // list of { title: string, summary: string, link: string }
-  stats           Json?      // { gender: number, international: number, working: number }
-  departmentId    String?
-  department      Department? @relation(fields: [departmentId], references: [id])
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
+  id             String      @id @default(cuid())
+  universityId   String?
+  university     University? @relation(fields: [universityId], references: [id])
+  universityName String?
+  name           String
+  tags           String[]
+  heroImage      String
+  website        String?
+  about          String?
+  profName       String?
+  profImage      String?
+  message        String?
+  contact        Json?
+  papers         Json?
+  stats          Json?
+  departmentId   String?
+  department     Department? @relation(fields: [departmentId], references: [id])
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
 }
