@@ -13,10 +13,17 @@ model Profile {
   firstName        String
   lastName         String
   university       String
+  faculty          String?    // 👈 新規追加: 現在の学部（1意選択なのでString?）
   department       String?
   grade            String
+
+  // ▼ 既存の志望校データ（過去のデータを消さないためにそのまま残します）
   targetUniversity String?
   targetDepartment String?
+
+  // ▼ 新規追加: 複数選択の志望校データ
+  targetSchools    Json?      // 👈 新規追加: 大学・学部・専攻のセットを配列で保存する用
+
   interests        String[]
   interestThemes   Theme[]
   careerPath       String

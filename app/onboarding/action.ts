@@ -12,31 +12,42 @@ export async function submitOnboarding(formData: FormData) {
         throw new Error("Unauthorized");
     }
 
+    // 1. 現在の所属を受け取る
     const finalUniversity = formData.get("finalUniversity") as string;
+    const finalFaculty = formData.get("finalFaculty") as string;
     const finalDepartment = formData.get("finalDepartment") as string;
     const grade = formData.get("grade") as string;
     const careerPath = formData.get("careerPath") as string;
 
-    // 志望校（最大3つ）を取得して結合
-    const targetList = [];
+    // 2. 志望校（最大3つ）を受け取ってJSON配列にする
+    const targetSchools = [];
     for (let i = 0; i < 3; i++) {
-        const targetStr = formData.get(`target_${i}`) as string;
-        if (targetStr && targetStr.trim() !== "") {
-            targetList.push(targetStr);
+        const univ = formData.get(`target_${i}_univ`) as string;
+        const faculty = formData.get(`target_${i}_faculty`) as string;
+        const dept = formData.get(`target_${i}_dept`) as string;
+        
+        // 大学名が入力されていれば配列に追加
+        if (univ && univ.trim() !== "") {
+            targetSchools.push({
+                univ: univ.trim(),
+                faculty: faculty ? faculty.trim() : "",
+                dept: dept ? dept.trim() : ""
+            });
         }
     }
-    const targetUniversityString = targetList.join(" | ");
 
     const themeIds = formData.getAll("themes") as string[];
 
+    // 3. データベースに保存
     await prisma.profile.upsert({
         where: { id: userId },
         update: {
             university: finalUniversity,
+            faculty: finalFaculty,       // 👈 新規追加
             department: finalDepartment,
             grade,
-            targetUniversity: targetUniversityString,
             careerPath,
+            targetSchools: targetSchools, // 👈 新規追加 (JSONとして自動保存されます)
             interestThemes: {
                 set: themeIds.map((id) => ({ id })),
             },
@@ -47,10 +58,11 @@ export async function submitOnboarding(formData: FormData) {
             firstName: user.firstName || "",
             lastName: user.lastName || "",
             university: finalUniversity,
+            faculty: finalFaculty,       // 👈 新規追加
             department: finalDepartment,
             grade,
-            targetUniversity: targetUniversityString,
             careerPath,
+            targetSchools: targetSchools, // 👈 新規追加
             interestThemes: {
                 connect: themeIds.map((id) => ({ id })),
             },

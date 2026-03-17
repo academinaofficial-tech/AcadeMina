@@ -71,16 +71,22 @@ export default function OnboardingForm({ universities, themeGroups }: any) {
         <form action={submitOnboarding} className="space-y-10">
             {/* 隠しフィールド：現在の所属 */}
             <input type="hidden" name="finalUniversity" value={isManual ? manualUniv : selectedUniv} />
-            <input type="hidden" name="finalDepartment" value={isManual ? `${manualFaculty} ${manualDept}`.trim() : `${selectedFaculty} ${selectedDept}`.trim()} />
+            <input type="hidden" name="finalFaculty" value={isManual ? manualFaculty : selectedFaculty} />
+            <input type="hidden" name="finalDepartment" value={isManual ? manualDept : selectedDept} />
 
-            {/* 隠しフィールド：志望校（最大3つを整形して送る） */}
+            {/* 隠しフィールド：志望校（最大3つをJSON用に分割して送る） */}
             {targets.map((t, i) => {
                 const u = t.isManual ? t.manualUniv : t.selectedUniv;
                 const f = t.isManual ? t.manualFaculty : t.selectedFaculty;
                 const d = t.isManual ? t.manualDept : t.selectedDept;
-                // "大学名(学部名 専攻名)" の形式にする
-                const combined = u ? `${u}${f || d ? `(${f} ${d})`.replace('  ', ' ') : ''}` : '';
-                return <input key={`hidden_target_${i}`} type="hidden" name={`target_${i}`} value={combined} />;
+                
+                return (
+                    <div key={`hidden_target_${i}`}>
+                        <input type="hidden" name={`target_${i}_univ`} value={u} />
+                        <input type="hidden" name={`target_${i}_faculty`} value={f} />
+                        <input type="hidden" name={`target_${i}_dept`} value={d} />
+                    </div>
+                );
             })}
 
             {/* === 1. 現在の所属 === */}
@@ -140,7 +146,7 @@ export default function OnboardingForm({ universities, themeGroups }: any) {
                     const tDepts = tFaculties.find((f: any) => f.name === target.selectedFaculty)?.departments || [];
 
                     return (
-                        <div key={index} className="p-5 border border-gray-200 rounded-2xl bg-gray-50/50 space-y-4 relative">
+                        <div key={index} className="p-5 border border-gray-200 rounded-2xl bg-gray-50/50 space-y-4 relative mt-4">
                             <span className="absolute -top-3 left-4 bg-white px-2 text-sm font-bold text-gray-500 border border-gray-200 rounded-full">第{index + 1}志望</span>
                             
                             <select className="w-full p-4 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-accent outline-none" value={target.isManual ? "other" : target.selectedUniv} onChange={e => handleTargetChange(index, "selectedUniv", e.target.value)}>
@@ -151,8 +157,8 @@ export default function OnboardingForm({ universities, themeGroups }: any) {
 
                             {target.isManual ? (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <input placeholder="大学名" value={target.manualUniv} onChange={e => handleTargetChange(index, "manualUniv", e.target.value)} className="w-full p-4 bg-white border rounded-xl" />
-                                    <input placeholder="学部・専攻名" value={target.manualFaculty} onChange={e => handleTargetChange(index, "manualFaculty", e.target.value)} className="w-full p-4 bg-white border rounded-xl" />
+                                    <input placeholder="学部名" value={target.manualFaculty} onChange={e => handleTargetChange(index, "manualFaculty", e.target.value)} className="w-full p-4 bg-white border rounded-xl" />
+                                    <input placeholder="学科・専攻名" value={target.manualDept} onChange={e => handleTargetChange(index, "manualDept", e.target.value)} className="w-full p-4 bg-white border rounded-xl" />
                                 </div>
                             ) : (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
