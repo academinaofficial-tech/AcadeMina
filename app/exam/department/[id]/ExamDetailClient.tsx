@@ -5,7 +5,9 @@ import Link from "next/link";
 import { useState } from "react";
 
 interface DeptWithRelations extends Department {
-    university: University;
+    faculty: {
+        university: University;
+    };
 }
 
 interface ExamDetailClientProps {
@@ -36,20 +38,22 @@ export default function ExamDetailClient({ department, products, recommendations
             <div className="bg-white py-16 px-5 text-center border-b border-gray-100">
                 <div className="max-w-[1000px] mx-auto">
                     <div className="text-sm md:text-base font-bold text-gray-400 mb-3 uppercase tracking-widest">
-                        {department.university.name}
+                        {department.faculty.university.name}
                     </div>
                     <h1 className="text-3xl md:text-5xl font-black mb-8 leading-tight">
                         {department.name}
                     </h1>
                     <div className="flex justify-center gap-3 flex-wrap">
-                        {department.university.tags.map(tag => (
+                        {department.faculty.university.tags.map(tag => (
                             <span key={tag} className="text-xs md:text-sm px-4 py-2 rounded-full border border-gray-200 font-bold bg-gray-50/50 text-gray-500">
                                 {tag}
                             </span>
                         ))}
-                        <span className="text-xs md:text-sm px-4 py-2 rounded-full border border-blue-100 font-bold bg-blue-50 text-accent">
-                            {department.theme}
-                        </span>
+                        {department.faculty.university.area && (
+                            <span className="text-xs md:text-sm px-4 py-2 rounded-full border border-blue-100 font-bold bg-blue-50 text-accent">
+                                {department.faculty.university.area}
+                            </span>
+                        )}
                     </div>
                 </div>
             </div>
@@ -62,8 +66,8 @@ export default function ExamDetailClient({ department, products, recommendations
                             key={cat.id}
                             onClick={() => setSelectedCategory(cat.id)}
                             className={`whitespace-nowrap px-6 py-3 rounded-full font-bold text-sm transition-all duration-300 border ${selectedCategory === cat.id
-                                    ? "bg-text text-white border-text shadow-lg transform scale-105"
-                                    : "bg-white text-gray-500 border-gray-200 hover:border-gray-400"
+                                ? "bg-text text-white border-text shadow-lg transform scale-105"
+                                : "bg-white text-gray-500 border-gray-200 hover:border-gray-400"
                                 }`}
                         >
                             {cat.name}
@@ -118,12 +122,13 @@ export default function ExamDetailClient({ department, products, recommendations
                                 className="bg-white p-6 rounded-2xl border border-gray-100 flex flex-col justify-between transition-all duration-300 hover:border-accent hover:bg-gray-50/50 hover:shadow-lg group"
                             >
                                 <div>
-                                    <div className="text-xs text-gray-400 font-bold mb-1">{rec.university.name}</div>
+                                    <div className="text-xs text-gray-400 font-bold mb-1">{rec.faculty.university.name}</div>
                                     <div className="text-lg font-bold mb-4 group-hover:text-accent transition-colors">{rec.name}</div>
                                     <div className="flex gap-2 flex-wrap">
-                                        <span className="text-[0.65rem] px-2 py-1 border border-blue-100 bg-blue-50 text-accent rounded-md font-bold">{rec.theme}</span>
-                                        <span className="text-[0.65rem] px-2 py-1 border border-gray-200 rounded-md text-gray-400 font-bold">{rec.university.level}ランク</span>
-                                        <span className="text-[0.65rem] px-2 py-1 border border-gray-200 rounded-md text-gray-400 font-bold">{rec.university.area}</span>
+                                        {rec.faculty.university.area && (
+                                            <span className="text-[0.65rem] px-2 py-1 border border-blue-100 bg-blue-50 text-accent rounded-md font-bold">{rec.faculty.university.area}</span>
+                                        )}
+                                        <span className="text-[0.65rem] px-2 py-1 border border-gray-200 rounded-md text-gray-400 font-bold">{rec.faculty.university.level}ランク</span>
                                     </div>
                                 </div>
                                 <div className="text-right text-xs font-bold text-gray-300 mt-6 group-hover:text-accent transition-colors">

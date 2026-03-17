@@ -12,7 +12,11 @@ export default async function Page({ params }: PageProps) {
     const department = await prisma.department.findUnique({
         where: { id: params.id },
         include: {
-            university: true,
+            faculty: {
+                include: {
+                    university: true,
+                },
+            },
         },
     });
 
@@ -26,10 +30,15 @@ export default async function Page({ params }: PageProps) {
 
     const recommendations = await prisma.department.findMany({
         where: {
-            theme: department.theme,
             NOT: { id: department.id }
         },
-        include: { university: true },
+        include: {
+            faculty: {
+                include: {
+                    university: true,
+                },
+            },
+        },
         take: 3
     });
 

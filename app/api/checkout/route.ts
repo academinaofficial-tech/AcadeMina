@@ -28,7 +28,11 @@ export async function POST(req: Request) {
                 product_data: {
                     name: exam.title,
                     description: exam.category,
-                    images: [exam.image.startsWith("http") ? exam.image : `${process.env.NEXT_PUBLIC_APP_URL}${exam.image}`],
+                    images: [
+                        exam.image
+                            ? (exam.image.startsWith("http") ? exam.image : `${process.env.NEXT_PUBLIC_APP_URL}${exam.image}`)
+                            : `${process.env.NEXT_PUBLIC_APP_URL}/placeholder.png`
+                    ],
                 },
                 unit_amount: exam.price,
             },

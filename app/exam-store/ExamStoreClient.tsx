@@ -366,7 +366,7 @@ export default function ExamStoreClient({ initialExams }: ExamStoreClientProps) 
                   <Link href={`/exam/product/${exam.id}`}>
                     <div
                       className="h-48 bg-gray-200 bg-cover bg-center"
-                      style={{ backgroundImage: `url(${exam.image || ""})` }}
+                      style={{ backgroundImage: `url(${exam.image || "/placeholder.png"})` }}
                     />
                   </Link>
 
@@ -430,9 +430,8 @@ export default function ExamStoreClient({ initialExams }: ExamStoreClientProps) 
       )}
 
       <div
-        className={`fixed top-0 right-0 w-full md:w-[400px] h-screen bg-white z-[2001] shadow-2xl transition-transform duration-300 ${
-          isCartOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed top-0 right-0 w-full md:w-[400px] h-screen bg-white z-[2001] shadow-2xl transition-transform duration-300 ${isCartOpen ? "translate-x-0" : "translate-x-full"
+          }`}
       >
         <div className="p-6 border-b flex justify-between items-center">
           <h2 className="text-xl font-bold">カート</h2>

@@ -3,6 +3,10 @@ import ColumnDetailClient from "./ColumnDetailClient";
 import Link from "next/link";
 
 
+interface Props {
+  searchParams: { id: string };
+}
+
 export async function generateMetadata({ searchParams }: Props) {
   const articleId = searchParams.id as string;
   const article = await getArticleById(articleId);
