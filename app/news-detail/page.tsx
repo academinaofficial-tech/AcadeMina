@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 export const metadata = {
-    title: "合格体験記 | AcadeMina",
+    title: "News | AcadeMina",
 };
 
 export default async function StoryDetailPage({ searchParams }: { searchParams: { id: string } }) {
@@ -46,8 +46,21 @@ export default async function StoryDetailPage({ searchParams }: { searchParams: 
                             {article.title}
                         </h1>
                         <div className="flex items-center text-gray-400 text-sm font-medium">
-                            <span className="bg-slate-800 px-3 py-1 rounded-md mr-4 border border-slate-700">{formatDate(article.publishedAt)}</span>
-                            <span>{article.author || '合格体験記'}</span>
+                            <span className="bg-slate-800 px-3 py-1 rounded-md mr-4 border border-slate-700">
+                                {formatDate(article.publishedAt)}
+                            </span>
+                            
+                            {/* ▼ ここを修正！強制的な「合格体験記」をやめて、本当のカテゴリを表示 ▼ */}
+                            <span className="bg-blue-900/50 text-blue-200 px-3 py-1 rounded-md border border-blue-700/50">
+                                {article.category?.category || article.category?.article_type || 'お知らせ'}
+                            </span>
+                            
+                            {/* もし著者名（author）も出したい場合は、さらに横に追加します */}
+                            {article.author && (
+                                <span className="ml-4 pl-4 border-l border-slate-700">
+                                    {article.author}
+                                </span>
+                            )}
                         </div>
                     </div>
                 </div>
