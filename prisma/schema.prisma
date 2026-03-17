@@ -18,6 +18,7 @@ model Profile {
   targetUniversity String?
   targetDepartment String?
   interests        String[]
+  interestThemes   Theme[]
   careerPath       String
   phone            String?
   address          String?
@@ -51,15 +52,18 @@ model Faculty {
 }
 
 model Department {
-  id        String   @id @default(cuid())
-  name      String
-  theme     String?
-  facultyId String
-  faculty   Faculty  @relation(fields: [facultyId], references: [id], onDelete: Cascade)
-  exams     Exam[]
-  labs      Lab[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String       @id @default(cuid())
+  name        String
+
+  facultyId   String
+  faculty     Faculty      @relation(fields: [facultyId], references: [id], onDelete: Cascade)
+
+  themeGroups ThemeGroup[]
+  exams       Exam[]
+  labs        Lab[]
+
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 
   @@unique([facultyId, name])
 }
@@ -107,8 +111,43 @@ model Lab {
   contact        Json?
   papers         Json?
   stats          Json?
+
   departmentId   String?
   department     Department? @relation(fields: [departmentId], references: [id])
+
+  themes         Theme[]
+
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
+}
+
+model ThemeGroup {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String?  @unique
+  description String?
+
+  themes      Theme[]
+  departments Department[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Theme {
+  id           String      @id @default(cuid())
+  name         String
+  slug         String?
+  description  String?
+
+  themeGroupId String
+  themeGroup   ThemeGroup  @relation(fields: [themeGroupId], references: [id], onDelete: Cascade)
+
+  labs         Lab[]
+  profiles     Profile[]
+
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@unique([themeGroupId, name])
 }
