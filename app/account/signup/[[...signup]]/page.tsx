@@ -18,9 +18,10 @@ export default function SignupPage() {
                         routing="path"
                         path="/account/signup"
                         signInUrl="/account/login"
+                        // 💡 ここを追加！サインアップ成功後にプロフィール入力画面へ飛ばす
+                        forceRedirectUrl="/account/setup" 
                         appearance={{
                             elements: {
-                                // globals.css で強力に上書きするため、ここでは最低限の指定のみ
                                 rootBox: "w-full flex justify-center",
                                 cardBox: "w-full",
                                 card: "w-full bg-transparent shadow-none",
