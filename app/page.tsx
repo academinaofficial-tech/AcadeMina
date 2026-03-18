@@ -1,21 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getArticles, formatDate } from "@/lib/cms"; // 💡 getArticlesに変更しました
+import { getArticles, formatDate } from "@/lib/cms";
 
 export const metadata: Metadata = {
   title: "AcadeMina | 次世代の研究者へ",
 };
 
 export default async function Page() {
-  // 💡 記事を少し多めに取得して、手元で「コラム」と「ニュース」に振り分けます
   const data = await getArticles({ limit: 30 });
 
-  // コラム（column）のみを抽出して最新3件を取得
   const columnArticles = data.contents
     .filter((a: any) => a.category?.article_type === "column")
     .slice(0, 3);
 
-  // ニュース（news）のみを抽出して最新3件を取得
   const newsArticles = data.contents
     .filter((a: any) => a.category?.article_type === "news")
     .slice(0, 3);
@@ -32,6 +29,7 @@ export default async function Page() {
 
       <section className="w-full" id="services">
         <div className="flex flex-col md:flex-row flex-wrap min-h-[70vh]">
+          {/* 💡 元の /lab に戻しました */}
           <article className="flex-1 min-w-[300px] relative p-20 md:p-[80px_40px] flex flex-col justify-between text-white bg-[#444] bg-cover bg-center transition-all duration-300 hover:brightness-110 cursor-pointer bg-[linear-gradient(rgba(0,0,0,0.45),rgba(0,0,0,0.45)),url('/images/lab.png')] border-b border-white/20 md:border-b-0 md:border-r border-white/20">
             <Link className="absolute top-0 left-0 w-full h-full z-10" href="/lab"></Link>
             <div className="relative z-20">
@@ -46,6 +44,8 @@ export default async function Page() {
             </div>
             <Link className="relative z-20 mt-auto font-bold text-[1.1rem] underline underline-offset-4" href="/lab">研究室を探す →</Link>
           </article>
+          
+          {/* 💡 こちらも元の /exam です */}
           <article className="flex-1 min-w-[300px] relative p-20 md:p-[80px_40px] flex flex-col justify-between text-white bg-[#444] bg-cover bg-center transition-all duration-300 hover:brightness-110 cursor-pointer bg-[linear-gradient(rgba(0,0,0,0.45),rgba(0,0,0,0.45)),url('/images/exam.png')] border-b border-white/20 md:border-b-0">
             <Link className="absolute top-0 left-0 w-full h-full z-10" href="/exam"></Link>
             <div className="relative z-20">
@@ -68,9 +68,8 @@ export default async function Page() {
           <h2 className="text-[2.5rem] font-extrabold">Column</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-10 mb-[60px]">
-          {/* 💡 コラムのみに絞った配列でマップします */}
           {columnArticles.map((a: any) => {
-            const imgUrl = a.eyecatch ? a.eyecatch.url : '/images/col-placeholder.jpg'; // ※eyecatchに変更しました（エラー防止）
+            const imgUrl = a.eyecatch ? a.eyecatch.url : '/images/col-placeholder.jpg';
             return (
               <Link href={`/column-detail?id=${a.id}`} key={a.id} className="flex flex-col cursor-pointer transition-transform duration-300 hover:-translate-y-1.5 group">
                 <div className="h-[200px] bg-gray bg-cover bg-center rounded-t-md border border-b-0 border-border" style={{ backgroundImage: `url('${imgUrl}')` }}></div>
@@ -94,10 +93,8 @@ export default async function Page() {
             <Link className="font-semibold text-[0.9rem] hover:opacity-70 transition-opacity" href="/news">一覧を見る →</Link>
           </div>
           <ul className="list-none border-t border-border">
-            {/* 💡 ニュースのみに絞った配列でマップします */}
             {newsArticles.map((n: any) => (
               <li key={n.id} className="flex flex-col md:flex-row md:items-center py-[25px] border-b border-border transition-colors duration-200 hover:bg-white group px-4 -mx-4 rounded-lg">
-                {/* 💡 リンク先を news-detail に変更しました！ */}
                 <Link href={`/news-detail?id=${n.id}`} className="flex flex-col md:flex-row md:items-center w-full">
                   <span className="font-bold text-[0.9rem] text-[#666] md:w-[120px] shrink-0 mb-2 md:mb-0">{formatDate(n.publishedAt)}</span>
                   <span className="text-[1rem] font-semibold flex-1 group-hover:text-blue-600 transition-colors">{n.title}</span>
