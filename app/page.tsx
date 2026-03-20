@@ -3,7 +3,7 @@ import Link from "next/link";
 import { getArticles, formatDate } from "@/lib/cms";
 
 export const metadata: Metadata = {
-  title: "AcadeMina | 次世代の研究者へ",
+  title: "AcadeMina | 研究者を、増やす。大学院入試・院試サポート",
 };
 
 export default async function Page() {
