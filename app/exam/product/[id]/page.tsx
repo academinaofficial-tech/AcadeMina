@@ -1,25 +1,24 @@
-import { prisma } from "@/lib/prisma";
-import { notFound } from "next/navigation";
-import ProductDetailClient from "./ProductDetailClient";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
+import prisma from "@/lib/prisma";
 
-interface PageProps {
-    params: {
-        id: string;
-    };
-}
+export default async function ExamDetailPage({ params }: { params: { id: string } }) {
+    const { userId } = auth();
 
-export default async function Page({ params }: PageProps) {
-    const exam = await prisma.exam.findUnique({
-        where: { id: params.id },
-    });
-
-    if (!exam) {
-        notFound();
+    // 1. ログインチェック
+    if (!userId) {
+        redirect("/sign-in");
     }
 
-    return (
-        <main className="mt-20 md:mt-[134px]">
-            <ProductDetailClient exam={exam} />
-        </main>
-    );
+    // 2. オンボーディング（プロフィール作成）済みチェック
+    const profile = await prisma.profile.findUnique({
+        where: { id: userId } // ClerkのuserIdをProfileのidとして保存している場合 [cite: 1]
+    });
+
+    if (!profile) {
+        redirect("/onboarding");
+    }
+
+    // ここから詳細ページの表示ロジック
+    return <div>教材の詳細内容...</div>;
 }
