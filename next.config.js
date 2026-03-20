@@ -2,29 +2,28 @@
 const nextConfig = {
   async redirects() {
     return [
-      // 🚨 今回追加する「近日公開」への強制リダイレクト（一時的なので permanent: false）🚨
+      // ✅ まだ準備中の機能（これらは引き続きComing Soonへ）
       { source: '/lab', destination: '/coming-soon', permanent: false },
-      
+      { source: '/mentors', destination: '/coming-soon', permanent: false }, // メンター
+      { source: '/qa', destination: '/coming-soon', permanent: false },      // 掲示板
 
-      // 👇 以下、もともとあった設定（そのまま残します）
+      // 💡 【重要】ここにあった '/exam-store' などのリダイレクト行は削除しました！
+      // これで教材ストアにはアクセスできるようになります。
+
+      // 👇 以下、古い.htmlファイルからの転送設定（そのまま）
       { source: '/index.html', destination: '/', permanent: true },
       { source: '/about.html', destination: '/about', permanent: true },
       { source: '/exam.html', destination: '/exam', permanent: true },
-      // ※教材ストア関連の.htmlも一旦coming-soonへ
-      { source: '/exam-store.html', destination: '/coming-soon', permanent: false },
-      { source: '/exam-detail.html', destination: '/coming-soon', permanent: false },
-      { source: '/product.html', destination: '/coming-soon', permanent: false },
-      { source: '/cart.html', destination: '/coming-soon', permanent: false },
-      { source: '/checkout.html', destination: '/coming-soon', permanent: false },
-      { source: '/order-complete.html', destination: '/coming-soon', permanent: false },
+      
+      // ストア系の.htmlは、正しいページ（/exam-store など）に飛ばすように修正
+      { source: '/exam-store.html', destination: '/exam-store', permanent: false },
+      { source: '/exam-detail.html', destination: '/exam-detail', permanent: false },
+      
+      // ラボなどは引き続きComing Soon
       { source: '/lab.html', destination: '/coming-soon', permanent: false },
 
       { source: '/signup.html', destination: '/signup', permanent: true },
       { source: '/contact.html', destination: '/contact', permanent: true },
-      { source: '/column.html', destination: '/column', permanent: true },
-      { source: '/column-detail.html', destination: '/column-detail', permanent: true },
-      { source: '/news-detail.html', destination: '/news-detail', permanent: true },
-      { source: '/detail.html', destination: '/detail', permanent: true },
       { source: '/mypage.html', destination: '/mypage', permanent: true },
       { source: '/legal.html', destination: '/legal', permanent: true }
     ];
