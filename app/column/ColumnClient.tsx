@@ -40,7 +40,7 @@ export default function ColumnClient({ initialArticles, featuredArticle }: Colum
                         <span className="text-sm font-extrabold tracking-[0.2em] uppercase text-gray-400">What's New</span>
                         <span className="text-xl font-extrabold ml-1">最新の記事</span>
                     </div>
-                    <Link href={`/column-detail?id=${featuredArticle.id}`} className="group block no-underline text-inherit">
+                    <Link href={`/column-detail?id=${featuredArticle.slug}`} className="group block no-underline text-inherit">
                         <div className="flex flex-col md:flex-row gap-0 md:gap-10 bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm transition-all duration-300 group-hover:shadow-xl group-hover:-translate-y-1">
                             <div
                                 className="w-full md:w-1/2 min-h-[250px] md:min-h-[400px] bg-gray-100 bg-cover bg-center shrink-0"
