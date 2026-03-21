@@ -1,9 +1,11 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { getArticles, formatDate } from "@/lib/cms";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "お知らせ | AcadeMina",
+  title: "お知らせ一覧｜AcadeMinaの最新情報・機能追加・更新情報",
+  description:
+    "AcadeMinaの最新ニュースや機能追加、コンテンツ更新、重要なお知らせをまとめたページです。サービスの変更点や新着情報をすばやく確認できます。",
 };
 
 export default async function NewsListPage() {

@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 
 // このページだけ検索結果に出さない
 export const metadata: Metadata = {
-  title: "利用規約・プライバシーポリシー・特定商取引法に基づく表記 | AcadeMina",
+  title: "特定商取引法に基づく表記・利用規約｜AcadeMina",
   description:
-    "AcadeMinaの利用規約、プライバシーポリシー、および特定商取引法に基づく表記を掲載しています。",
+    "AcadeMinaの特定商取引法に基づく表記、利用規約、教材購入時の注意事項を掲載しています。サービス利用前にご確認いただきたい重要事項をまとめています。",
   robots: {
     index: false,
     follow: false,

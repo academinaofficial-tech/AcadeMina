@@ -1,6 +1,13 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "大学院受験の過去問・対策教材詳細｜AcadeMina",
+  description:
+    "教材の内容、対象大学・研究科、価格、特徴を詳しく確認できる商品詳細ページです。自分の志望先や対策テーマに合う教材かを比較しながら検討できます。",
+};
 
 export default async function ExamDetailPage({ params }: { params: { id: string } }) {
     const { userId } = auth();

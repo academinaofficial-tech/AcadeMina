@@ -1,9 +1,12 @@
 import { getArticleById, formatDate } from "@/lib/cms";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 
-export const metadata = {
-    title: "News | AcadeMina",
+export const metadata: Metadata = {
+  title: "AcadeMinaからのお知らせ｜最新情報・更新内容",
+  description:
+    "AcadeMinaの機能アップデートや重要なお知らせの内容を確認できる詳細ページです。最新情報を正確に把握したい方はこちらをご覧ください。",
 };
 
 export default async function StoryDetailPage({ searchParams }: { searchParams: { id: string } }) {
