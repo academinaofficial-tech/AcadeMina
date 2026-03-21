@@ -5,7 +5,7 @@ export default function Footer() {
         <>
             <footer className="px-5 py-10 md:p-[60px_40px] bg-white text-text border-t border-border flex flex-col md:flex-row justify-between items-start gap-[30px] md:gap-0">
                 <div className="flex flex-col gap-6">
-                    <img src="/images/logo.png" alt="AcadeMina" className="h-[120px] md:h-20 w-auto object-contain self-start" />
+                    <img src="/images/icon.png" alt="AcadeMina" className="h-[120px] md:h-20 w-auto object-contain self-start" />
                     <div className="flex items-center gap-4 px-2">
                         <a href="https://note.com/grand_avocet7665" target="_blank" rel="noopener noreferrer" className="transition-transform duration-200 hover:scale-110" title="note">
                             <img src="/images/icon-note.png" alt="note" className="w-6 h-6 rounded-sm" />

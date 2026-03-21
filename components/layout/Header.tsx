@@ -39,7 +39,7 @@ export default function Header() {
             {/* Upper Tier: Main Utility Bar (White) */}
             <div className="h-20 bg-white flex justify-between items-center px-5 md:px-10 border-b border-gray-100">
                 <Link href="/" className="flex items-center transition-opacity duration-300 hover:opacity-70">
-                    <img src="/images/logo.png" alt="AcadeMina" className="h-[80px] md:h-[90px] w-auto" />
+                    <img src="/images/icon.png" alt="AcadeMina" className="h-[80px] md:h-[90px] w-auto" />
                 </Link>
 
                 <div className="flex items-center gap-4 md:gap-7">
