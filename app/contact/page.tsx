@@ -1,13 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "お問い合わせ｜AcadeMinaへの質問・掲載依頼・法人連携はこちら",
-  description:
-    "AcadeMinaへのご質問、教材掲載のご相談、取材依頼、法人連携のお問い合わせはこちらから。大学院受験に関するサービス利用前の不明点もお気軽にご連絡ください。",
-};
 
 export default function Page() {
   const [isSubmitting, setIsSubmitting] = useState(false);
