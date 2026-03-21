@@ -1,0 +1,21 @@
+import { MetadataRoute } from 'next';
+
+export default function robots(): MetadataRoute.Robots {
+  return {
+    rules: {
+      userAgent: '*', // すべての検索ロボットに対して
+      allow: '/',     // 基本的にサイト内のどこを見てもOK！
+      disallow: [     // ただし、以下の「裏口」には絶対に入らないでね！
+        '/account/',
+        '/api/',
+        '/cart/',
+        '/checkout/',
+        '/mypage/',
+        '/onboarding/',
+        '/order-complete/',
+      ],
+    },
+    // ここが一番重要！「うちのサイトマップ（地図）はここにあるよ！」と教える
+    sitemap: 'https://academina.com/sitemap.xml',
+  };
+}
