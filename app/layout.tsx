@@ -10,13 +10,13 @@ import Footer from "@/components/layout/Footer";
 export const metadata: Metadata = {
   metadataBase: new URL("https://academina.com"),
   title: {
-    default: "AcadeMina | 研究者を、増やす。大学院入試・院試サポート",
+    default: "大学院受験対策ならAcadeMina｜過去問・合格体験記・研究室情報",
     template: "%s | AcadeMina",
   },
   description: "AcadeMina（アカデミナ）は、大学院進学を目指す学生のためのプラットフォームです。難関大合格者による過去問解答解説、合格体験記、研究計画書のノウハウや、研究室情報などのナレッジを提供し、あなたの院試突破を後押しします。",
-  keywords: ["院試", "大学院入試", "大学院進学", "過去問", "過去問解答", "研究計画書", "合格体験記", "AcadeMina", "アカデミナ", "研究室"],
+  keywords: ["院試", "大学院入試", "過去問", "研究計画書", "合格体験記", "AcadeMina", "アカデミナ", "研究室"],
   openGraph: {
-    title: "AcadeMina | 研究者を、増やす。大学院入試・院試サポート",
+    title: "大学院受験対策ならAcadeMina｜過去問・合格体験記・研究室情報",
     description: "大学院進学を目指す学生のための総合サポートプラットフォーム。過去問解説や合格体験記で院試突破を後押しします。",
     url: "https://academina.com",
     siteName: "AcadeMina",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary", // ロゴが綺麗に四角く収まる設定
-    title: "AcadeMina | 研究者を、増やす。大学院入試・院試サポート",
+    title: "大学院受験対策ならAcadeMina｜過去問・合格体験記・研究室情報",
     description: "大学院進学を目指す学生のための総合サポートプラットフォーム。",
     images: ["/images/logo.png"],
   },

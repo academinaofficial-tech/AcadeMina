@@ -1,5 +1,6 @@
 import { getArticles, getSchools } from "@/lib/cms";
 import StoryClient from "./StoryClient";
+import { prisma } from "@/lib/prisma";
 
 export const metadata = {
     title: "合格体験記 | AcadeMina",
