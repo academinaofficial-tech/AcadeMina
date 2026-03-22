@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { MAIN_NAV_LINKS } from "@/lib/navigation";
 
 export default function Header() {
     const pathname = usePathname() || "";
@@ -35,9 +36,9 @@ export default function Header() {
     };
 
     return (
-        <header className="fixed top-0 left-0 w-full z-[1000]">
+        <header className="fixed top-0 left-0 w-full z-[1000] shadow-sm">
             {/* Upper Tier: Main Utility Bar (White) */}
-            <div className="h-20 bg-white border-b border-border flex justify-between items-center px-5 md:px-10">
+            <div className="h-20 bg-white flex justify-between items-center px-5 md:px-10 border-b border-gray-100">
                 <Link href="/" className="flex items-center transition-opacity duration-300 hover:opacity-70">
                     <img src="/images/logo.png" alt="AcadeMina" className="h-[80px] md:h-[90px] w-auto" />
                 </Link>
@@ -76,28 +77,29 @@ export default function Header() {
             </div>
 
             {/* Lower Tier: Navigation Bar (Dark/Black) */}
-            <div className="hidden md:flex h-[54px] bg-text justify-center items-center px-10">
+            <div className="hidden md:flex h-[54px] bg-text justify-center items-center px-10 shadow-inner">
                 <nav className="flex items-center text-white/95 h-full">
                     <span className="text-white/20 font-light mx-4">|</span>
-                    <Link href="/lab" className={`h-full flex items-center px-12 text-[0.9rem] font-bold tracking-wider hover:bg-white/10 transition-colors ${isActive("/lab") ? "text-gray-300" : ""}`}>研究室検索</Link>
-                    <span className="text-white/20 font-light mx-4">|</span>
-                    <Link href="/exam" className={`h-full flex items-center px-12 text-[0.9rem] font-bold tracking-wider hover:bg-white/10 transition-colors ${isActive("/exam") ? "text-gray-300" : ""}`}>院試サポート</Link>
-                    <span className="text-white/20 font-light mx-4">|</span>
-                    <Link href="/column" className={`h-full flex items-center px-12 text-[0.9rem] font-bold tracking-wider hover:bg-white/10 transition-colors ${isActive("/column") ? "text-gray-300" : ""}`}>コラム</Link>
-                    <span className="text-white/20 font-light mx-4">|</span>
-                    <Link href="/about" className={`h-full flex items-center px-12 text-[0.9rem] font-bold tracking-wider hover:bg-white/10 transition-colors ${isActive("/about") ? "text-gray-300" : ""}`}>AcadeMinaとは</Link>
-                    <span className="text-white/20 font-light mx-4">|</span>
+                    {MAIN_NAV_LINKS.map((link) => (
+                        <React.Fragment key={link.href}>
+                            <Link href={link.href} className={`h-full flex items-center px-12 text-[0.9rem] font-bold tracking-wider hover:bg-white/10 transition-colors ${isActive(link.href) ? "text-gray-300" : ""}`}>
+                                {link.label}
+                            </Link>
+                            <span className="text-white/20 font-light mx-4">|</span>
+                        </React.Fragment>
+                    ))}
                 </nav>
             </div>
 
-            {/* Mobile Menu Overlay (only visible when menu is open) */}
+            {/* Mobile Menu Overlay */}
             {isMenuOpen && (
                 <div className="md:hidden fixed inset-0 bg-text z-[1100] pt-28 px-10">
                     <nav className="flex flex-col gap-10 text-white">
-                        <Link href="/lab" onClick={() => setIsMenuOpen(false)} className="text-2xl font-bold">研究室検索</Link>
-                        <Link href="/exam" onClick={() => setIsMenuOpen(false)} className="text-2xl font-bold">院試サポート</Link>
-                        <Link href="/column" onClick={() => setIsMenuOpen(false)} className="text-2xl font-bold">コラム</Link>
-                        <Link href="/about" onClick={() => setIsMenuOpen(false)} className="text-2xl font-bold">AcadeMinaとは</Link>
+                        {MAIN_NAV_LINKS.map((link) => (
+                            <Link key={link.href} href={link.href} onClick={() => setIsMenuOpen(false)} className="text-2xl font-bold">
+                                {link.label}
+                            </Link>
+                        ))}
 
                         <div className="pt-10 border-t border-white/10 flex flex-col gap-8">
                             <SignedOut>
@@ -117,4 +119,3 @@ export default function Header() {
         </header>
     );
 }
-

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Button from "@/components/ui/Button";
 
 export const metadata = {
   title: "院試サポート | AcadeMina",
@@ -7,6 +8,7 @@ export const metadata = {
 export default function Page() {
   return (
     <>
+      {/* 幾何学模様の背景装飾 */}
       <div className="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none overflow-hidden before:content-[''] before:absolute before:-top-[10%] before:-right-[5%] before:w-[700px] before:h-[700px] before:rounded-full before:bg-[radial-gradient(circle,rgba(0,68,204,0.07)_0%,transparent_70%)] after:content-[''] after:absolute after:-bottom-[15%] after:-left-[10%] after:w-[800px] after:h-[800px] after:rounded-full after:bg-[radial-gradient(circle,rgba(77,166,255,0.06)_0%,transparent_70%)]"></div>
       <svg className="fixed -z-10 pointer-events-none w-full h-full" style={{ top: '5%', left: '-5%', width: 500, height: 500, opacity: .12 }} viewBox="0 0 500 500">
         <polygon fill="none" points="250,30 470,180 390,430 110,430 30,180" stroke="#0044cc" strokeWidth="1.5"></polygon>
@@ -32,17 +34,20 @@ export default function Page() {
         <path d="M150 50 L240 110 L220 210 L80 210 L60 110 Z" fill="none" stroke="#4da6ff" strokeWidth="1"></path>
       </svg>
 
+      {/* Hero Section */}
       <section className="mt-20 md:mt-[134px] pt-[80px] md:pt-[120px] px-5 md:px-10 pb-[60px] md:pb-[100px] text-center relative overflow-hidden bg-[linear-gradient(135deg,#e8efff_0%,#d0dfff_30%,#e0eaff_60%,#f0f4ff_100%)] before:content-[''] before:absolute before:-top-[30%] before:-right-[10%] before:w-[500px] before:h-[500px] before:rounded-full before:bg-[radial-gradient(circle,rgba(0,68,204,0.1),transparent_70%)] after:content-[''] after:absolute after:-bottom-[20%] after:-left-[10%] after:w-[400px] after:h-[400px] after:rounded-full after:bg-[radial-gradient(circle,rgba(77,166,255,0.08),transparent_70%)]">
         <div className="text-[0.9rem] font-bold text-accent tracking-[0.15em] uppercase mb-5 relative">Exam Support / 院試サポート</div>
         <h1 className="text-[2.2rem] md:text-[3.5rem] font-extrabold leading-[1.2] mb-[25px] relative">院試突破のすべてを、<br />ここに。</h1>
-        <p className="text-[1.15rem] text-[#555] max-w-[600px] mx-auto relative leading-[1.9]">過去問の解答解説から、合格者との1on1メンタリングまで。<br />院試に挑戦するあなたを、3つのサービスで全方位サポートします。</p>
+        <p className="text-[1.15rem] text-[#555] max-w-[600px] mx-auto relative leading-[1.9]">過去問の解答解説から、合格者との1on1メンタリングまで。<br />院試に挑戦するあなたを、4つのサービスで全方位サポートします。</p>
       </section>
+
+      {/* 01: 教材ストア (画像 右) */}
       <div className="flex flex-col md:flex-row items-center gap-[40px] md:gap-[80px] max-w-[1100px] mx-auto py-[60px] md:py-[120px] px-5 md:px-10 border-t border-border first:border-t-0">
         <div className="flex-1">
           <div className="text-[0.8rem] font-bold text-accent-light tracking-[0.15em] uppercase mb-3">01 / Digital Store</div>
           <h2 className="text-[1.8rem] md:text-[2.5rem] font-extrabold mb-5 leading-[1.2]">院試マスター / 教材ストア</h2>
           <p className="text-[1.05rem] text-[#555] leading-[2] mb-[30px]">合格者が執筆した過去問解説、体験記、研究計画書、予想問題。<br />大学院入試を突破するための「武器」を、いつでも手に入れられます。</p>
-          <Link className="inline-block px-[36px] py-[14px] bg-text text-white rounded-full font-bold text-[0.95rem] transition-all duration-300 hover:bg-accent hover:opacity-100 hover:-translate-y-[2px]" href="/exam-store">教材を探す →</Link>
+          <Button href="/exam-store" variant="outline" className="px-10">教材を探す →</Button>
         </div>
         <div className="flex-1 relative w-full">
           <div className="rounded-xl overflow-hidden aspect-[4/3] bg-gray">
@@ -50,12 +55,29 @@ export default function Page() {
           </div>
         </div>
       </div>
+
+      {/* 02: 合格体験記 [NEW] (画像 左) */}
       <div className="flex flex-col md:flex-row-reverse items-center gap-[40px] md:gap-[80px] max-w-[1100px] mx-auto py-[60px] md:py-[120px] px-5 md:px-10 border-t border-border">
         <div className="flex-1">
-          <div className="text-[0.8rem] font-bold text-accent-light tracking-[0.15em] uppercase mb-3">02 / Mentoring</div>
+          <div className="text-[0.8rem] font-bold text-accent-light tracking-[0.15em] uppercase mb-3">02 / Success Stories</div>
+          <h2 className="text-[1.8rem] md:text-[2.5rem] font-extrabold mb-5 leading-[1.2]">サクセスストーリー / 合格体験記</h2>
+          <p className="text-[1.05rem] text-[#555] leading-[2] mb-[30px]">難関大学院を突破した先輩たちのリアルな軌跡。<br />独自の勉強スケジュール、研究室訪問のコツ、モチベーション維持の方法まで、生の声をお届けします。</p>
+          <Button href="/story" variant="outline" className="px-10">体験記を読む →</Button>
+        </div>
+        <div className="flex-1 relative w-full">
+          <div className="rounded-xl overflow-hidden aspect-[4/3] bg-gray">
+            <img className="w-full h-full object-cover" alt="合格体験記" src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800&auto=format&fit=crop" />
+          </div>
+        </div>
+      </div>
+
+      {/* 03: メンター相談 (画像 右) */}
+      <div className="flex flex-col md:flex-row items-center gap-[40px] md:gap-[80px] max-w-[1100px] mx-auto py-[60px] md:py-[120px] px-5 md:px-10 border-t border-border">
+        <div className="flex-1">
+          <div className="text-[0.8rem] font-bold text-accent-light tracking-[0.15em] uppercase mb-3">03 / Mentoring</div>
           <h2 className="text-[1.8rem] md:text-[2.5rem] font-extrabold mb-5 leading-[1.2]">メンターマッチ / メンター相談</h2>
           <p className="text-[1.05rem] text-[#555] leading-[2] mb-[30px]">現役院生にオンラインで直接相談。研究室選びのリアルな話、<br />面接対策、研究計画書のレビューまで、マンツーマンでサポート。</p>
-          <Link className="inline-block px-[36px] py-[14px] bg-text text-white rounded-full font-bold text-[0.95rem] transition-all duration-300 hover:bg-accent hover:opacity-100 hover:-translate-y-[2px]" href="#">メンターを探す →</Link>
+          <Button href="#" variant="outline" className="px-10">メンターを探す →</Button>
         </div>
         <div className="flex-1 relative w-full">
           <div className="rounded-xl overflow-hidden aspect-[4/3] bg-gray">
@@ -63,12 +85,14 @@ export default function Page() {
           </div>
         </div>
       </div>
-      <div className="flex flex-col md:flex-row items-center gap-[40px] md:gap-[80px] max-w-[1100px] mx-auto py-[60px] md:py-[120px] px-5 md:px-10 border-t border-border">
+
+      {/* 04: 質問掲示板 (画像 左) */}
+      <div className="flex flex-col md:flex-row-reverse items-center gap-[40px] md:gap-[80px] max-w-[1100px] mx-auto py-[60px] md:py-[120px] px-5 md:px-10 border-t border-border">
         <div className="flex-1">
-          <div className="text-[0.8rem] font-bold text-accent-light tracking-[0.15em] uppercase mb-3">03 / Community</div>
+          <div className="text-[0.8rem] font-bold text-accent-light tracking-[0.15em] uppercase mb-3">04 / Community</div>
           <h2 className="text-[1.8rem] md:text-[2.5rem] font-extrabold mb-5 leading-[1.2]">Q&amp;Aボード / 質問掲示板</h2>
           <p className="text-[1.05rem] text-[#555] leading-[2] mb-[30px]">「この問題の解き方がわからない」「研究室訪問のマナーは？」<br />院試に関するあらゆる疑問を、先輩や同期と解決できるコミュニティ。</p>
-          <Link className="inline-block px-[36px] py-[14px] bg-text text-white rounded-full font-bold text-[0.95rem] transition-all duration-300 hover:bg-accent hover:opacity-100 hover:-translate-y-[2px]" href="#">掲示板を見る →</Link>
+          <Button href="#" variant="outline" className="px-10">掲示板を見る →</Button>
         </div>
         <div className="flex-1 relative w-full">
           <div className="rounded-xl overflow-hidden aspect-[4/3] bg-gray">
@@ -76,10 +100,12 @@ export default function Page() {
           </div>
         </div>
       </div>
+
+      {/* Footer CTA */}
       <section className="bg-text text-white py-[100px] px-10 text-center">
         <h2 className="text-[2.5rem] font-extrabold mb-5">未来を描こう</h2>
         <p className="text-[1.1rem] opacity-80 mb-10">サービスに関するご質問や掲載のご依頼はこちらから。</p>
-        <Link className="inline-block bg-white text-text px-[50px] py-[15px] rounded-full font-bold text-[1.1rem] transition-transform duration-200 hover:scale-105 hover:opacity-100" href="/contact">お問い合わせ</Link>
+        <Button href="/contact" variant="outline" className="border-white text-white hover:bg-white hover:text-black text-[1.1rem]">お問い合わせ</Button>
       </section>
     </>
   );

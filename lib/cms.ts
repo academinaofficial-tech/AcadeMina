@@ -36,7 +36,6 @@ const _mockArticles = [
 
 function _getMockData(options: any = {}) {
     let data = [..._mockArticles];
-    // Simple filter for mock
     if (options.filters && options.filters.includes('category[equals]')) {
         // Mock simplification
     }
@@ -105,5 +104,50 @@ export async function getArticleById(id: string) {
     } catch (e: any) {
         console.warn(`CMS fetch failed for ID ${id}, using mock data:`, e.message);
         return _mockArticles.find(a => a.id === id) || _mockArticles[0];
+    }
+}
+
+// 大学・専攻マスタを全件取得する関数
+export async function getSchools() {
+    const limit = 100; // microCMSの1回あたりの最大取得件数
+    let offset = 0;
+    let allSchools: any[] = [];
+    let totalCount = 0;
+
+    try {
+        // 1回目の通信
+        let url = `${CMS_CONFIG.BASE_URL}/schools?limit=${limit}&offset=${offset}`;
+        let res = await fetch(url, {
+            headers: { 'X-MICROCMS-API-KEY': CMS_CONFIG.API_KEY },
+            next: { revalidate: 60 }
+        });
+        
+        if (!res.ok) throw new Error(`CMS API Error: ${res.status}`);
+        let data = await res.json();
+        
+        allSchools = [...data.contents];
+        totalCount = data.totalCount;
+
+        // 残りのデータをループで取得
+        while (allSchools.length < totalCount) {
+            offset += limit;
+            url = `${CMS_CONFIG.BASE_URL}/schools?limit=${limit}&offset=${offset}`;
+            
+            res = await fetch(url, {
+                headers: { 'X-MICROCMS-API-KEY': CMS_CONFIG.API_KEY },
+                next: { revalidate: 60 }
+            });
+            
+            if (!res.ok) throw new Error(`CMS API Error: ${res.status}`);
+            data = await res.json();
+            
+            allSchools = [...allSchools, ...data.contents];
+        }
+
+        return { contents: allSchools, totalCount };
+
+    } catch (e: any) {
+        console.warn('CMS fetch failed for schools:', e.message);
+        return { contents: [], totalCount: 0 }; 
     }
 }

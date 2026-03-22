@@ -47,7 +47,7 @@ export default function CartClient({ allExams }: CartClientProps) {
                         cartItems.map(item => (
                             <div key={item.id} className="bg-white border border-gray-100 rounded-3xl p-6 md:p-8 flex gap-6 shadow-sm">
                                 <Link href={`/exam/product/${item.id}`} className="w-24 h-24 md:w-32 md:h-32 rounded-2xl overflow-hidden bg-gray-100 shrink-0">
-                                    <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                                    <img src={item.image || "/placeholder.png"} alt={item.title} className="w-full h-full object-cover" />
                                 </Link>
                                 <div className="flex-1 flex flex-col justify-between">
                                     <div>
@@ -103,8 +103,8 @@ export default function CartClient({ allExams }: CartClientProps) {
                         <Link
                             href={cartItems.length > 0 ? "/checkout" : "#"}
                             className={`block w-full text-center py-5 rounded-full font-bold text-lg transition-all ${cartItems.length > 0
-                                    ? "bg-accent text-white shadow-lg shadow-accent/20 hover:scale-[1.02] hover:brightness-110 active:scale-95"
-                                    : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                                ? "bg-accent text-white shadow-lg shadow-accent/20 hover:scale-[1.02] hover:brightness-110 active:scale-95"
+                                : "bg-gray-100 text-gray-400 cursor-not-allowed"
                                 }`}
                         >
                             レジに進む

@@ -2,11 +2,18 @@ import { getArticleById } from "@/lib/cms";
 import ColumnDetailClient from "./ColumnDetailClient";
 import Link from "next/link";
 
-export async function generateMetadata({ searchParams }: { searchParams: { id: string } }) {
-  const articleId = searchParams.id;
+
+interface Props {
+  searchParams: { id: string };
+}
+
+export async function generateMetadata({ searchParams }: Props) {
+  const articleId = searchParams.id as string;
   const article = await getArticleById(articleId);
+
   return {
-    title: `${article?.title || "Column"} | AcadeMina`,
+    title: `${article?.title || "合格体験記"} | AcadeMina`,
+    description: article?.meta_description || "AcadeMinaの合格体験記です。...", // 👈 ここにmicroCMSのデータをセット！
   };
 }
 

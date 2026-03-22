@@ -54,7 +54,7 @@ export default function ProductDetailClient({ exam }: ProductDetailClientProps) 
                 {/* Main Content */}
                 <div className="flex-1">
                     <div className="w-full aspect-video rounded-3xl overflow-hidden bg-gray-100 mb-10 shadow-sm">
-                        <img src={exam.image} alt={exam.title} className="w-full h-full object-cover" />
+                        <img src={exam.image || "/placeholder.png"} alt={exam.title} className="w-full h-full object-cover" />
                     </div>
 
                     <div className="mb-10">
@@ -142,12 +142,12 @@ export default function ProductDetailClient({ exam }: ProductDetailClientProps) 
                         </div>
                     </div>
 
-                    <div className="mt-8 p-6 bg-blue-50 rounded-2xl border border-blue-100">
-                        <h4 className="font-bold text-blue-900 mb-2 flex items-center gap-2">
-                            <span>🛡️</span> 安心の返金保証
+                    <div className="mt-8 p-6 bg-gray-50 rounded-2xl border border-gray-200">
+                        <h4 className="font-bold text-gray-700 mb-2 flex items-center gap-2">
+                            <span>⚠️</span> 免責事項
                         </h4>
-                        <p className="text-xs text-blue-700 leading-relaxed">
-                            万が一内容にご満足いただけない場合、購入後24時間以内であれば返金リクエストが可能です。
+                        <p className="text-xs text-gray-500 leading-relaxed">
+                            本教材の内容の正確性については万全を期しておりますが、誤りが含まれている場合でも当方は一切の責任を負いかねます。あらかじめご了承の上、ご購入をお願いいたします。
                         </p>
                     </div>
                 </aside>
