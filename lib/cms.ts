@@ -67,8 +67,8 @@ export async function getArticles(options: any = {}) {
         if (!res.ok) throw new Error(`CMS API Error: ${res.status}`);
         return await res.json();
     } catch (e: any) {
-        console.warn('CMS fetch failed, using mock data:', e.message);
-        return _getMockData(options);
+        console.error('CMS fetch failed:', e.message);
+        return { contents: [], totalCount: 0 };
     }
 }
 
@@ -102,8 +102,8 @@ export async function getArticleById(id: string) {
         if (!res.ok) throw new Error(`CMS API Error: ${res.status}`);
         return await res.json();
     } catch (e: any) {
-        console.warn(`CMS fetch failed for ID ${id}, using mock data:`, e.message);
-        return _mockArticles.find(a => a.id === id) || _mockArticles[0];
+        console.error(`CMS fetch failed for ID ${id}:`, e.message);
+        return null;
     }
 }
 
