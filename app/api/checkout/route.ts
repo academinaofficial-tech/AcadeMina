@@ -2,9 +2,15 @@ import { NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 import { stripe } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
+import { auth } from "@clerk/nextjs/server";
 
 export async function POST(req: Request) {
     try {
+        const { userId } = await auth();
+        if (!userId) {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
+        
         const { cartIds } = await req.json();
 
         if (!cartIds || !Array.isArray(cartIds) || cartIds.length === 0) {
@@ -49,6 +55,7 @@ export async function POST(req: Request) {
             cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout`,
             metadata: {
                 cartIds: cartIds.join(","),
+                userId: userId,
             },
         });
 
