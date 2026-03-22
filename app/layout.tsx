@@ -5,10 +5,9 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
 // ==========================================
-// 🚨 ここから最強のSEO・OGP設定（土台） 🚨
+// 🚨 最強のSEO・OGP設定（ファビコンは全自動！） 🚨
 // ==========================================
 export const metadata: Metadata = {
-  // 修正箇所①：wwwありのURLに統一
   metadataBase: new URL("https://www.academina.com"),
   title: {
     default: "大学院受験対策ならAcadeMina｜過去問・合格体験記・研究室情報",
@@ -17,23 +16,20 @@ export const metadata: Metadata = {
   description: "AcadeMina（アカデミナ）は、大学院進学を目指す学生のためのプラットフォームです。難関大合格者による過去問解答解説、合格体験記、研究計画書のノウハウや、研究室情報などのナレッジを提供し、あなたの院試突破を後押しします。",
   keywords: ["院試", "大学院入試", "過去問", "研究計画書", "合格体験記", "研究室"],
   
-  // 修正箇所②：検索結果の地球儀マークを消すためのアイコン設定を追加
-  icons: {
-    icon: "/images/icon.png",
-    apple: "/images/icon.png",
-  },
+  // 💡 【ポイント】
+  // `app/icon.png` を置いたので、ここにあった `icons: {...}` は完全に削除しました！
+  // Next.jsが勝手に `app/icon.png` を見つけて全ページに適用してくれます。
 
   openGraph: {
     title: "大学院受験対策ならAcadeMina｜過去問・合格体験記・研究室情報",
     description: "大学院進学を目指す学生のための総合サポートプラットフォーム。過去問解説や合格体験記で院試突破を後押しします。",
-    // 修正箇所③：ここもwwwありのURLに統一
     url: "https://www.academina.com",
     siteName: "AcadeMina",
     locale: "ja_JP",
     type: "website",
     images: [
       {
-        url: "/images/icon.png",
+        url: "/images/icon.png", // 共有された時（OGP）の画像は引き続きこちらを使用
       },
     ],
   },
@@ -46,7 +42,7 @@ export const metadata: Metadata = {
 };
 
 // ==========================================
-// 🚨 ここから下は元の画面表示用コード（変更なし） 🚨
+// 🚨 画面表示用コード 🚨
 // ==========================================
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
