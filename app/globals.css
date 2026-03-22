@@ -32,6 +32,9 @@
 }
 
 @layer components {
+  /* ==========================================
+     🖋 コラム本文（ベース設定）
+     ========================================== */
   .column-content {
     max-width: 860px;
     margin: 0 auto;
@@ -40,6 +43,27 @@
     line-height: 1.9;
   }
 
+  /* ==========================================
+     ✨ 追加：microCMSの基本タグ（p, a, img, h3など）の復活
+     ========================================== */
+  .column-content p { margin-bottom: 2rem; }
+  .column-content h3 { font-size: 1.25rem; font-weight: bold; margin: 2.5rem 0 1rem; color: #333; }
+  .column-content h4 { font-size: 1.1rem; font-weight: bold; margin: 2rem 0 0.5rem; }
+  
+  /* クラス名のない普通の箇条書き・番号リストを復活（張本さんのリストと衝突しないように設定） */
+  .column-content ul:not([class]) { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 2rem; color: #444; }
+  .column-content ol:not([class]) { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 2rem; color: #444; }
+  .column-content ul:not([class]) li, .column-content ol:not([class]) li { margin-bottom: 0.5rem; }
+  
+  .column-content a { color: var(--accent-color); text-decoration: underline; text-underline-offset: 4px; transition: opacity 0.3s; }
+  .column-content a:hover { opacity: 0.7; }
+  .column-content strong, .column-content b { font-weight: bold; color: #111; background-color: rgba(255, 244, 204, 0.6); padding: 0 4px; }
+  .column-content img { border-radius: 12px; margin: 2.5rem 0; width: 100%; height: auto; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+  .column-content blockquote { border-left: 4px solid #ddd; padding-left: 1.5rem; margin: 2rem 0; color: #666; font-style: italic; }
+
+  /* ==========================================
+     🛡 既存：張本さんのオリジナルカスタムパーツ（完全維持）
+     ========================================== */
   /* 箇条書きの復活設定 */
   .column-content ul.point-list {
     list-style-type: disc !important;
@@ -90,7 +114,81 @@
   .column-content .check-card-list li::before { content: "✓"; position: absolute; left: 1rem; color: var(--accent-color); font-weight: bold; }
   .column-content .check-card-list.is-caution li::before { content: "!"; color: #ea580c; }
 
+  /* ==========================================
+     ✨ 追加：比較表（compare-grid）のデザイン
+     ========================================== */
+  .column-content .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 2.5rem 0;
+  }
+  .column-content .compare-card {
+    border: 2px solid #f1f5f9;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  }
+  .column-content .compare-card-head {
+    background: #f8fafc;
+    padding: 1rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 2px solid #f1f5f9;
+    color: var(--accent-color);
+  }
+  .column-content .compare-card-body {
+    padding: 1.5rem;
+  }
+  .column-content .compare-card-body p {
+    margin-bottom: 0.5rem;
+  }
+
+  /* ==========================================
+     ✨ 追加：フロー図（flow-diagram）のデザイン
+     ========================================== */
+  .column-content .flow-diagram {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 3rem 0;
+    background: #f8fafc;
+    padding: 2rem;
+    border-radius: 16px;
+  }
+  .column-content .flow-step {
+    background: #ffffff;
+    border: 2px solid var(--accent-color);
+    padding: 1.5rem;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  }
+  .column-content .flow-label {
+    display: inline-block;
+    background: var(--accent-color);
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 0.2rem 0.8rem;
+    border-radius: 9999px;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.05em;
+  }
+  .column-content .flow-arrow {
+    color: #cbd5e1;
+    font-size: 2rem;
+    font-weight: bold;
+    line-height: 1;
+  }
+
   @media (max-width: 767px) {
     .column-content .check-card-list { grid-template-columns: 1fr; }
+    .column-content .compare-grid { grid-template-columns: 1fr; }
   }
 }

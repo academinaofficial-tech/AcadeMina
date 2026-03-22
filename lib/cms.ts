@@ -151,3 +151,31 @@ export async function getSchools() {
         return { contents: [], totalCount: 0 }; 
     }
 }
+
+export async function getArticleBySlug(slug: string) {
+    // 💡 ID指定ではなく、filtersクエリを使って「slugフィールドが一致するもの」を探します
+    const params = new URLSearchParams({
+        filters: `slug[equals]${slug}`,
+    });
+
+    const url = `${CMS_CONFIG.BASE_URL}/${CMS_CONFIG.ENDPOINT}?${params}`;
+
+    try {
+        const res = await fetch(url, {
+            headers: { 'X-MICROCMS-API-KEY': CMS_CONFIG.API_KEY },
+            next: { revalidate: 60 }
+        });
+        
+        if (!res.ok) throw new Error(`CMS API Error: ${res.status}`);
+        
+        const data = await res.json();
+        
+        // filtersで検索した場合、結果は contents 配列で返ってくるので、最初の1件を返す
+        return data.contents[0] || null;
+
+    } catch (e: any) {
+        console.warn(`CMS fetch failed for slug ${slug}, using mock data:`, e.message);
+        // モックデータから探す場合（検証用）
+        return _mockArticles.find((a: any) => a.slug === slug) || _mockArticles[0];
+    }
+}
