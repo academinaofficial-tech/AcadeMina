@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Button from "@/components/ui/Button";
 
 export const metadata = {
   title: "院試サポート | AcadeMina",
@@ -46,7 +47,7 @@ export default function Page() {
           <div className="text-[0.8rem] font-bold text-accent-light tracking-[0.15em] uppercase mb-3">01 / Digital Store</div>
           <h2 className="text-[1.8rem] md:text-[2.5rem] font-extrabold mb-5 leading-[1.2]">院試マスター / 教材ストア</h2>
           <p className="text-[1.05rem] text-[#555] leading-[2] mb-[30px]">合格者が執筆した過去問解説、体験記、研究計画書、予想問題。<br />大学院入試を突破するための「武器」を、いつでも手に入れられます。</p>
-          <Link className="inline-block px-[36px] py-[14px] bg-text text-white rounded-full font-bold text-[0.95rem] transition-all duration-300 hover:bg-accent hover:opacity-100 hover:-translate-y-[2px]" href="/exam-store">教材を探す →</Link>
+          <Button href="/exam-store" variant="outline" className="px-10">教材を探す →</Button>
         </div>
         <div className="flex-1 relative w-full">
           <div className="rounded-xl overflow-hidden aspect-[4/3] bg-gray">
@@ -61,7 +62,7 @@ export default function Page() {
           <div className="text-[0.8rem] font-bold text-accent-light tracking-[0.15em] uppercase mb-3">02 / Success Stories</div>
           <h2 className="text-[1.8rem] md:text-[2.5rem] font-extrabold mb-5 leading-[1.2]">サクセスストーリー / 合格体験記</h2>
           <p className="text-[1.05rem] text-[#555] leading-[2] mb-[30px]">難関大学院を突破した先輩たちのリアルな軌跡。<br />独自の勉強スケジュール、研究室訪問のコツ、モチベーション維持の方法まで、生の声をお届けします。</p>
-          <Link className="inline-block px-[36px] py-[14px] bg-text text-white rounded-full font-bold text-[0.95rem] transition-all duration-300 hover:bg-accent hover:opacity-100 hover:-translate-y-[2px]" href="/story">体験記を読む →</Link>
+          <Button href="/story" variant="outline" className="px-10">体験記を読む →</Button>
         </div>
         <div className="flex-1 relative w-full">
           <div className="rounded-xl overflow-hidden aspect-[4/3] bg-gray">
@@ -76,7 +77,7 @@ export default function Page() {
           <div className="text-[0.8rem] font-bold text-accent-light tracking-[0.15em] uppercase mb-3">03 / Mentoring</div>
           <h2 className="text-[1.8rem] md:text-[2.5rem] font-extrabold mb-5 leading-[1.2]">メンターマッチ / メンター相談</h2>
           <p className="text-[1.05rem] text-[#555] leading-[2] mb-[30px]">現役院生にオンラインで直接相談。研究室選びのリアルな話、<br />面接対策、研究計画書のレビューまで、マンツーマンでサポート。</p>
-          <Link className="inline-block px-[36px] py-[14px] bg-text text-white rounded-full font-bold text-[0.95rem] transition-all duration-300 hover:bg-accent hover:opacity-100 hover:-translate-y-[2px]" href="#">メンターを探す →</Link>
+          <Button href="#" variant="outline" className="px-10">メンターを探す →</Button>
         </div>
         <div className="flex-1 relative w-full">
           <div className="rounded-xl overflow-hidden aspect-[4/3] bg-gray">
@@ -91,7 +92,7 @@ export default function Page() {
           <div className="text-[0.8rem] font-bold text-accent-light tracking-[0.15em] uppercase mb-3">04 / Community</div>
           <h2 className="text-[1.8rem] md:text-[2.5rem] font-extrabold mb-5 leading-[1.2]">Q&amp;Aボード / 質問掲示板</h2>
           <p className="text-[1.05rem] text-[#555] leading-[2] mb-[30px]">「この問題の解き方がわからない」「研究室訪問のマナーは？」<br />院試に関するあらゆる疑問を、先輩や同期と解決できるコミュニティ。</p>
-          <Link className="inline-block px-[36px] py-[14px] bg-text text-white rounded-full font-bold text-[0.95rem] transition-all duration-300 hover:bg-accent hover:opacity-100 hover:-translate-y-[2px]" href="#">掲示板を見る →</Link>
+          <Button href="#" variant="outline" className="px-10">掲示板を見る →</Button>
         </div>
         <div className="flex-1 relative w-full">
           <div className="rounded-xl overflow-hidden aspect-[4/3] bg-gray">
@@ -104,7 +105,7 @@ export default function Page() {
       <section className="bg-text text-white py-[100px] px-10 text-center">
         <h2 className="text-[2.5rem] font-extrabold mb-5">未来を描こう</h2>
         <p className="text-[1.1rem] opacity-80 mb-10">サービスに関するご質問や掲載のご依頼はこちらから。</p>
-        <Link className="inline-block bg-white text-text px-[50px] py-[15px] rounded-full font-bold text-[1.1rem] transition-transform duration-200 hover:scale-105 hover:opacity-100" href="/contact">お問い合わせ</Link>
+        <Button href="/contact" variant="outline" className="border-white text-white hover:bg-white hover:text-black text-[1.1rem]">お問い合わせ</Button>
       </section>
     </>
   );

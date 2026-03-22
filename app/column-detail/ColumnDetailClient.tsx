@@ -2,6 +2,7 @@
 
 import { formatDate } from "@/lib/cms";
 import Link from "next/link";
+import Button from "@/components/ui/Button";
 
 interface ColumnDetailClientProps {
     article: any;
@@ -62,12 +63,9 @@ export default function ColumnDetailClient({ article }: ColumnDetailClientProps)
 
             <footer className="mt-24 pt-10 border-t border-gray-100 text-center">
                 <p className="text-gray-400 mb-8 font-medium">最後まで読んでいただきありがとうございます。</p>
-                <Link
-                    href={isNews ? "/news" : "/column"}
-                    className="inline-block px-12 py-4 border-2 border-black rounded-full font-bold transition-all duration-300 hover:bg-black hover:text-white"
-                >
+                <Button href={isNews ? "/news" : "/column"}>
                     ← {isNews ? "ニュース一覧に戻る" : "全てのコラムを見る"}
-                </Link>
+                </Button>
             </footer>
         </article>
     );

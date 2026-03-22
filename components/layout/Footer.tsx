@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FOOTER_COMPANY_LINKS, FOOTER_SERVICE_LINKS, FOOTER_LEGAL_LINKS } from "@/lib/navigation";
 
 export default function Footer() {
     return (
@@ -21,22 +22,27 @@ export default function Footer() {
                 <div className="flex flex-col md:flex-row gap-[30px] md:gap-[50px]">
                     <ul className="list-none">
                         <li className="font-bold mb-3 text-[0.85rem] text-[#999] uppercase tracking-wider">運営 / Company</li>
-                        {/* ここを About Us に変更しました */}
-                        <li className="mb-2 text-[0.9rem]"><Link href="/about" className="transition-opacity duration-300 hover:opacity-70 hover:underline">About Us</Link></li>
-                        <li className="mb-2 text-[0.9rem]"><Link href="/contact" className="transition-opacity duration-300 hover:opacity-70 hover:underline">お問い合わせ</Link></li>
+                        {FOOTER_COMPANY_LINKS.map((link) => (
+                            <li key={link.href} className="mb-2 text-[0.9rem]">
+                                <Link href={link.href} className="transition-opacity duration-300 hover:opacity-70 hover:underline">{link.label}</Link>
+                            </li>
+                        ))}
                     </ul>
                     <ul className="list-none">
                         <li className="font-bold mb-3 text-[0.85rem] text-[#999] uppercase tracking-wider">サービス / Services</li>
-                        <li className="mb-2 text-[0.9rem]"><Link href="/lab" className="transition-opacity duration-300 hover:opacity-70 hover:underline">研究室検索</Link></li>
-                        <li className="mb-2 text-[0.9rem]"><Link href="/exam" className="transition-opacity duration-300 hover:opacity-70 hover:underline">院試サポート</Link></li>
-                        <li className="mb-2 text-[0.9rem]"><Link href="/exam-store" className="transition-opacity duration-300 hover:opacity-70 hover:underline">教材ストア</Link></li>
-                        <li className="mb-2 text-[0.9rem]"><Link href="/column" className="transition-opacity duration-300 hover:opacity-70 hover:underline">コラム</Link></li>
-                        {/* ここに News を追加しました */}
-                        <li className="mb-2 text-[0.9rem]"><Link href="/news" className="transition-opacity duration-300 hover:opacity-70 hover:underline">News</Link></li>
+                        {FOOTER_SERVICE_LINKS.map((link) => (
+                            <li key={link.href} className="mb-2 text-[0.9rem]">
+                                <Link href={link.href} className="transition-opacity duration-300 hover:opacity-70 hover:underline">{link.label}</Link>
+                            </li>
+                        ))}
                     </ul>
                     <ul className="list-none">
                         <li className="font-bold mb-3 text-[0.85rem] text-[#999] uppercase tracking-wider">規約・ポリシー / Legal</li>
-                        <li className="mb-2 text-[0.9rem]"><Link href="/legal" className="transition-opacity duration-300 hover:opacity-70 hover:underline">利用規約・プライバシーポリシー</Link></li>
+                        {FOOTER_LEGAL_LINKS.map((link) => (
+                            <li key={link.href} className="mb-2 text-[0.9rem]">
+                                <Link href={link.href} className="transition-opacity duration-300 hover:opacity-70 hover:underline">{link.label}</Link>
+                            </li>
+                        ))}
                     </ul>
                 </div>
             </footer>

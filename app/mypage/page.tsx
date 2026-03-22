@@ -3,6 +3,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import DownloadPdfButton from "./DownloadPdfButton";
 
 export const metadata: Metadata = {
   title: "マイページ | AcadeMina",
@@ -180,6 +181,8 @@ export default async function MyPage() {
                       <h3 className="font-extrabold text-lg mb-3 leading-snug group-hover/card:text-accent transition-colors">{p.exam.title}</h3>
                       <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{p.exam.category}</div>
                       <div className="mt-4 text-xs text-gray-400 font-bold">購入日: {new Date(p.createdAt).toLocaleDateString()}</div>
+                      
+                      <DownloadPdfButton examId={p.examId} hasPdfKey={!!p.exam.pdfKey} />
                     </Link>
                   ))
                 ) : (

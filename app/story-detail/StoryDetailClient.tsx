@@ -2,6 +2,7 @@
 
 import { formatDate } from "@/lib/cms";
 import Link from "next/link";
+import Button from "@/components/ui/Button";
 
 interface StoryDetailClientProps {
     article: any;
@@ -101,12 +102,9 @@ export default function StoryDetailClient({ article }: StoryDetailClientProps) {
 
             <footer className="mt-24 pt-10 border-t border-gray-100 text-center">
                 <p className="text-gray-400 mb-8 font-medium">最後まで読んでいただきありがとうございます。</p>
-                <Link
-                    href="/story"
-                    className="inline-block px-12 py-4 border-2 border-black rounded-full font-bold transition-all duration-300 hover:bg-black hover:text-white"
-                >
+                <Button href="/story">
                     ← 体験記一覧に戻る
-                </Link>
+                </Button>
             </footer>
         </article>
     );

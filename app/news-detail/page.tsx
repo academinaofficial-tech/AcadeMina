@@ -1,6 +1,7 @@
 import { getArticleById, formatDate } from "@/lib/cms";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import Button from "@/components/ui/Button";
 
 export const metadata = {
     title: "News | AcadeMina",
@@ -98,12 +99,12 @@ export default async function StoryDetailPage({ searchParams }: { searchParams: 
 
                 {/* 戻るボタン（豪華版） */}
                 <div className="mt-16 mb-12 text-center">
-                    <Link href="/story" className="inline-flex items-center justify-center gap-2 px-10 py-5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-2xl shadow-lg shadow-slate-900/20 transition-all hover:-translate-y-1">
+                    <Button href="/news" variant="solid">
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                         </svg>
-                        体験記一覧に戻る
-                    </Link>
+                        News一覧に戻る
+                    </Button>
                 </div>
             </div>
         </main>
