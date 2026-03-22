@@ -1,18 +1,20 @@
-import { getArticleById } from "@/lib/cms";
+import { getArticleBySlug } from "@/lib/cms";
 import StoryDetailClient from "./StoryDetailClient";
 import Link from "next/link";
 
-export async function generateMetadata({ searchParams }: { searchParams: { id: string } }) {
-  const articleId = searchParams.id;
-  const article = await getArticleById(articleId);
+// ❌ searchParams ではなく ⭕️ params に変更
+export async function generateMetadata({ params }: { params: { slug: string } }) {
+  const articleSlug = params.slug;
+  const article = await getArticleBySlug(articleSlug);
   return {
     title: `${article?.title || "合格体験記"} | AcadeMina`,
   };
 }
 
-export default async function Page({ searchParams }: { searchParams: { id: string } }) {
-  const articleId = searchParams.id;
-  const article = await getArticleById(articleId);
+// ❌ searchParams ではなく ⭕️ params に変更
+export default async function Page({ params }: { params: { slug: string } }) {
+  const articleSlug = params.slug;
+  const article = await getArticleBySlug(articleSlug);
 
   return (
     <main className="mt-20 md:mt-[134px] min-h-screen">

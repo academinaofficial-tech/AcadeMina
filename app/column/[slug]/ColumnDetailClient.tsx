@@ -69,13 +69,10 @@ export default function ColumnDetailClient({ article }: ColumnDetailClientProps)
             </header>
 
             {/* 3. 本文セクション (microCMSから送られてきたHTMLを展開) */}
-            <div className="column-content">
-                <div
-                    dangerouslySetInnerHTML={{ 
-                        __html: article.content || "<p>記事の中身がここに入ります。</p>" 
-                    }}
-                />
-            </div>
+            <div 
+    className="column-content" 
+    dangerouslySetInnerHTML={{ __html: article.content }} 
+/>
 
             {/* 4. フッターセクション (戻るボタン) */}
             <footer className="mt-24 pt-10 border-t border-gray-100 text-center">

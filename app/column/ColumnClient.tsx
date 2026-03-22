@@ -13,7 +13,6 @@ export default function ColumnClient({ initialArticles, featuredArticle }: Colum
     const [articles, setArticles] = useState(initialArticles);
     const [selectedCategory, setSelectedCategory] = useState("all");
 
-    // ② `category.category` (例: "院試対策") を抽出してタブを作る
     const dynamicCategories = Array.from(
         new Set(initialArticles.map(a => a.category?.category).filter(Boolean))
     ) as string[];
@@ -32,7 +31,6 @@ export default function ColumnClient({ initialArticles, featuredArticle }: Colum
 
     return (
         <div className="max-w-[1100px] mx-auto py-10 px-5">
-            {/* 1. NEW Article Highlight */}
             {featuredArticle && (
                 <div className="mb-20">
                     <div className="flex items-center gap-3 mb-6">
@@ -40,7 +38,7 @@ export default function ColumnClient({ initialArticles, featuredArticle }: Colum
                         <span className="text-sm font-extrabold tracking-[0.2em] uppercase text-gray-400">What's New</span>
                         <span className="text-xl font-extrabold ml-1">最新の記事</span>
                     </div>
-                    <Link href={`/column-detail?id=${featuredArticle.slug}`} className="group block no-underline text-inherit">
+                    <Link href={`/column/${featuredArticle.slug || featuredArticle.id}`} className="group block no-underline text-inherit">
                         <div className="flex flex-col md:flex-row gap-0 md:gap-10 bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm transition-all duration-300 group-hover:shadow-xl group-hover:-translate-y-1">
                             <div
                                 className="w-full md:w-1/2 min-h-[250px] md:min-h-[400px] bg-gray-100 bg-cover bg-center shrink-0"
@@ -59,7 +57,6 @@ export default function ColumnClient({ initialArticles, featuredArticle }: Colum
                 </div>
             )}
 
-            {/* 2. Article Grid Section with Filters */}
             <div className="pt-10 border-t border-gray-100">
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
                     <div>
@@ -88,7 +85,7 @@ export default function ColumnClient({ initialArticles, featuredArticle }: Colum
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
                     {articles.map((a) => (
-                        <Link key={a.id} href={`/column-detail?id=${a.id}`} className="group no-underline text-inherit">
+                        <Link key={a.id} href={`/column/${a.slug || a.id}`} className="group no-underline text-inherit">
                             <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 transition-all duration-300 group-hover:shadow-lg group-hover:-translate-y-1 h-full flex flex-col">
                                 <div
                                     className="h-48 bg-gray-100 bg-cover bg-center"
