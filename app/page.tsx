@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const data = await getArticles({ limit: 30 });
+  const data = await getArticles({ limit: 100 });
 
   const columnArticles = data.contents
     .filter((a: any) => a.category?.article_type === "column")
@@ -29,7 +29,6 @@ export default async function Page() {
 
       <section className="w-full" id="services">
         <div className="flex flex-col md:flex-row flex-wrap min-h-[70vh]">
-          {/* 💡 元の /lab に戻しました */}
           <article className="flex-1 min-w-[300px] relative p-20 md:p-[80px_40px] flex flex-col justify-between text-white bg-[#444] bg-cover bg-center transition-all duration-300 hover:brightness-110 cursor-pointer bg-[linear-gradient(rgba(0,0,0,0.45),rgba(0,0,0,0.45)),url('/images/lab.png')] border-b border-white/20 md:border-b-0 md:border-r border-white/20">
             <Link className="absolute top-0 left-0 w-full h-full z-10" href="/lab"></Link>
             <div className="relative z-20">
@@ -45,7 +44,6 @@ export default async function Page() {
             <Link className="relative z-20 mt-auto font-bold text-[1.1rem] underline underline-offset-4" href="/lab">研究室を探す →</Link>
           </article>
           
-          {/* 💡 こちらも元の /exam です */}
           <article className="flex-1 min-w-[300px] relative p-20 md:p-[80px_40px] flex flex-col justify-between text-white bg-[#444] bg-cover bg-center transition-all duration-300 hover:brightness-110 cursor-pointer bg-[linear-gradient(rgba(0,0,0,0.45),rgba(0,0,0,0.45)),url('/images/exam.png')] border-b border-white/20 md:border-b-0">
             <Link className="absolute top-0 left-0 w-full h-full z-10" href="/exam"></Link>
             <div className="relative z-20">
@@ -71,7 +69,7 @@ export default async function Page() {
           {columnArticles.map((a: any) => {
             const imgUrl = a.eyecatch ? a.eyecatch.url : '/images/col-placeholder.jpg';
             return (
-              <Link href={`/column-detail?id=${a.id}`} key={a.id} className="flex flex-col cursor-pointer transition-transform duration-300 hover:-translate-y-1.5 group">
+              <Link href={`/column/${a.slug || a.id}`} key={a.id} className="flex flex-col cursor-pointer transition-transform duration-300 hover:-translate-y-1.5 group">
                 <div className="h-[200px] bg-gray bg-cover bg-center rounded-t-md border border-b-0 border-border" style={{ backgroundImage: `url('${imgUrl}')` }}></div>
                 <div className="p-5 border border-border rounded-b-md flex-1 bg-white">
                   <div className="text-[0.8rem] text-gray-500 mb-2 font-medium">{formatDate(a.publishedAt)} / {a.category?.category || 'Column'}</div>
@@ -95,7 +93,7 @@ export default async function Page() {
           <ul className="list-none border-t border-border">
             {newsArticles.map((n: any) => (
               <li key={n.id} className="flex flex-col md:flex-row md:items-center py-[25px] border-b border-border transition-colors duration-200 hover:bg-white group px-4 -mx-4 rounded-lg">
-                <Link href={`/news-detail?id=${n.id}`} className="flex flex-col md:flex-row md:items-center w-full">
+                <Link href={`/news/${n.slug || n.id}`} className="flex flex-col md:flex-row md:items-center w-full">
                   <span className="font-bold text-[0.9rem] text-[#666] md:w-[120px] shrink-0 mb-2 md:mb-0">{formatDate(n.publishedAt)}</span>
                   <span className="text-[1rem] font-semibold flex-1 group-hover:text-blue-600 transition-colors">{n.title}</span>
                   <span className="ml-0 md:ml-5 text-[1.2rem] hidden md:block opacity-0 group-hover:opacity-100 transition-opacity text-blue-600">→</span>
