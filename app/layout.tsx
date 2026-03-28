@@ -5,28 +5,25 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
 // ==========================================
-// 🚨 ここから最強のSEO・OGP設定（土台） 🚨
+// SEO・OGP設定
 // ==========================================
 export const metadata: Metadata = {
-  // 修正箇所①：wwwありのURLに統一
   metadataBase: new URL("https://www.academina.com"),
   title: {
     default: "大学院受験対策ならAcadeMina｜過去問・合格体験記・研究室情報",
     template: "%s | AcadeMina",
   },
-  description: "AcadeMina（アカデミナ）は、大学院進学を目指す学生のためのプラットフォームです。難関大合格者による過去問解答解説、合格体験記、研究計画書のノウハウや、研究室情報などのナレッジを提供し、あなたの院試突破を後押しします。",
+  description:
+    "AcadeMina（アカデミナ）は、大学院進学を目指す学生のためのプラットフォームです。難関大合格者による過去問解答解説、合格体験記、研究計画書のノウハウや、研究室情報などのナレッジを提供し、あなたの院試突破を後押しします。",
   keywords: ["院試", "大学院入試", "過去問", "研究計画書", "合格体験記", "研究室"],
-  
-  // 修正箇所②：検索結果の地球儀マークを消すためのアイコン設定を追加
   icons: {
     icon: "/images/icon.png",
     apple: "/images/icon.png",
   },
-
   openGraph: {
     title: "大学院受験対策ならAcadeMina｜過去問・合格体験記・研究室情報",
-    description: "大学院進学を目指す学生のための総合サポートプラットフォーム。過去問解説や合格体験記で院試突破を後押しします。",
-    // 修正箇所③：ここもwwwありのURLに統一
+    description:
+      "大学院進学を目指す学生のための総合サポートプラットフォーム。過去問解説や合格体験記で院試突破を後押しします。",
     url: "https://www.academina.com",
     siteName: "AcadeMina",
     locale: "ja_JP",
@@ -40,24 +37,60 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary",
     title: "大学院受験対策ならAcadeMina｜過去問・合格体験記・研究室情報",
-    description: "大学院進学を目指す学生のための総合サポートプラットフォーム。",
+    description:
+      "大学院進学を目指す学生のための総合サポートプラットフォーム。",
     images: ["/images/icon.png"],
   },
 };
 
 // ==========================================
-// 🚨 ここから下は元の画面表示用コード（変更なし） 🚨
+// レイアウト
 // ==========================================
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <AppProviders>
       <html lang="ja">
         <head>
           <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+          <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossOrigin="anonymous"
+          />
           <link
             href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Kaushan+Script&family=Montserrat:wght@900&family=Orbitron:wght@700&family=Playfair+Display:ital,wght@1,700&display=swap"
             rel="stylesheet"
+          />
+
+          {/* 構造化データ：Googleに「AcadeMina」をブランド名として認識させる */}
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify([
+                {
+                  "@context": "https://schema.org",
+                  "@type": "Organization",
+                  name: "AcadeMina",
+                  url: "https://www.academina.com",
+                  logo: "https://www.academina.com/images/icon.png",
+                  sameAs: [
+                    "https://x.com/AcadeMina_ofc",
+                    "https://www.instagram.com/academina.official/",
+                    "https://note.com/grand_avocet7665",
+                  ],
+                },
+                {
+                  "@context": "https://schema.org",
+                  "@type": "WebSite",
+                  name: "AcadeMina",
+                  url: "https://www.academina.com",
+                },
+              ]),
+            }}
           />
         </head>
         <body>
