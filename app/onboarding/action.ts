@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
 export async function submitOnboarding(formData: FormData) {
-    const { userId } = auth();
+    const { userId } = await auth();
     const user = await currentUser();
 
     if (!userId || !user) {
@@ -25,8 +25,7 @@ export async function submitOnboarding(formData: FormData) {
         const univ = formData.get(`target_${i}_univ`) as string;
         const faculty = formData.get(`target_${i}_faculty`) as string;
         const dept = formData.get(`target_${i}_dept`) as string;
-        
-        // 大学名が入力されていれば配列に追加
+
         if (univ && univ.trim() !== "") {
             targetSchools.push({
                 univ: univ.trim(),
@@ -38,36 +37,46 @@ export async function submitOnboarding(formData: FormData) {
 
     const themeIds = formData.getAll("themes") as string[];
 
-    // 3. データベースに保存
-    await prisma.profile.upsert({
-        where: { id: userId },
-        update: {
-            university: finalUniversity,
-            faculty: finalFaculty,       // 👈 新規追加
-            department: finalDepartment,
-            grade,
-            careerPath,
-            targetSchools: targetSchools, // 👈 新規追加 (JSONとして自動保存されます)
-            interestThemes: {
-                set: themeIds.map((id) => ({ id })),
-            },
+    const email = user.emailAddresses[0].emailAddress;
+    const updateData = {
+        university: finalUniversity,
+        faculty: finalFaculty,
+        department: finalDepartment,
+        grade,
+        careerPath,
+        targetSchools: targetSchools,
+        interestThemes: {
+            set: themeIds.map((id) => ({ id })),
         },
-        create: {
-            id: userId,
-            email: user.emailAddresses[0].emailAddress,
-            firstName: user.firstName || "",
-            lastName: user.lastName || "",
-            university: finalUniversity,
-            faculty: finalFaculty,       // 👈 新規追加
-            department: finalDepartment,
-            grade,
-            careerPath,
-            targetSchools: targetSchools, // 👈 新規追加
-            interestThemes: {
-                connect: themeIds.map((id) => ({ id })),
-            },
-        },
-    });
+    };
 
-    redirect("/mypage");
+    // 同メールのプロフィールが既存の場合はそちらを更新
+    const existingByEmail = await prisma.profile.findUnique({ where: { email } });
+    if (existingByEmail && existingByEmail.id !== userId) {
+        await prisma.profile.update({ where: { email }, data: updateData });
+    } else {
+        await prisma.profile.upsert({
+            where: { id: userId },
+            update: updateData,
+            create: {
+                id: userId,
+                email,
+                firstName: user.firstName || "",
+                lastName: user.lastName || "",
+                university: finalUniversity,
+                faculty: finalFaculty,
+                department: finalDepartment,
+                grade,
+                careerPath,
+                targetSchools: targetSchools,
+                interestThemes: {
+                    connect: themeIds.map((id) => ({ id })),
+                },
+            },
+        });
+    }
+
+    // リダイレクト先があればそこへ、なければマイページへ
+    const redirectTo = formData.get("redirectTo") as string;
+    redirect(redirectTo || "/mypage");
 }

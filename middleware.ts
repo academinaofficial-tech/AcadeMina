@@ -6,9 +6,11 @@ const isPublicRoute = createRouteMatcher([
     "/about",
     "/contact",
     "/column(.*)",
-    "/exam",              // 合格体験記まとめ
-    "/exam-store",        // 教材ストアまとめ
-    "/story",             // ストーリーまとめ
+    "/exam",
+    "/exam/mentor",
+    "/exam-store",
+    "/story",             // ← 一覧ページのみ公開
+    // "/story(.*)" は入れない → /story/[slug] はログイン必須になる
     "/news(.*)",
     "/legal",
     "/api/webhooks/clerk",

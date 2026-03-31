@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Profile {
@@ -30,6 +31,7 @@ model Profile {
   phone            String?
   address          String?
   purchases        Purchase[]
+  mentorRequests   MentorRequest[]
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
 }
@@ -126,6 +128,57 @@ model Lab {
 
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
+}
+
+enum MentorRequestType {
+  CONSULTATION
+  REVIEW
+}
+
+enum MentorRequestStatus {
+  PENDING      // 申込済み・未対応
+  IN_PROGRESS  // 対応中（面談日確定 / 添削中）
+  DELIVERED    // 完了・引き落とし実行済み
+  PAID         // 決済確認済み
+  CANCELLED    // キャンセル
+}
+
+// 面談・研究計画書添削の申込
+model MentorRequest {
+  id                    String              @id @default(cuid())
+  profileId             String
+  profile               Profile             @relation(fields: [profileId], references: [id])
+  type                  MentorRequestType
+  status                MentorRequestStatus @default(PENDING)
+
+  // 面談用：希望日時（例: [{date:"2024-04-15", slots:["12:00-15:00","17:00-18:00"]}]）
+  preferredSlots        Json?
+
+  // 添削用：提出書類・添削済み書類のURL（Vercel Blob）
+  documentUrl           String?
+  reviewedDocUrl        String?
+
+  // 申込時のメッセージ・運営メモ
+  message               String?
+  adminNote             String?
+
+  // 決済（申込時に確定した料金スナップショット）
+  price                 Int
+  stripeCustomerId      String?
+  stripePaymentMethodId String?
+  stripePaymentIntentId String?
+  paidAt                DateTime?
+
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+}
+
+// 運営が変更できるサービス料金
+model ServicePrice {
+  id        String            @id @default(cuid())
+  type      MentorRequestType @unique
+  price     Int
+  updatedAt DateTime          @updatedAt
 }
 
 model ThemeGroup {

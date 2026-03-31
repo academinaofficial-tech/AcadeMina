@@ -34,8 +34,9 @@ export default async function MyPage() {
     );
   }
 
-  const profile = await prisma.profile.findUnique({
-    where: { id: user.id },
+  const email = user.emailAddresses[0]?.emailAddress;
+  const profile = await prisma.profile.findFirst({
+    where: { OR: [{ id: user.id }, ...(email ? [{ email }] : [])] },
     include: { purchases: { include: { exam: true } } }
   });
 
