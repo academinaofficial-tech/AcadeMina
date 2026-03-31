@@ -1,24 +1,23 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-// 誰でも見れる「公開ルート」を定義（まとめページはここに入れる）
 const isPublicRoute = createRouteMatcher([
     "/",
     "/about",
     "/contact",
     "/column(.*)",
-    "/exam",              // 合格体験記まとめ
-    "/exam-store",        // 教材ストアまとめ
-    "/story",             // ストーリーまとめ
+    "/exam",
+    "/exam-store",
+    "/story",             // ← 一覧ページのみ公開
+    // "/story(.*)" は入れない → /story/[slug] はログイン必須になる
     "/news(.*)",
     "/legal",
     "/api/webhooks/clerk",
     "/account/login(.*)",
     "/account/signup(.*)",
+    "/onboarding",        // ← オンボーディング自体は認証後にアクセスするが公開ルートに入れておく
 ]);
 
 export default clerkMiddleware((auth, req) => {
-    // ユーザーがアクセスしたページが「公開ルート」でない場合、
-    // ログインしていなければ Clerk が自動でログイン画面に飛ばす
     if (!isPublicRoute(req)) {
         auth().protect();
     }

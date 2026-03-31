@@ -1,8 +1,10 @@
 import { getArticleBySlug } from "@/lib/cms";
 import StoryDetailClient from "./StoryDetailClient";
 import Link from "next/link";
+import { auth } from "@clerk/nextjs/server";
+import { prisma } from "@/lib/prisma";
+import { redirect } from "next/navigation";
 
-// ❌ searchParams ではなく ⭕️ params に変更
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const articleSlug = params.slug;
   const article = await getArticleBySlug(articleSlug);
@@ -11,14 +13,30 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-// ❌ searchParams ではなく ⭕️ params に変更
 export default async function Page({ params }: { params: { slug: string } }) {
+  // ✅ ログイン済みかチェック（middlewareで強制されるが念のため）
+  const { userId } = auth();
+  if (!userId) {
+    redirect("/account/login");
+  }
+
+  // ✅ オンボーディング済みかチェック（Profileレコードの有無）
+  const profile = await prisma.profile.findUnique({
+    where: { id: userId },
+    select: { id: true },
+  });
+
+  if (!profile) {
+    // 未回答 → オンボーディングへ飛ばす（戻りURLをクエリで渡す）
+    redirect(`/onboarding?redirect=/story/${params.slug}`);
+  }
+
+  // ✅ 記事データ取得
   const articleSlug = params.slug;
   const article = await getArticleBySlug(articleSlug);
 
   return (
     <main className="mt-20 md:mt-[134px] min-h-screen">
-      {/* Breadcrumb */}
       <nav className="py-4 px-6 md:px-10 text-xs text-gray-400 bg-gray-50/50 border-b border-gray-100 flex items-center gap-2 overflow-x-auto whitespace-nowrap">
         <Link href="/" className="hover:text-accent font-medium transition-colors">TOP</Link>
         <span>&gt;</span>
