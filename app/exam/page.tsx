@@ -74,20 +74,20 @@ export default function Page() {
         </div>
       </div>
 
-      {/* 03: メンター相談 (画像 右) */}
-      <div className="flex flex-col md:flex-row items-center gap-[40px] md:gap-[80px] max-w-[1100px] mx-auto py-[60px] md:py-[120px] px-5 md:px-10 border-t border-border">
+      {/* 03: メンター相談 — 準備中のため非表示 */}
+      {/* <div className="flex flex-col md:flex-row items-center gap-[40px] md:gap-[80px] max-w-[1100px] mx-auto py-[60px] md:py-[120px] px-5 md:px-10 border-t border-border">
         <div className="flex-1">
           <div className="text-[0.8rem] font-bold text-accent-light tracking-[0.15em] uppercase mb-3">03 / Mentoring</div>
           <h2 className="text-[1.8rem] md:text-[2.5rem] font-extrabold mb-5 leading-[1.2]">メンターマッチ / メンター相談</h2>
           <p className="text-[1.05rem] text-[#555] leading-[2] mb-[30px]">現役院生にオンラインで直接相談。研究室選びのリアルな話、<br />面接対策、研究計画書のレビューまで、マンツーマンでサポート。</p>
-          <Link className="inline-block px-[36px] py-[14px] bg-text text-white rounded-full font-bold text-[0.95rem] transition-all duration-300 hover:bg-accent hover:opacity-100 hover:-translate-y-[2px]" href="#">メンターを探す →</Link>
+          <Link className="inline-block px-[36px] py-[14px] bg-text text-white rounded-full font-bold text-[0.95rem] transition-all duration-300 hover:bg-accent hover:opacity-100 hover:-translate-y-[2px]" href="/exam/mentor">面談・添削を申し込む →</Link>
         </div>
         <div className="flex-1 relative w-full">
           <div className="rounded-xl overflow-hidden aspect-[4/3] bg-gray">
             <img className="w-full h-full object-cover" alt="メンター" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800&auto=format&fit=crop" />
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* 04: 質問掲示板 (画像 左) */}
       <div className="flex flex-col md:flex-row-reverse items-center gap-[40px] md:gap-[80px] max-w-[1100px] mx-auto py-[60px] md:py-[120px] px-5 md:px-10 border-t border-border">

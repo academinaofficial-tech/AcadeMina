@@ -8,8 +8,33 @@ import { redirect } from "next/navigation";
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const articleSlug = params.slug;
   const article = await getArticleBySlug(articleSlug);
+
+  const title = article?.title || "合格体験記";
+  const school = article?.school_info || article;
+  const descParts = [
+    school?.university,
+    school?.faculty,
+    school?.major,
+  ].filter(Boolean).join(" ");
+  const description = descParts
+    ? `${descParts}への合格体験記。${title} | AcadeMina`
+    : `${title} | 大学院合格者の体験記 | AcadeMina`;
+  const ogImage = article?.eyecatch?.url;
+
   return {
-    title: `${article?.title || "合格体験記"} | AcadeMina`,
+    title: `${title} | AcadeMina`,
+    description,
+    openGraph: {
+      title: `${title} | AcadeMina`,
+      description,
+      ...(ogImage ? { images: [{ url: ogImage }] } : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} | AcadeMina`,
+      description,
+      ...(ogImage ? { images: [ogImage] } : {}),
+    },
   };
 }
 
