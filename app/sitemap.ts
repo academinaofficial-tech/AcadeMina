@@ -22,7 +22,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     const staticPages = staticPaths.map((route) => ({
         url: `${baseUrl}${route}`,
-        lastModified: new Date(),
+        lastModified: new Date("2026-04-02"),
         changeFrequency: 'weekly' as const,
         priority: route === '' ? 1.0 : 0.8,
     }));

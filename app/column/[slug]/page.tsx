@@ -66,5 +66,28 @@ export default async function ColumnDetailPage({ params }: { params: { slug: str
   }
 
   // クライアントコンポーネントへデータを渡す
-  return <ColumnDetailClient article={article} />;
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.title,
+    datePublished: article.publishedAt,
+    author: { "@type": "Organization", name: "AcadeMina" },
+    publisher: {
+      "@type": "Organization",
+      name: "AcadeMina",
+      logo: { "@type": "ImageObject", url: "https://www.academina.com/images/icon.png" },
+    },
+    ...(article.eyecatch ? { image: article.eyecatch.url } : {}),
+    ...(article.metaDescription ? { description: article.metaDescription } : {}),
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <ColumnDetailClient article={article} />
+    </>
+  );
 }

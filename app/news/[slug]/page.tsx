@@ -5,8 +5,23 @@ import type { Metadata } from "next";
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
     const article = await getArticleBySlug(params.slug);
+    const title = article?.title || "お知らせ";
+    const description = article?.metaDescription || article?.description || undefined;
+    const ogImage = article?.eyecatch?.url;
+
     return {
-        title: `${article?.title || "お知らせ"} | AcadeMina`,
+        title: `${title} | AcadeMina`,
+        ...(description ? { description } : {}),
+        openGraph: {
+            title: `${title} | AcadeMina`,
+            ...(description ? { description } : {}),
+            ...(ogImage ? { images: [{ url: ogImage }] } : {}),
+        },
+        twitter: {
+            card: "summary_large_image",
+            title: `${title} | AcadeMina`,
+            ...(ogImage ? { images: [ogImage] } : {}),
+        },
     };
 }
 
@@ -17,6 +32,27 @@ export default async function NewsDetailPage({ params }: { params: { slug: strin
         notFound();
     }
 
-    // 💡 データの取得だけやって、実際の表示はすべて Client に任せる！
-    return <NewsDetailClient article={article} />;
+    const articleSchema = {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        headline: article.title,
+        datePublished: article.publishedAt,
+        author: { "@type": "Organization", name: "AcadeMina" },
+        publisher: {
+            "@type": "Organization",
+            name: "AcadeMina",
+            logo: { "@type": "ImageObject", url: "https://www.academina.com/images/icon.png" },
+        },
+        ...(article.eyecatch ? { image: article.eyecatch.url } : {}),
+    };
+
+    return (
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+            />
+            <NewsDetailClient article={article} />
+        </>
+    );
 }
