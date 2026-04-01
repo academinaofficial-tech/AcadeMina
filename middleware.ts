@@ -9,8 +9,7 @@ const isPublicRoute = createRouteMatcher([
     "/exam",
     "/exam/mentor",
     "/exam-store",
-    "/story",             // ← 一覧ページのみ公開
-    // "/story(.*)" は入れない → /story/[slug] はログイン必須になる
+    "/story(.*)",         // 一覧・詳細ページともに公開（SEOインデックス対応）
     "/news(.*)",
     "/legal",
     "/api/webhooks/clerk",
