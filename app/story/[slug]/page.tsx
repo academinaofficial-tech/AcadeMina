@@ -1,9 +1,6 @@
 import { getArticleBySlug } from "@/lib/cms";
 import StoryDetailClient from "./StoryDetailClient";
 import Link from "next/link";
-import { auth } from "@clerk/nextjs/server";
-import { prisma } from "@/lib/prisma";
-import { redirect } from "next/navigation";
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const articleSlug = params.slug;
@@ -39,24 +36,6 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default async function Page({ params }: { params: { slug: string } }) {
-  // ✅ ログイン済みかチェック（middlewareで強制されるが念のため）
-  const { userId } = auth();
-  if (!userId) {
-    redirect("/account/login");
-  }
-
-  // ✅ オンボーディング済みかチェック（Profileレコードの有無）
-  const profile = await prisma.profile.findUnique({
-    where: { id: userId },
-    select: { id: true },
-  });
-
-  if (!profile) {
-    // 未回答 → オンボーディングへ飛ばす（戻りURLをクエリで渡す）
-    redirect(`/onboarding?redirect=/story/${params.slug}`);
-  }
-
-  // ✅ 記事データ取得
   const articleSlug = params.slug;
   const article = await getArticleBySlug(articleSlug);
 
