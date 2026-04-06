@@ -9,7 +9,7 @@ export default function Footer() {
                 <div className="flex flex-col items-center gap-4 md:gap-5 w-fit">
                     <img src="/images/icon.png" alt="AcadeMina" className="h-[50px] md:h-[60px] w-auto object-contain rounded-[10px]" />
                     <div className="flex justify-center items-center gap-4 px-2">
-                        <a href="https://note.com/grand_avocet7665" target="_blank" rel="noopener noreferrer" className="transition-transform duration-200 hover:scale-110" title="note">
+                        <a href="https://note.com/academina" target="_blank" rel="noopener noreferrer" className="transition-transform duration-200 hover:scale-110" title="note">
                             <img src="/images/icon-note.png" alt="note" className="w-6 h-6 rounded-sm" />
                         </a>
                         <a href="https://x.com/AcadeMina_ofc" target="_blank" rel="noopener noreferrer" className="transition-transform duration-200 hover:scale-110" title="X">

@@ -187,6 +187,127 @@
     line-height: 1;
   }
 
+/* ==========================================
+     ✨ 追加：記事末尾のCTAバナー（Call To Action）
+     ========================================== */
+  .column-content .article-cta-banner {
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 32px;
+    margin-top: 56px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* 左側にサイトのテーマカラーのアクセントライン */
+  .column-content .article-cta-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background-color: var(--accent-color);
+  }
+
+  .column-content .cta-content {
+    margin-bottom: 24px;
+  }
+
+  /* バッジの色もテーマカラー（の薄い色）に合わせて自動調整 */
+  .column-content .cta-badge {
+    display: inline-block;
+    background-color: rgba(0, 68, 204, 0.1); 
+    color: var(--accent-color);
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 999px;
+    margin-bottom: 12px;
+  }
+
+  .column-content .cta-title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--text-color);
+    margin-top: 0;
+    margin-bottom: 12px;
+    line-height: 1.4;
+    border-bottom: none; /* h2などのボーダー設定をリセット */
+    padding-bottom: 0;
+  }
+
+  .column-content .cta-description {
+    font-size: 0.95rem;
+    color: #475569;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .column-content .cta-action {
+    display: flex;
+    align-items: center;
+  }
+
+  /* 既存の a タグの下線設定を無効化して綺麗なボタンに */
+  .column-content a.cta-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--accent-color);
+    color: #ffffff;
+    font-size: 1.05rem;
+    font-weight: 700;
+    padding: 16px 32px;
+    border-radius: 12px;
+    text-decoration: none; /* 下線を消す */
+    transition: all 0.2s ease-in-out;
+    width: 100%;
+    box-shadow: 0 4px 6px -1px rgba(0, 68, 204, 0.2);
+  }
+
+  .column-content a.cta-button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px); /* フワッと浮く */
+    box-shadow: 0 10px 15px -3px rgba(0, 68, 204, 0.3);
+  }
+
+  .column-content .cta-icon {
+    width: 20px;
+    height: 20px;
+    margin-left: 8px;
+    transition: transform 0.2s ease;
+  }
+
+  .column-content a.cta-button:hover .cta-icon {
+    transform: translateX(4px); /* アイコンが右に動く */
+  }
+
+  /* PC向けのレイアウト（横並び） */
+  @media (min-width: 768px) {
+    .column-content .article-cta-banner {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding: 40px;
+    }
+    
+    .column-content .cta-content {
+      margin-bottom: 0;
+      flex: 1;
+      padding-right: 40px;
+    }
+    
+    .column-content .cta-action {
+      flex-shrink: 0;
+      width: 280px; /* PCでのボタンの幅 */
+    }
+  }
+  
   @media (max-width: 767px) {
     .column-content .check-card-list { grid-template-columns: 1fr; }
     .column-content .compare-grid { grid-template-columns: 1fr; }

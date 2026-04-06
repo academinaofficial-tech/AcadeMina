@@ -100,7 +100,7 @@ export default function RootLayout({
                   sameAs: [
                     "https://x.com/AcadeMina_ofc",
                     "https://www.instagram.com/academina.official/",
-                    "https://note.com/grand_avocet7665",
+                    "https://note.com/academina",
                   ],
                 },
                 {
