@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import AdminMentorClient from "./AdminMentorClient";
 
 export default async function AdminMentorPage() {
-    const { userId, sessionClaims } = auth();
+    const { userId, sessionClaims } = await auth();
     if (!userId) redirect("/account/login");
 
     const role = (sessionClaims?.publicMetadata as any)?.role;
