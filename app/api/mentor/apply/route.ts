@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { type, preferredSlots, message, paymentMethodId } = body;
+    const { type, price: priceOverride, preferredSlots, message, paymentMethodId } = body;
 
     if (!type || !paymentMethodId) {
         return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -28,10 +28,16 @@ export async function POST(req: Request) {
     }
     const profileId = profile.id;
 
-    // 現在のサービス料金を取得
-    const servicePrice = await prisma.servicePrice.findUnique({ where: { type } });
-    if (!servicePrice) {
-        return NextResponse.json({ error: "Service price not found" }, { status: 404 });
+    // 料金はフロントから渡された値を優先、なければDBから取得
+    let finalPrice: number;
+    if (typeof priceOverride === "number" && priceOverride > 0) {
+        finalPrice = priceOverride;
+    } else {
+        const servicePrice = await prisma.servicePrice.findUnique({ where: { type } });
+        if (!servicePrice) {
+            return NextResponse.json({ error: "Service price not found" }, { status: 404 });
+        }
+        finalPrice = servicePrice.price;
     }
 
     // Stripe Customerを作成（またはすでに存在する場合は取得）
@@ -64,7 +70,7 @@ export async function POST(req: Request) {
             type,
             preferredSlots: preferredSlots ?? null,
             message: message ?? null,
-            price: servicePrice.price,
+            price: finalPrice,
             stripeCustomerId,
             stripePaymentMethodId: paymentMethodId,
         },

@@ -17,6 +17,11 @@ const TIME_SLOTS = [
 
 type PreferredSlot = { date: string; slots: string[] };
 
+const CONSULTATION_PLANS = [
+    { duration: 30, price: 1980, label: "30分" },
+    { duration: 60, price: 2980, label: "60分" },
+] as const;
+
 function ApplyForm({
     type,
     price,
@@ -124,6 +129,7 @@ function ApplyForm({
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     type,
+                    price,
                     preferredSlots: type === "CONSULTATION" ? preferredSlots : undefined,
                     message,
                     paymentMethodId: setupIntent.payment_method,
@@ -285,26 +291,28 @@ function ApplyForm({
 }
 
 export default function MentorApplyClient({
-    consultationPrice,
     reviewPrice,
 }: {
-    consultationPrice: number;
     reviewPrice: number;
 }) {
     const [step, setStep] = useState<"select" | "form">("select");
     const [selectedType, setSelectedType] = useState<"CONSULTATION" | "REVIEW" | null>(null);
-    const [clientSecret, setClientSecret] = useState<string | null>(null);
+    const [selectedPrice, setSelectedPrice] = useState<number>(0);
 
-    const selectService = (type: "CONSULTATION" | "REVIEW") => {
-        setSelectedType(type);
+    const selectConsultation = (price: number) => {
+        setSelectedType("CONSULTATION");
+        setSelectedPrice(price);
         setStep("form");
     };
 
-    const selectedPrice =
-        selectedType === "CONSULTATION" ? consultationPrice : reviewPrice;
+    const selectReview = () => {
+        setSelectedType("REVIEW");
+        setSelectedPrice(reviewPrice);
+        setStep("form");
+    };
 
     return (
-        <div className="max-w-[800px] mx-auto px-5 py-16">
+        <div className="max-w-[860px] mx-auto px-5 py-16">
             <div className="text-center mb-12">
                 <div className="text-[0.85rem] font-bold text-accent tracking-widest uppercase mb-3">
                     Mentoring Service
@@ -312,7 +320,11 @@ export default function MentorApplyClient({
                 <h1 className="text-[2rem] md:text-[2.5rem] font-extrabold mb-4">
                     面談・研究計画書添削
                 </h1>
-                <p className="text-gray-500 leading-relaxed">
+                {/* 東大・東京科学大の強調 */}
+                <div className="inline-flex items-center gap-2 bg-black text-white text-sm font-bold px-5 py-2 rounded-full mb-4">
+                    東京大学・東京科学大学の現役学生によるサポート
+                </div>
+                <p className="text-gray-500 leading-relaxed mt-3">
                     サービス完了後にお支払いいただく後払い制です。<br />
                     運営側のキャンセルがあった場合、費用は一切発生しません。
                 </p>
@@ -320,11 +332,8 @@ export default function MentorApplyClient({
 
             {step === "select" && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* 面談カード */}
-                    <button
-                        onClick={() => selectService("CONSULTATION")}
-                        className="text-left bg-white border-2 border-transparent hover:border-accent rounded-2xl p-8 shadow-sm hover:shadow-lg transition-all group"
-                    >
+                    {/* 面談カード（30分・60分） */}
+                    <div className="bg-white border rounded-2xl p-8 shadow-sm flex flex-col">
                         <div className="text-3xl mb-4">💬</div>
                         <div className="text-xs font-bold text-accent uppercase tracking-widest mb-2">
                             Consultation
@@ -334,21 +343,28 @@ export default function MentorApplyClient({
                             大学院受験に関する疑問や不安をオンラインで相談。
                             研究室選び・面接対策・勉強スケジュールなど幅広く対応します。
                         </p>
-                        <div className="flex items-center justify-between">
-                            <span className="text-2xl font-extrabold">
-                                ¥{consultationPrice.toLocaleString()}
-                            </span>
-                            <span className="text-sm text-accent font-bold group-hover:translate-x-1 transition-transform">
-                                申し込む →
-                            </span>
+                        <div className="mt-auto space-y-3">
+                            {CONSULTATION_PLANS.map((plan) => (
+                                <button
+                                    key={plan.duration}
+                                    onClick={() => selectConsultation(plan.price)}
+                                    className="w-full flex items-center justify-between border-2 border-transparent hover:border-accent rounded-xl px-5 py-3 bg-gray-50 hover:bg-white transition-all group"
+                                >
+                                    <span className="font-bold text-sm">{plan.label}</span>
+                                    <span className="flex items-center gap-2">
+                                        <span className="text-xl font-extrabold">¥{plan.price.toLocaleString()}</span>
+                                        <span className="text-xs text-accent font-bold group-hover:translate-x-1 transition-transform">→</span>
+                                    </span>
+                                </button>
+                            ))}
                         </div>
-                        <p className="text-xs text-gray-400 mt-2">面談完了後にお支払い</p>
-                    </button>
+                        <p className="text-xs text-gray-400 mt-3">面談完了後にお支払い</p>
+                    </div>
 
                     {/* 添削カード */}
                     <button
-                        onClick={() => selectService("REVIEW")}
-                        className="text-left bg-white border-2 border-transparent hover:border-accent rounded-2xl p-8 shadow-sm hover:shadow-lg transition-all group"
+                        onClick={selectReview}
+                        className="text-left bg-white border-2 border-transparent hover:border-accent rounded-2xl p-8 shadow-sm hover:shadow-lg transition-all group flex flex-col"
                     >
                         <div className="text-3xl mb-4">📝</div>
                         <div className="text-xs font-bold text-accent uppercase tracking-widest mb-2">
@@ -359,7 +375,7 @@ export default function MentorApplyClient({
                             研究計画書をご提出いただき、3日以内に添削してお返しします。
                             志望大学院に合わせた的確なフィードバックをお届けします。
                         </p>
-                        <div className="flex items-center justify-between">
+                        <div className="mt-auto flex items-center justify-between">
                             <span className="text-2xl font-extrabold">
                                 ¥{reviewPrice.toLocaleString()}
                             </span>
