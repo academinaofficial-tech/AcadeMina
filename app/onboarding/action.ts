@@ -48,10 +48,10 @@ export async function submitOnboarding(formData: FormData) {
         },
     };
 
-    // 同メールのプロフィールが既存の場合はそちらを更新
+    // 同メールのプロフィールが既存の場合はそちらを更新（idも現在のuserIdに付け替える）
     const existingByEmail = await prisma.profile.findUnique({ where: { email } });
     if (existingByEmail && existingByEmail.id !== userId) {
-        await prisma.profile.update({ where: { email }, data: updateData });
+        await prisma.profile.update({ where: { email }, data: { ...updateData, id: userId } });
     } else {
         await prisma.profile.upsert({
             where: { id: userId },

@@ -23,7 +23,7 @@ export default async function ExamDetailPage({ params }: { params: { id: string 
     });
 
     if (!profile) {
-        redirect("/onboarding");
+        redirect(`/onboarding?redirect=/exam/product/${params.id}`);
     }
 
     // ここから詳細ページの表示ロジック
