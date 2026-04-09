@@ -1,13 +1,14 @@
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import AdminMentorClient from "./AdminMentorClient";
 
 export default async function AdminMentorPage() {
-    const { userId, sessionClaims } = await auth();
+    const { userId } = await auth();
     if (!userId) redirect("/account/login");
 
-    const role = (sessionClaims?.publicMetadata as any)?.role;
+    const user = await currentUser();
+    const role = (user?.publicMetadata as any)?.role;
     if (role !== "admin") redirect("/");
 
     const requests = await prisma.mentorRequest.findMany({
