@@ -21,11 +21,13 @@ export default function AddToCartButton({ examId }: { examId: string }) {
   };
 
   return inCart ? (
-    <span className="px-6 py-3 bg-gray-100 text-gray-500 rounded-full font-bold text-sm">カート追加済み</span>
+    <div className="w-full py-4 text-center bg-gray-100 text-gray-500 font-bold text-sm tracking-widest rounded-sm">
+      カートに追加済み
+    </div>
   ) : (
     <button
       onClick={handleClick}
-      className="px-8 py-3 bg-black text-white rounded-full font-bold hover:bg-accent transition-colors"
+      className="w-full py-4 bg-black text-white font-bold text-sm tracking-[0.15em] hover:bg-gray-800 transition-colors rounded-sm"
     >
       カートに追加
     </button>
