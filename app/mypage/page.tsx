@@ -44,6 +44,28 @@ export default async function MyPage() {
     redirect("/onboarding");
   }
 
+  // 自分が投稿した質問 & 回答した質問
+  const [myQuestions, answeredQuestions] = await Promise.all([
+    prisma.question.findMany({
+      where: { profileId: user.id },
+      include: {
+        category: true,
+        _count: { select: { answers: true } },
+      },
+      orderBy: { createdAt: "desc" },
+      take: 20,
+    }),
+    prisma.question.findMany({
+      where: { answers: { some: { profileId: user.id } } },
+      include: {
+        category: true,
+        _count: { select: { answers: true } },
+      },
+      orderBy: { updatedAt: "desc" },
+      take: 20,
+    }),
+  ]);
+
   // ==========================================
   // 2. コンテンツの取得（Prisma ＋ microCMS）
   // ==========================================
@@ -181,8 +203,72 @@ export default async function MyPage() {
             </section>
           </div>
 
-          {/* 右側カラム (ハイブリッド新着コンテンツ) */}
+          {/* 右側カラム */}
           <div className="space-y-8">
+            {/* 投稿した質問 */}
+            <section className="bg-white rounded-3xl shadow-sm border border-gray-100 p-7">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-black">📝 投稿した質問</h2>
+                <Link href="/exam/qa/new" className="text-xs font-bold text-accent hover:underline">
+                  ＋ 質問する
+                </Link>
+              </div>
+              {myQuestions.length === 0 ? (
+                <div className="text-center py-4">
+                  <p className="text-sm text-gray-400 mb-3">まだ質問がありません</p>
+                  <Link href="/exam/qa/new" className="text-sm font-bold text-accent hover:underline">
+                    最初の質問を投稿する →
+                  </Link>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {myQuestions.map((q) => (
+                    <Link key={q.id} href={`/exam/qa/${q.id}`} className="block group">
+                      <div className="border border-gray-100 rounded-xl p-4 hover:border-text/20 transition-colors">
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-[10px] font-bold text-accent">{q.category.name}</span>
+                          <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+                            q._count.answers > 0
+                              ? "bg-accent/10 text-accent"
+                              : "bg-gray-100 text-gray-400"
+                          }`}>
+                            {q._count.answers > 0 ? `回答${q._count.answers}件` : "未回答"}
+                          </span>
+                        </div>
+                        <p className="text-sm font-bold line-clamp-2 group-hover:text-text transition-colors leading-snug">
+                          {q.title}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </section>
+
+            {/* 回答した質問 */}
+            <section className="bg-white rounded-3xl shadow-sm border border-gray-100 p-7">
+              <h2 className="text-xl font-black mb-6">💬 回答した質問</h2>
+              {answeredQuestions.length === 0 ? (
+                <p className="text-sm text-gray-400 text-center py-4">まだ回答した質問はありません</p>
+              ) : (
+                <div className="space-y-3">
+                  {answeredQuestions.map((q) => (
+                    <Link key={q.id} href={`/exam/qa/${q.id}`} className="block group">
+                      <div className="border border-gray-100 rounded-xl p-4 hover:border-text/20 transition-colors">
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-[10px] font-bold text-accent">{q.category.name}</span>
+                          <span className="text-[10px] text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-full">{q._count.answers}件</span>
+                        </div>
+                        <p className="text-sm font-bold line-clamp-2 group-hover:text-text transition-colors leading-snug">
+                          {q.title}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </section>
+
             <section className="bg-white rounded-3xl shadow-sm border border-gray-100 p-7">
               <h2 className="text-xl font-black mb-6 flex items-center gap-2">
                 ⚡️ おすすめコンテンツ

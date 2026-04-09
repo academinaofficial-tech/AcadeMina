@@ -32,6 +32,8 @@ model Profile {
   address          String?
   purchases        Purchase[]
   mentorRequests   MentorRequest[]
+  questions        Question[]
+  answers          Answer[]
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
 }
@@ -179,6 +181,39 @@ model ServicePrice {
   type      MentorRequestType @unique
   price     Int
   updatedAt DateTime          @updatedAt
+}
+
+model QaCategory {
+  id        String     @id @default(cuid())
+  name      String     @unique
+  order     Int        @default(0)
+  questions Question[]
+  createdAt DateTime   @default(now())
+}
+
+model Question {
+  id         String     @id @default(cuid())
+  title      String
+  body       String
+  anonymous  Boolean    @default(false)
+  categoryId String
+  category   QaCategory @relation(fields: [categoryId], references: [id])
+  profileId  String
+  profile    Profile    @relation(fields: [profileId], references: [id])
+  answers    Answer[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
+
+model Answer {
+  id         String   @id @default(cuid())
+  body       String
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  profileId  String
+  profile    Profile  @relation(fields: [profileId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model ThemeGroup {
