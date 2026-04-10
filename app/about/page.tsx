@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About Us | AcadeMina",
+  title: "AcadeMinaとは｜大学院受験生の挑戦を支える運営理念とサービス紹介",
+  description:
+    "AcadeMinaのビジョン、運営の想い、サービス立ち上げの背景を紹介します。なぜ大学院受験に特化したのか、どんな価値を届けたいのかを知りたい方はこちらをご覧ください。",
 };
 
 export default function Page() {

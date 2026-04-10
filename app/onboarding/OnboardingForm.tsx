@@ -1,10 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { submitOnboarding } from "./action";
 
 export default function OnboardingForm({ universities, themeGroups }: any) {
-    // --- 1. 現在の所属に関するState ---
+    const searchParams = useSearchParams();
+    const redirectTo = searchParams.get("redirect") || "";
+
+    // --- 以下、既存のStateはすべてそのまま ---
     const [selectedUniv, setSelectedUniv] = useState("");
     const [selectedFaculty, setSelectedFaculty] = useState("");
     const [selectedDept, setSelectedDept] = useState("");
@@ -29,7 +33,6 @@ export default function OnboardingForm({ universities, themeGroups }: any) {
         setSelectedDept("");
     };
 
-    // --- 2. 志望校に関するState (最大3つ) ---
     const [targets, setTargets] = useState([
         { selectedUniv: "", selectedFaculty: "", selectedDept: "", isManual: false, manualUniv: "", manualFaculty: "", manualDept: "" }
     ]);
@@ -37,7 +40,6 @@ export default function OnboardingForm({ universities, themeGroups }: any) {
     const handleTargetChange = (index: number, field: string, value: string) => {
         const newTargets = [...targets];
         const target = newTargets[index];
-
         if (field === "selectedUniv") {
             if (value === "other") {
                 target.isManual = true;
@@ -61,7 +63,6 @@ export default function OnboardingForm({ universities, themeGroups }: any) {
         }
     };
 
-    // --- 3. テーマのアコーディオンに関するState ---
     const [openGroups, setOpenGroups] = useState<string[]>([]);
     const toggleGroup = (groupId: string) => {
         setOpenGroups(prev => prev.includes(groupId) ? prev.filter(id => id !== groupId) : [...prev, groupId]);
@@ -69,17 +70,19 @@ export default function OnboardingForm({ universities, themeGroups }: any) {
 
     return (
         <form action={submitOnboarding} className="space-y-10">
+            {/* ✅ リダイレクト先を隠しフィールドで渡す */}
+            <input type="hidden" name="redirectTo" value={redirectTo} />
+
             {/* 隠しフィールド：現在の所属 */}
             <input type="hidden" name="finalUniversity" value={isManual ? manualUniv : selectedUniv} />
             <input type="hidden" name="finalFaculty" value={isManual ? manualFaculty : selectedFaculty} />
             <input type="hidden" name="finalDepartment" value={isManual ? manualDept : selectedDept} />
 
-            {/* 隠しフィールド：志望校（最大3つをJSON用に分割して送る） */}
+            {/* 隠しフィールド：志望校 */}
             {targets.map((t, i) => {
                 const u = t.isManual ? t.manualUniv : t.selectedUniv;
                 const f = t.isManual ? t.manualFaculty : t.selectedFaculty;
                 const d = t.isManual ? t.manualDept : t.selectedDept;
-                
                 return (
                     <div key={`hidden_target_${i}`}>
                         <input type="hidden" name={`target_${i}_univ`} value={u} />
@@ -144,17 +147,14 @@ export default function OnboardingForm({ universities, themeGroups }: any) {
                 {targets.map((target, index) => {
                     const tFaculties = universities.find((u: any) => u.name === target.selectedUniv)?.faculties || [];
                     const tDepts = tFaculties.find((f: any) => f.name === target.selectedFaculty)?.departments || [];
-
                     return (
                         <div key={index} className="p-5 border border-gray-200 rounded-2xl bg-gray-50/50 space-y-4 relative mt-4">
                             <span className="absolute -top-3 left-4 bg-white px-2 text-sm font-bold text-gray-500 border border-gray-200 rounded-full">第{index + 1}志望</span>
-                            
                             <select className="w-full p-4 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-accent outline-none" value={target.isManual ? "other" : target.selectedUniv} onChange={e => handleTargetChange(index, "selectedUniv", e.target.value)}>
                                 <option value="">大学を選択してください</option>
                                 {universities.map((u: any) => <option key={u.id} value={u.name}>{u.name}</option>)}
                                 <option value="other">その他（手入力）</option>
                             </select>
-
                             {target.isManual ? (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <input placeholder="学部名" value={target.manualFaculty} onChange={e => handleTargetChange(index, "manualFaculty", e.target.value)} className="w-full p-4 bg-white border rounded-xl" />
@@ -177,7 +177,7 @@ export default function OnboardingForm({ universities, themeGroups }: any) {
                 })}
             </div>
 
-            {/* === 3. 興味のある分野 (アコーディオン) === */}
+            {/* === 3. 興味のある分野 === */}
             <div>
                 <label className="block font-bold text-lg mb-3 border-b pb-2">興味のある分野・テーマ（複数選択可）</label>
                 <div className="space-y-3">
@@ -185,15 +185,10 @@ export default function OnboardingForm({ universities, themeGroups }: any) {
                         const isOpen = openGroups.includes(group.id);
                         return (
                             <div key={group.id} className="border border-gray-200 rounded-xl overflow-hidden bg-white">
-                                <button
-                                    type="button"
-                                    onClick={() => toggleGroup(group.id)}
-                                    className="w-full flex justify-between items-center p-4 bg-gray-50 hover:bg-gray-100 transition"
-                                >
+                                <button type="button" onClick={() => toggleGroup(group.id)} className="w-full flex justify-between items-center p-4 bg-gray-50 hover:bg-gray-100 transition">
                                     <span className="font-bold text-gray-700">{group.name}</span>
                                     <span className="text-gray-400 font-mono text-xl">{isOpen ? "−" : "＋"}</span>
                                 </button>
-                                
                                 {isOpen && (
                                     <div className="p-4 grid grid-cols-2 md:grid-cols-3 gap-3 border-t border-gray-100">
                                         {group.themes.map((theme: any) => (

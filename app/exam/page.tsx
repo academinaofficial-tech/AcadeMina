@@ -1,8 +1,12 @@
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 
-export const metadata = {
-  title: "院試サポート | AcadeMina",
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "大学院受験サポート｜院試対策の始め方から合格戦略までAcadeMinaで整理",
+  description:
+    "院試対策を何から始めるべきか迷う方へ。AcadeMinaの院試サポートでは、過去問、体験記、研究計画書、情報収集の進め方まで、大学院受験の全体像をわかりやすく整理できます。",
 };
 
 export default function Page() {

@@ -1,17 +1,34 @@
 "use client";
 
-import { formatDate } from "@/lib/cms";
+import { formatDate } from "@/lib/cms"; // ※ご自身の環境に合わせてパスを確認してください
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 
-interface ColumnDetailClientProps {
-    article: any;
+// ==========================================
+// 📦 page.tsxから渡されるデータの型を定義
+// ==========================================
+interface ColumnArticle {
+    id: string;
+    title: string;
+    content: string;
+    publishedAt: string;
+    eyecatch?: { url: string; width: number; height: number };
+    category?: { category: string; article_type: string };
+    author?: string;
 }
 
+interface ColumnDetailClientProps {
+    article: ColumnArticle;
+}
+
+// ==========================================
+// 🎨 クライアントコンポーネント本体
+// ==========================================
 export default function ColumnDetailClient({ article }: ColumnDetailClientProps) {
     if (!article) return <div className="text-center py-20">記事が見つかりませんでした。</div>;
 
     const imgUrl = article.eyecatch?.url;
+    // article_typeが存在しない場合はデフォルトで通常のコラム扱いにする安全対策
     const isNews = article.category?.article_type === "news";
 
     return (
@@ -52,15 +69,13 @@ export default function ColumnDetailClient({ article }: ColumnDetailClientProps)
                 </div>
             </header>
 
-            {/* Content Section */}
-            <div className="column-content">
-                <div
-                    dangerouslySetInnerHTML={{ 
-                        __html: article.content || "<p>記事の中身がここに入ります。</p>" 
-                    }}
-                />
-            </div>
+            {/* 3. 本文セクション (microCMSから送られてきたHTMLを展開) */}
+            <div 
+    className="column-content" 
+    dangerouslySetInnerHTML={{ __html: article.content }} 
+/>
 
+            {/* 4. フッターセクション (戻るボタン) */}
             <footer className="mt-24 pt-10 border-t border-gray-100 text-center">
                 <p className="text-gray-400 mb-8 font-medium">最後まで読んでいただきありがとうございます。</p>
                 <Button href={isNews ? "/news" : "/column"}>

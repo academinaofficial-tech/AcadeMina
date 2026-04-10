@@ -5,28 +5,25 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
 export async function submitOnboarding(formData: FormData) {
-    const { userId } = auth();
+    const { userId } = await auth();
     const user = await currentUser();
 
     if (!userId || !user) {
         throw new Error("Unauthorized");
     }
 
-    // 1. 現在の所属を受け取る
     const finalUniversity = formData.get("finalUniversity") as string;
     const finalFaculty = formData.get("finalFaculty") as string;
     const finalDepartment = formData.get("finalDepartment") as string;
     const grade = formData.get("grade") as string;
     const careerPath = formData.get("careerPath") as string;
 
-    // 2. 志望校（最大3つ）を受け取ってJSON配列にする
     const targetSchools = [];
     for (let i = 0; i < 3; i++) {
         const univ = formData.get(`target_${i}_univ`) as string;
         const faculty = formData.get(`target_${i}_faculty`) as string;
         const dept = formData.get(`target_${i}_dept`) as string;
-        
-        // 大学名が入力されていれば配列に追加
+
         if (univ && univ.trim() !== "") {
             targetSchools.push({
                 univ: univ.trim(),
@@ -71,5 +68,33 @@ export async function submitOnboarding(formData: FormData) {
         },
     });
 
-    redirect("/mypage");
+    // 同メールのプロフィールが既存の場合はそちらを更新（idも現在のuserIdに付け替える）
+    const existingByEmail = await prisma.profile.findUnique({ where: { email } });
+    if (existingByEmail && existingByEmail.id !== userId) {
+        await prisma.profile.update({ where: { email }, data: { ...updateData, id: userId } });
+    } else {
+        await prisma.profile.upsert({
+            where: { id: userId },
+            update: updateData,
+            create: {
+                id: userId,
+                email,
+                firstName: user.firstName || "",
+                lastName: user.lastName || "",
+                university: finalUniversity,
+                faculty: finalFaculty,
+                department: finalDepartment,
+                grade,
+                careerPath,
+                targetSchools: targetSchools,
+                interestThemes: {
+                    connect: themeIds.map((id) => ({ id })),
+                },
+            },
+        });
+    }
+
+    // リダイレクト先があればそこへ、なければマイページへ
+    const redirectTo = formData.get("redirectTo") as string;
+    redirect(redirectTo || "/mypage");
 }

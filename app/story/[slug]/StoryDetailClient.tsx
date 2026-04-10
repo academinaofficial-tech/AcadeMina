@@ -1,5 +1,6 @@
 "use client";
 
+import { useUser } from "@clerk/nextjs";
 import { formatDate } from "@/lib/cms";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
@@ -9,11 +10,20 @@ interface StoryDetailClientProps {
 }
 
 export default function StoryDetailClient({ article }: StoryDetailClientProps) {
+    const { isSignedIn, isLoaded } = useUser();
+
     if (!article) return <div className="text-center py-20">体験記が見つかりませんでした。</div>;
 
     const imgUrl = article.eyecatch?.url;
     // 💡 体験記用の大学データを抽出
     const school = article.school_info || article;
+
+    // 未ログイン時：最初のH2タイトルまでだけ表示
+    const fullContent = article.content || "<p>記事の中身がここに入ります。</p>";
+    const firstH2End = fullContent.indexOf("</h2>");
+    const previewContent = firstH2End !== -1
+        ? fullContent.slice(0, firstH2End + 5) // "</h2>" を含む
+        : fullContent.slice(0, 300);            // H2がない場合は300文字まで
 
     return (
         <article className="max-w-[860px] mx-auto py-16 px-6 lg:px-0">
@@ -64,41 +74,39 @@ export default function StoryDetailClient({ article }: StoryDetailClientProps) {
             </header>
 
             {/* Content Section */}
-            <div className="column-content">
-                <div
-                    className="prose prose-lg max-w-none text-gray-800 leading-loose 
-                    /* h2（大見出し）の設定 */
-                    [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:border-b-2 [&_h2]:border-gray-200 [&_h2]:pb-2 [&_h2]:mt-14 [&_h2]:mb-6
-                    
-                    /* h3（小見出し）の設定 */
-                    [&_h3]:text-xl [&_h3]:font-bold [&_h3]:mt-10 [&_h3]:mb-4 [&_h3]:border-l-4 [&_h3]:border-blue-600 [&_h3]:pl-4 [&_h3]:text-gray-900
-                    
-                    /* aタグ（リンク）の設定 */
-                    [&_a]:text-blue-600 [&_a]:underline [&_a]:font-bold hover:[&_a]:text-blue-800 [&_a]:transition-colors
-                    
-                    /* リスト（箇条書き）の設定 */
-                    [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:my-6 [&_li]:mb-2
-                    [&_strong]:font-extrabold [&_strong]:text-gray-900
+            {isLoaded && !isSignedIn ? (
+                /* 未ログイン：最初のH2タイトルまで + フェード */
+                <div className="relative column-content">
+                    <div dangerouslySetInnerHTML={{ __html: previewContent }} />
+                    <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
+                </div>
+            ) : (
+                /* ログイン済み：全文 */
+                <div className="column-content">
+                    <div dangerouslySetInnerHTML={{ __html: fullContent }} />
+                </div>
+            )}
 
-                    /* 🎁 特殊なHTML（比較カードなど）の設定 */
-                    [&_.section-lead]:text-gray-500 [&_.section-lead]:font-medium [&_.section-lead]:mb-8
-                    [&_.info-box]:bg-blue-50 [&_.info-box]:p-6 [&_.info-box]:rounded-xl [&_.info-box]:my-8 [&_.info-box]:border [&_.info-box]:border-blue-200
-                    [&_.compare-grid]:grid md:[&_.compare-grid]:grid-cols-2 [&_.compare-grid]:gap-6 [&_.compare-grid]:my-8
-                    [&_.compare-card]:border [&_.compare-card]:border-gray-200 [&_.compare-card]:rounded-xl [&_.compare-card]:overflow-hidden [&_.compare-card]:shadow-sm
-                    [&_.compare-card-head]:bg-gray-800 [&_.compare-card-head]:text-white [&_.compare-card-head]:font-bold [&_.compare-card-head]:text-center [&_.compare-card-head]:py-2
-                    [&_.compare-card-body]:p-5 [&_.compare-card-body]:bg-gray-50 [&_.compare-card-body>p]:mb-2 [&_.compare-card-body>p:last-child]:mb-0
-                    
-                    /* 📚 追加：Amazonリンク（サムネなし・シンプル版）の設定 */
-                    [&_.amazon-link]:block [&_.amazon-link]:my-8 [&_.amazon-link]:p-5 [&_.amazon-link]:bg-gray-50 [&_.amazon-link]:border [&_.amazon-link]:border-gray-200 [&_.amazon-link]:rounded-xl hover:[&_.amazon-link]:bg-gray-100 [&_.amazon-link]:transition-colors
-                    [&_.amazon-link_a]:flex [&_.amazon-link_a]:flex-col sm:[&_.amazon-link_a]:flex-row sm:[&_.amazon-link_a]:items-center [&_.amazon-link_a]:justify-between [&_.amazon-link_a]:no-underline
-                    [&_.amazon-title]:text-gray-900 [&_.amazon-title]:font-bold [&_.amazon-title]:text-lg [&_.amazon-title]:mb-4 sm:[&_.amazon-title]:mb-0 sm:[&_.amazon-title]:mr-4
-                    [&_.amazon-btn]:bg-[#FFA724] hover:[&_.amazon-btn]:bg-[#FF9900] [&_.amazon-btn]:text-white [&_.amazon-btn]:text-sm [&_.amazon-btn]:font-bold [&_.amazon-btn]:px-8 [&_.amazon-btn]:py-3 [&_.amazon-btn]:rounded-full [&_.amazon-btn]:text-center [&_.amazon-btn]:transition-colors [&_.amazon-btn]:shadow-sm [&_.amazon-btn]:whitespace-nowrap
-                    "
-                    dangerouslySetInnerHTML={{ 
-                        __html: article.content || "<p>記事の中身がここに入ります。</p>" 
-                    }}
-                />
-            </div>
+            {/* 未ログイン時の登録CTA */}
+            {isLoaded && !isSignedIn && (
+                <div className="mt-4 pb-10 text-center">
+                    <p className="text-gray-500 text-sm mb-4">続きを読むには会員登録が必要です</p>
+                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                        <Link
+                            href="/account/signup"
+                            className="inline-block px-10 py-3 bg-black text-white rounded-full font-bold hover:opacity-80 transition-opacity"
+                        >
+                            無料で会員登録する
+                        </Link>
+                        <Link
+                            href="/account/login"
+                            className="inline-block px-10 py-3 border-2 border-black rounded-full font-bold hover:bg-black hover:text-white transition-all"
+                        >
+                            ログイン
+                        </Link>
+                    </div>
+                </div>
+            )}
 
             <footer className="mt-24 pt-10 border-t border-gray-100 text-center">
                 <p className="text-gray-400 mb-8 font-medium">最後まで読んでいただきありがとうございます。</p>

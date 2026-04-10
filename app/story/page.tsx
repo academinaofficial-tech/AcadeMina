@@ -1,8 +1,13 @@
 import { getArticles, getSchools } from "@/lib/cms";
 import StoryClient from "./StoryClient";
+import { prisma } from "@/lib/prisma";
 
-export const metadata = {
-    title: "合格体験記 | AcadeMina",
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "大学院の合格体験記一覧｜大学・研究科別に先輩のリアルな院試対策を検索",
+  description:
+    "大学院受験を突破した先輩たちの合格体験記を一覧で読めるページです。大学・研究科・専攻ごとに絞り込みながら、勉強法、面接対策、研究計画書の実例を探せます。",
 };
 
 export default async function Page() {

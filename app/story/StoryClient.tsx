@@ -142,7 +142,7 @@ export default function StoryClient({ initialArticles, masterSchools }: StoryCli
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
                 {filteredArticles.map((a: any) => (
-                    <Link key={a.id} href={`/story-detail?id=${a.id}`} className="group no-underline text-inherit">
+                    <Link key={a.id} href={`/story/${a.slug || a.id}`} className="group no-underline text-inherit">
                         <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 transition-all duration-300 group-hover:shadow-lg group-hover:-translate-y-1 h-full flex flex-col relative">
                             {getSchoolData(a).university && (
                                 <div className="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur-sm text-black text-[10px] font-extrabold px-3 py-1.5 rounded-md shadow-sm">

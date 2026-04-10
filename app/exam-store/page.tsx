@@ -1,8 +1,26 @@
 import { prisma } from "@/lib/prisma";
 import ExamStoreClient from "./ExamStoreClient";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "教材ストア | AcadeMina",
+// 💡 修正箇所：タイトルと説明文を変数にして、OGPにも使い回すようにしました！
+const pageTitle = "大学院受験の教材ストア｜過去問・解答・対策問題を探すならAcadeMina";
+const pageDescription = "大学院受験向けの過去問、解答例、院試対策教材を検索・比較できる教材ストアです。大学・研究科・専攻で絞り込みながら、自分に合う教材を効率よく見つけられます。";
+const imageUrl = "/images/icon.png"; // 💡 もしストア専用のバナー画像があれば、ここにそのパスを入れます
+
+export const metadata: Metadata = {
+  title: pageTitle,
+  description: pageDescription,
+  openGraph: {
+    title: pageTitle,
+    description: pageDescription,
+    images: [imageUrl],
+  },
+  twitter: {
+    card: "summary_large_image", // 💡 SNSで画像を大きく目立たせる
+    title: pageTitle,
+    description: pageDescription,
+    images: [imageUrl],
+  },
 };
 
 export const revalidate = 60; // 60秒ごとに裏側でキャッシュを最新化する（DBアクセス負荷を激減）

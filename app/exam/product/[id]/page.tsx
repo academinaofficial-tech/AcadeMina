@@ -1,22 +1,25 @@
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import ProductDetailClient from "./ProductDetailClient";
 import { auth } from "@clerk/nextjs/server";
 
-interface PageProps {
-    params: {
-        id: string;
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+    const exam = await prisma.exam.findUnique({
+        where: { id: params.id },
+        include: { department: { include: { faculty: { include: { university: true } } } } },
+    });
+    return {
+        title: exam?.title ? `${exam.title} | AcadeMina` : "教材詳細 | AcadeMina",
+        description: exam?.description || "大学院受験の過去問・対策教材詳細ページです。",
     };
 }
 
-export default async function Page({ params }: PageProps) {
-    const exam = await prisma.exam.findUnique({
-        where: { id: params.id },
-    });
+export default async function ExamDetailPage({ params }: { params: { id: string } }) {
+    const { userId } = await auth();
 
-    if (!exam) {
-        notFound();
-    }
+    if (!userId) redirect("/sign-in");
 
     let hasPurchased = false;
     const { userId } = await auth();

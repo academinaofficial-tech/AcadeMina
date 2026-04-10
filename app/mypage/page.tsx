@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+// 👇 波括弧付きの正しいインポート！
 import { prisma } from "@/lib/prisma";
 import DownloadPdfButton from "./DownloadPdfButton";
 
@@ -21,19 +22,22 @@ type MixedContent = {
 };
 
 export default async function MyPage() {
-  // 1. ユーザー情報の取得と関所
+  // ==========================================
+  // 🚨 1. 関所（ログイン＆オンボーディング確認）
+  // ==========================================
   const user = await currentUser();
   if (!user) {
     return (
       <main className="min-h-screen bg-gray-50 pt-[180px] pb-24 text-center">
         <h1 className="text-2xl font-bold">ログインが必要です</h1>
-        <Link href="/sign-in" className="text-accent underline">ログイン画面へ</Link>
+        <Link href="/account/login" className="text-accent underline">ログイン画面へ</Link>
       </main>
     );
   }
 
-  const profile = await prisma.profile.findUnique({
-    where: { id: user.id },
+  const email = user.emailAddresses[0]?.emailAddress;
+  const profile = await prisma.profile.findFirst({
+    where: { OR: [{ id: user.id }, ...(email ? [{ email }] : [])] },
     include: { purchases: { include: { exam: true } } }
   });
 
@@ -41,8 +45,30 @@ export default async function MyPage() {
     redirect("/onboarding");
   }
 
+  // 自分が投稿した質問 & 回答した質問
+  const [myQuestions, answeredQuestions] = await Promise.all([
+    prisma.question.findMany({
+      where: { profileId: user.id },
+      include: {
+        category: true,
+        _count: { select: { answers: true } },
+      },
+      orderBy: { createdAt: "desc" },
+      take: 20,
+    }),
+    prisma.question.findMany({
+      where: { answers: { some: { profileId: user.id } } },
+      include: {
+        category: true,
+        _count: { select: { answers: true } },
+      },
+      orderBy: { updatedAt: "desc" },
+      take: 20,
+    }),
+  ]);
+
   // ==========================================
-  // コンテンツの取得（Prisma ＋ microCMS）
+  // 2. コンテンツの取得（Prisma ＋ microCMS）
   // ==========================================
   let mixedContents: MixedContent[] = [];
 
@@ -63,32 +89,20 @@ export default async function MyPage() {
   }));
   mixedContents = [...mixedContents, ...examContents];
 
-// ② microCMSから「コラム・合格体験記」を取得
+  // ② microCMSから「コラム・合格体験記」を取得
   const endpoint = "columns"; 
-  const domain = process.env.MICROCMS_SERVICE_ID; // 👈 "ID" に変更！
+  const domain = process.env.MICROCMS_SERVICE_ID;
   const apiKey = process.env.MICROCMS_API_KEY;
 
   if (domain && apiKey) {
     try {
-      // ▼▼ デバッグ用のログ出力（ターミナルに表示されます） ▼▼
-      console.log("=== microCMS 通信テスト開始 ===");
-      console.log(`リクエストURL: https://${domain}.microcms.io/api/v1/${endpoint}?limit=3`);
-
       const res = await fetch(`https://${domain}.microcms.io/api/v1/${endpoint}?limit=3`, {
         headers: { "X-MICROCMS-API-KEY": apiKey },
         next: { revalidate: 60 } 
       });
-      
-      console.log("ステータスコード:", res.status);
 
       if (res.ok) {
         const data = await res.json();
-        console.log("取得できたデータ件数:", data.contents.length);
-        if (data.contents.length > 0) {
-          console.log("1件目のデータの中身:", JSON.stringify(data.contents[0], null, 2));
-        }
-        // ▲▲ デバッグ用のログ出力 ここまで ▲▲
-
         const cmsContents: MixedContent[] = data.contents.map((item: any) => {
           const articleType = item.category?.article_type || "";
           const displayCategory = item.category?.category || articleType || "コンテンツ";
@@ -110,15 +124,10 @@ export default async function MyPage() {
         });
         
         mixedContents = [...mixedContents, ...cmsContents];
-      } else {
-        const errorText = await res.text();
-        console.error("❌ microCMSエラー:", errorText);
       }
     } catch (error) {
       console.error("❌ 通信に失敗しました:", error);
     }
-  } else {
-    console.log("⚠️ 環境変数（ドメインまたはAPIキー）が読み込めていません");
   }
 
   // ③ 混ぜたコンテンツを「日付の新しい順」に並び替えて、上位3件だけ残す
@@ -133,7 +142,7 @@ export default async function MyPage() {
     <main className="min-h-screen bg-gray-50 pt-[180px] pb-24">
       <div className="max-w-[1200px] mx-auto px-5">
 
-        {/* --- プロフィールセクション (変更なし) --- */}
+        {/* --- プロフィールセクション --- */}
         <section className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 md:p-10 mb-8 flex flex-col md:flex-row items-center md:items-start gap-8 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full -translate-y-1/2 translate-x-1/3 blur-3xl"></div>
           <div className="w-28 h-28 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-full flex items-center justify-center text-accent text-4xl font-extrabold shadow-inner shrink-0 z-10">
@@ -197,8 +206,72 @@ export default async function MyPage() {
             </section>
           </div>
 
-          {/* 右側カラム (ハイブリッド新着コンテンツ) */}
+          {/* 右側カラム */}
           <div className="space-y-8">
+            {/* 投稿した質問 */}
+            <section className="bg-white rounded-3xl shadow-sm border border-gray-100 p-7">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-black">📝 投稿した質問</h2>
+                <Link href="/exam/qa/new" className="text-xs font-bold text-accent hover:underline">
+                  ＋ 質問する
+                </Link>
+              </div>
+              {myQuestions.length === 0 ? (
+                <div className="text-center py-4">
+                  <p className="text-sm text-gray-400 mb-3">まだ質問がありません</p>
+                  <Link href="/exam/qa/new" className="text-sm font-bold text-accent hover:underline">
+                    最初の質問を投稿する →
+                  </Link>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {myQuestions.map((q) => (
+                    <Link key={q.id} href={`/exam/qa/${q.id}`} className="block group">
+                      <div className="border border-gray-100 rounded-xl p-4 hover:border-text/20 transition-colors">
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-[10px] font-bold text-accent">{q.category.name}</span>
+                          <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+                            q._count.answers > 0
+                              ? "bg-accent/10 text-accent"
+                              : "bg-gray-100 text-gray-400"
+                          }`}>
+                            {q._count.answers > 0 ? `回答${q._count.answers}件` : "未回答"}
+                          </span>
+                        </div>
+                        <p className="text-sm font-bold line-clamp-2 group-hover:text-text transition-colors leading-snug">
+                          {q.title}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </section>
+
+            {/* 回答した質問 */}
+            <section className="bg-white rounded-3xl shadow-sm border border-gray-100 p-7">
+              <h2 className="text-xl font-black mb-6">💬 回答した質問</h2>
+              {answeredQuestions.length === 0 ? (
+                <p className="text-sm text-gray-400 text-center py-4">まだ回答した質問はありません</p>
+              ) : (
+                <div className="space-y-3">
+                  {answeredQuestions.map((q) => (
+                    <Link key={q.id} href={`/exam/qa/${q.id}`} className="block group">
+                      <div className="border border-gray-100 rounded-xl p-4 hover:border-text/20 transition-colors">
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-[10px] font-bold text-accent">{q.category.name}</span>
+                          <span className="text-[10px] text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-full">{q._count.answers}件</span>
+                        </div>
+                        <p className="text-sm font-bold line-clamp-2 group-hover:text-text transition-colors leading-snug">
+                          {q.title}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </section>
+
             <section className="bg-white rounded-3xl shadow-sm border border-gray-100 p-7">
               <h2 className="text-xl font-black mb-6 flex items-center gap-2">
                 ⚡️ おすすめコンテンツ

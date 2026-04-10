@@ -39,7 +39,7 @@ export default function SignupPage() {
                         に同意したものとみなされます。
                     </p>
                     <div className="flex justify-center gap-6 opacity-30">
-                        <img src="/images/logo.png" alt="AcadeMina" className="h-8 grayscale" />
+                        <img src="/images/icon.png" alt="AcadeMina" className="h-8 grayscale" />
                     </div>
                 </div>
             </div>
