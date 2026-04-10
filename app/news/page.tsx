@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { getArticles, formatDate } from "@/lib/cms";
 import type { Metadata } from "next";
+import Typography from "@/components/ui/Typography";
+import { Section, Container } from "@/components/ui/Section";
 
 export const metadata: Metadata = {
   title: "お知らせ一覧｜AcadeMinaの最新情報・機能追加・更新情報",
@@ -19,12 +21,12 @@ export default async function NewsListPage() {
     return (
         <main className="mt-20 md:mt-[134px] bg-white min-h-screen pb-24">
             
-            <div className="bg-gray-50 border-b border-gray-100 py-16 px-5 text-center">
-                <h1 className="text-3xl md:text-5xl font-extrabold mb-4 tracking-tight text-gray-900">News</h1>
-                <p className="text-gray-500 font-medium tracking-wide">運営からのお知らせ・最新情報</p>
-            </div>
+            <Section spacing="none" className="bg-gray-50 border-b border-gray-100 py-16 px-5 text-center">
+                <Typography variant="h1" className="mb-4 text-gray-900">News</Typography>
+                <Typography variant="body" className="font-medium tracking-wide">運営からのお知らせ・最新情報</Typography>
+            </Section>
 
-            <div className="max-w-4xl mx-auto px-5 pt-12">
+            <Container className="max-w-4xl pt-12">
                 {newsArticles.length === 0 ? (
                     <div className="text-center text-gray-500 py-20 font-medium">
                         現在、お知らせはありません。
@@ -60,7 +62,7 @@ export default async function NewsListPage() {
                         ))}
                     </ul>
                 )}
-            </div>
+            </Container>
         </main>
     );
 }

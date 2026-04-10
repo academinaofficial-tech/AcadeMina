@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Lab } from "@prisma/client";
+import Typography from "@/components/ui/Typography";
+import { Section, Container } from "@/components/ui/Section";
 
 interface LabInsightClientProps {
     initialLabs: Lab[];
@@ -24,12 +26,12 @@ export default function LabInsightClient({ initialLabs }: LabInsightClientProps)
     });
 
     return (
-        <div className="max-w-[1200px] mx-auto py-10 px-5">
+        <Container className="py-10">
             <div className="mb-12 text-center">
-                <h1 className="text-4xl font-extrabold mb-4">研究室検索</h1>
-                <p className="text-gray-600 max-w-2xl mx-auto">
+                <Typography variant="h1" className="mb-4">研究室検索</Typography>
+                <Typography variant="body" className="max-w-2xl mx-auto text-gray-600">
                     全国の研究室情報をデータベース化。現役院生の声や研究内容を元に、あなたにぴったりの研究室を見つけましょう。
-                </p>
+                </Typography>
             </div>
 
             <div className="flex flex-col md:flex-row gap-6 mb-10">
@@ -112,6 +114,6 @@ export default function LabInsightClient({ initialLabs }: LabInsightClientProps)
                     <div className="text-gray-400 font-bold">該当する研究室が見つかりませんでした。</div>
                 </div>
             )}
-        </div>
+        </Container>
     );
 }

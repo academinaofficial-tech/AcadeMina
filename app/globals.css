@@ -12,6 +12,37 @@
   --font-sans: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
 }
 
+/* Typography Utilities */
+@utility text-hero {
+  @apply text-[2.5rem] md:text-[4.5rem] font-extrabold leading-[1.1] tracking-[-0.02em];
+}
+@utility text-h1 {
+  @apply text-[2.2rem] md:text-[3.5rem] font-extrabold leading-[1.2];
+}
+@utility text-h2 {
+  @apply text-[1.8rem] md:text-[2.5rem] font-extrabold leading-[1.2];
+}
+@utility text-h3 {
+  @apply text-[1.5rem] font-bold leading-[1.4];
+}
+@utility text-body-lg {
+  @apply text-[1.15rem] leading-[1.9] text-[#555];
+}
+@utility text-body {
+  @apply text-[1.05rem] leading-[1.8] text-[#555];
+}
+@utility text-label {
+  @apply text-[0.85rem] font-bold tracking-[0.15em] uppercase;
+}
+
+/* Layout Utilities */
+@utility section-padding {
+  @apply py-[60px] md:py-[120px] px-5 md:px-10;
+}
+@utility container-max {
+  @apply max-w-[1200px] mx-auto w-full;
+}
+
 /* カスタムユーティリティの再定義 */
 @utility bg-text { background-color: var(--text-color); }
 @utility text-text { color: var(--text-color); }

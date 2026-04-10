@@ -2,6 +2,8 @@
 
 import { Lab, University, Department } from "@prisma/client";
 import Link from "next/link";
+import Typography from "@/components/ui/Typography";
+import { Container } from "@/components/ui/Section";
 
 interface LabWithRelations extends Lab {
     university: University | null;
@@ -29,9 +31,9 @@ export default function LabDetailClient({ lab }: LabDetailClientProps) {
                         <div className="text-sm md:text-lg font-bold opacity-90 mb-2">
                             {lab.universityName || lab.university?.name}
                         </div>
-                        <h1 className="text-3xl md:text-5xl font-extrabold leading-tight mb-6">
+                        <Typography variant="h1" className="mb-6 !leading-tight text-white">
                             {lab.name}
-                        </h1>
+                        </Typography>
                         <div className="flex gap-2.5 flex-wrap">
                             {lab.tags.map((tag) => (
                                 <span
@@ -46,12 +48,12 @@ export default function LabDetailClient({ lab }: LabDetailClientProps) {
                 </div>
             </section>
 
-            <div className="max-w-[900px] mx-auto py-20 px-5">
+            <Container variant="narrow" className="py-20">
                 {/* Basic Information & Buttons */}
                 <section className="mb-20">
-                    <h2 className="text-3xl font-extrabold mb-10 pb-3 border-b-4 border-text inline-block">
+                    <Typography variant="h2" component="h2" className="mb-10 pb-3 border-b-4 border-text inline-block">
                         Basic Information
-                    </h2>
+                    </Typography>
                     <div className="text-center mb-16">
                         {lab.website && (
                             <Link
@@ -91,9 +93,9 @@ export default function LabDetailClient({ lab }: LabDetailClientProps) {
 
                 {/* Research & Papers */}
                 <section className="mb-20">
-                    <h2 className="text-3xl font-extrabold mb-10 pb-3 border-b-4 border-text inline-block">
+                    <Typography variant="h2" component="h2" className="mb-10 pb-3 border-b-4 border-text inline-block">
                         Research & Papers
-                    </h2>
+                    </Typography>
                     <p className="text-lg leading-relaxed text-gray-700 mb-16 whitespace-pre-wrap">
                         {lab.about}
                     </p>
@@ -129,9 +131,9 @@ export default function LabDetailClient({ lab }: LabDetailClientProps) {
 
                 {/* Professor's Message */}
                 <section className="mb-20">
-                    <h2 className="text-3xl font-extrabold mb-10 pb-3 border-b-4 border-text inline-block">
+                    <Typography variant="h2" component="h2" className="mb-10 pb-3 border-b-4 border-text inline-block">
                         Professor's Message
-                    </h2>
+                    </Typography>
                     <div className="flex flex-col md:flex-row gap-10 items-center md:items-start bg-white border border-gray-100 p-10 rounded-3xl shadow-sm">
                         <div className="min-w-[150px] text-center">
                             <div
@@ -152,9 +154,9 @@ export default function LabDetailClient({ lab }: LabDetailClientProps) {
 
                 {/* Contact */}
                 <section className="mb-20">
-                    <h2 className="text-3xl font-extrabold mb-10 pb-3 border-b-4 border-text inline-block">
+                    <Typography variant="h2" component="h2" className="mb-10 pb-3 border-b-4 border-text inline-block">
                         Contact
-                    </h2>
+                    </Typography>
                     <div className="bg-text text-white p-12 md:p-16 rounded-3xl text-center relative overflow-hidden">
                         <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16"></div>
                         <div className="relative z-10">
@@ -178,7 +180,7 @@ export default function LabDetailClient({ lab }: LabDetailClientProps) {
                         </div>
                     </div>
                 </section>
-            </div>
+            </Container>
         </div>
     );
 }

@@ -2,6 +2,7 @@
 
 import { formatDate } from "@/lib/cms";
 import Link from "next/link";
+import Typography from "@/components/ui/Typography";
 
 interface NewsDetailClientProps {
     article: any;
@@ -36,9 +37,9 @@ export default function NewsDetailClient({ article }: NewsDetailClientProps) {
                         </span>
                     </div>
                     
-                    <h1 className="text-2xl md:text-4xl font-extrabold leading-tight text-gray-900 tracking-tight">
+                    <Typography variant="h2" component="h1" className="text-gray-900 tracking-tight">
                         {article.title}
-                    </h1>
+                    </Typography>
                     
                     {article.author && (
                         <div className="mt-6 pt-6 border-t border-gray-100 text-right">

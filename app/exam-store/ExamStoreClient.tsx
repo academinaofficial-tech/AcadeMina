@@ -3,6 +3,8 @@
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { Prisma } from "@prisma/client";
+import Typography from "@/components/ui/Typography";
+import { Section, Container } from "@/components/ui/Section";
 
 type ExamWithRelations = Prisma.ExamGetPayload<{
   include: {
@@ -176,8 +178,8 @@ export default function ExamStoreClient({ initialExams }: ExamStoreClientProps) 
 
   return (
     <>
-      <div className="pt-[60px] pb-[50px] px-10 text-center relative overflow-hidden">
-        <h1 className="text-[2.5rem] font-extrabold mb-[15px] relative">教材ストア</h1>
+      <Section spacing="none" className="pt-[60px] pb-[50px] px-10 text-center relative overflow-hidden">
+        <Typography variant="h1" className="mb-[15px] relative">教材ストア</Typography>
         <div className="max-w-[650px] mx-auto relative">
           <div className="flex flex-wrap gap-2 mb-3 min-h-[0px]">
             {selectedTags.map((tag) => (
@@ -217,9 +219,9 @@ export default function ExamStoreClient({ initialExams }: ExamStoreClientProps) 
             )}
           </div>
         </div>
-      </div>
+      </Section>
 
-      <div className="flex flex-col md:flex-row max-w-[1200px] mx-auto py-10 px-5 gap-10">
+      <Container className="flex flex-col md:flex-row py-10 gap-10">
         <aside className="w-full md:w-[260px] shrink-0 space-y-8">
           <div>
             <h3 className="text-lg font-bold mb-4 border-b-2 border-text pb-2">絞り込み</h3>
@@ -385,7 +387,7 @@ export default function ExamStoreClient({ initialExams }: ExamStoreClientProps) 
             </div>
           )}
         </div>
-      </div>
+      </Container>
 
     </>
   );

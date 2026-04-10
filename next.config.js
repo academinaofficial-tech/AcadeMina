@@ -46,8 +46,6 @@ const nextConfig = {
 
       // ✅ まだ準備中の機能（coming-soonへ）
       { source: '/lab', destination: '/coming-soon', permanent: false },
-      { source: '/mentors', destination: '/coming-soon', permanent: false },
-      { source: '/qa', destination: '/coming-soon', permanent: false },
 
       // ✅ 古い.htmlファイルからの転送
       { source: '/index.html', destination: '/', permanent: true },

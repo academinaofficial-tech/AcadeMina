@@ -1,5 +1,7 @@
 import Link from "next/link";
 import Button from "@/components/ui/Button";
+import Typography from "@/components/ui/Typography";
+import { Section, Container } from "@/components/ui/Section";
 
 import type { Metadata } from "next";
 
@@ -39,78 +41,90 @@ export default function Page() {
       </svg>
 
       {/* Hero Section */}
-      <section className="mt-20 md:mt-[134px] pt-[80px] md:pt-[120px] px-5 md:px-10 pb-[60px] md:pb-[100px] text-center relative overflow-hidden bg-[linear-gradient(135deg,#e8efff_0%,#d0dfff_30%,#e0eaff_60%,#f0f4ff_100%)] before:content-[''] before:absolute before:-top-[30%] before:-right-[10%] before:w-[500px] before:h-[500px] before:rounded-full before:bg-[radial-gradient(circle,rgba(0,68,204,0.1),transparent_70%)] after:content-[''] after:absolute after:-bottom-[20%] after:-left-[10%] after:w-[400px] after:h-[400px] after:rounded-full after:bg-[radial-gradient(circle,rgba(77,166,255,0.08),transparent_70%)]">
-        <div className="text-[0.9rem] font-bold text-accent tracking-[0.15em] uppercase mb-5 relative">Exam Support / 院試サポート</div>
-        <h1 className="text-[2.2rem] md:text-[3.5rem] font-extrabold leading-[1.2] mb-[25px] relative">院試突破のすべてを、<br />ここに。</h1>
-        <p className="text-[1.15rem] text-[#555] max-w-[600px] mx-auto relative leading-[1.9]">過去問の解答解説から、合格者との1on1メンタリングまで。<br />院試に挑戦するあなたを、4つのサービスで全方位サポートします。</p>
-      </section>
+      <Section spacing="large" className="mt-20 md:mt-[134px] text-center relative overflow-hidden bg-[linear-gradient(135deg,#e8efff_0%,#d0dfff_30%,#e0eaff_60%,#f0f4ff_100%)] before:content-[''] before:absolute before:-top-[30%] before:-right-[10%] before:w-[500px] before:h-[500px] before:rounded-full before:bg-[radial-gradient(circle,rgba(0,68,204,0.1),transparent_70%)] after:content-[''] after:absolute after:-bottom-[20%] after:-left-[10%] after:w-[400px] after:h-[400px] after:rounded-full after:bg-[radial-gradient(circle,rgba(77,166,255,0.08),transparent_70%)]">
+        <Container variant="narrow">
+          <Typography variant="label" className="text-accent mb-5 relative">Exam Support / 院試サポート</Typography>
+          <Typography variant="h1" className="mb-[25px] relative">院試突破のすべてを、<br />ここに。</Typography>
+          <Typography variant="body-lg" className="mx-auto relative">過去問の解答解説から、合格者との1on1メンタリングまで。<br />院試に挑戦するあなたを、4つのサービスで全方位サポートします。</Typography>
+        </Container>
+      </Section>
 
       {/* 01: 教材ストア (画像 右) */}
-      <div className="flex flex-col md:flex-row items-center gap-[40px] md:gap-[80px] max-w-[1100px] mx-auto py-[60px] md:py-[120px] px-5 md:px-10 border-t border-border first:border-t-0">
-        <div className="flex-1">
-          <div className="text-[0.8rem] font-bold text-accent-light tracking-[0.15em] uppercase mb-3">01 / Digital Store</div>
-          <h2 className="text-[1.8rem] md:text-[2.5rem] font-extrabold mb-5 leading-[1.2]">教材ストア</h2>
-          <p className="text-[1.05rem] text-[#555] leading-[2] mb-[30px]">合格者が執筆した過去問解説、体験記、研究計画書、予想問題。<br />大学院入試を突破するための「武器」を、いつでも手に入れられます。</p>
-          <Button href="/exam-store" variant="outline" className="px-10">教材を探す →</Button>
-        </div>
-        <div className="flex-1 relative w-full">
-          <div className="rounded-xl overflow-hidden aspect-[4/3] bg-gray">
-            <img className="w-full h-full object-cover" alt="教材ストア" src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=800&auto=format&fit=crop" />
+      <div className="border-t border-border first:border-t-0">
+        <Container className="flex flex-col md:flex-row items-center gap-[40px] md:gap-[80px] py-[60px] md:py-[120px] max-w-[1100px]">
+          <div className="flex-1">
+            <Typography variant="label" className="text-accent-light mb-3">01 / Digital Store</Typography>
+            <Typography variant="h2" className="mb-5">教材ストア</Typography>
+            <Typography variant="body" className="mb-[30px]">合格者が執筆した過去問解説、体験記、研究計画書、予想問題。<br />大学院入試を突破するための「武器」を、いつでも手に入れられます。</Typography>
+            <Button href="/exam-store" variant="outline" className="px-10">教材を探す →</Button>
           </div>
-        </div>
+          <div className="flex-1 relative w-full">
+            <div className="rounded-xl overflow-hidden aspect-[4/3] bg-gray">
+              <img className="w-full h-full object-cover" alt="教材ストア" src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=800&auto=format&fit=crop" />
+            </div>
+          </div>
+        </Container>
       </div>
 
       {/* 02: 合格体験記 [NEW] (画像 左) */}
-      <div className="flex flex-col md:flex-row-reverse items-center gap-[40px] md:gap-[80px] max-w-[1100px] mx-auto py-[60px] md:py-[120px] px-5 md:px-10 border-t border-border">
-        <div className="flex-1">
-          <div className="text-[0.8rem] font-bold text-accent-light tracking-[0.15em] uppercase mb-3">02 / Success Stories</div>
-          <h2 className="text-[1.8rem] md:text-[2.5rem] font-extrabold mb-5 leading-[1.2]">合格体験記</h2>
-          <p className="text-[1.05rem] text-[#555] leading-[2] mb-[30px]">難関大学院を突破した先輩たちのリアルな軌跡。<br />独自の勉強スケジュール、研究室訪問のコツ、モチベーション維持の方法まで、生の声をお届けします。</p>
-          <Button variant="gray" className="px-10">現在準備中</Button>
-        </div>
-        <div className="flex-1 relative w-full">
-          <div className="rounded-xl overflow-hidden aspect-[4/3] bg-gray">
-            <img className="w-full h-full object-cover" alt="合格体験記" src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800&auto=format&fit=crop" />
+      <div className="border-t border-border">
+        <Container className="flex flex-col md:flex-row-reverse items-center gap-[40px] md:gap-[80px] py-[60px] md:py-[120px] max-w-[1100px]">
+          <div className="flex-1">
+            <Typography variant="label" className="text-accent-light mb-3">02 / Success Stories</Typography>
+            <Typography variant="h2" className="mb-5">合格体験記</Typography>
+            <Typography variant="body" className="mb-[30px]">難関大学院を突破した先輩たちのリアルな軌跡。<br />独自の勉強スケジュール、研究室訪問のコツ、モチベーション維持の方法まで、生の声をお届けします。</Typography>
+            <Button variant="gray" className="px-10">現在準備中</Button>
           </div>
-        </div>
+          <div className="flex-1 relative w-full">
+            <div className="rounded-xl overflow-hidden aspect-[4/3] bg-gray">
+              <img className="w-full h-full object-cover" alt="合格体験記" src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800&auto=format&fit=crop" />
+            </div>
+          </div>
+        </Container>
       </div>
 
       {/* 03: メンター相談 (画像 右) */}
-      <div className="flex flex-col md:flex-row items-center gap-[40px] md:gap-[80px] max-w-[1100px] mx-auto py-[60px] md:py-[120px] px-5 md:px-10 border-t border-border">
-        <div className="flex-1">
-          <div className="text-[0.8rem] font-bold text-accent-light tracking-[0.15em] uppercase mb-3">03 / Mentoring</div>
-          <h2 className="text-[1.8rem] md:text-[2.5rem] font-extrabold mb-5 leading-[1.2]">メンター相談</h2>
-          <p className="text-[1.05rem] text-[#555] leading-[2] mb-[30px]">現役院生にオンラインで直接相談。研究室選びのリアルな話、<br />面接対策、研究計画書のレビューまで、マンツーマンでサポート。</p>
-          <Button variant="gray" className="px-10">現在準備中</Button>
-        </div>
-        <div className="flex-1 relative w-full">
-          <div className="rounded-xl overflow-hidden aspect-[4/3] bg-gray">
-            <img className="w-full h-full object-cover" alt="メンター" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800&auto=format&fit=crop" />
+      <div className="border-t border-border">
+        <Container className="flex flex-col md:flex-row items-center gap-[40px] md:gap-[80px] py-[60px] md:py-[120px] max-w-[1100px]">
+          <div className="flex-1">
+            <Typography variant="label" className="text-accent-light mb-3">03 / Mentoring</Typography>
+            <Typography variant="h2" className="mb-5">メンター相談</Typography>
+            <Typography variant="body" className="mb-[30px]">現役院生にオンラインで直接相談。研究室選びのリアルな話、<br />面接対策、研究計画書のレビューまで、マンツーマンでサポート。</Typography>
+            <Button href="/exam/mentor" variant="outline" className="px-10">メンターを探す →</Button>
           </div>
-        </div>
+          <div className="flex-1 relative w-full">
+            <div className="rounded-xl overflow-hidden aspect-[4/3] bg-gray">
+              <img className="w-full h-full object-cover" alt="メンター" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800&auto=format&fit=crop" />
+            </div>
+          </div>
+        </Container>
       </div>
 
       {/* 04: 質問掲示板 (画像 左) */}
-      <div className="flex flex-col md:flex-row-reverse items-center gap-[40px] md:gap-[80px] max-w-[1100px] mx-auto py-[60px] md:py-[120px] px-5 md:px-10 border-t border-border">
-        <div className="flex-1">
-          <div className="text-[0.8rem] font-bold text-accent-light tracking-[0.15em] uppercase mb-3">04 / Community</div>
-          <h2 className="text-[1.8rem] md:text-[2.5rem] font-extrabold mb-5 leading-[1.2]">質問掲示板</h2>
-          <p className="text-[1.05rem] text-[#555] leading-[2] mb-[30px]">「この問題の解き方がわからない」「研究室訪問のマナーは？」<br />院試に関するあらゆる疑問を、先輩や同期と解決できるコミュニティ。</p>
-          <Button variant="gray" className="px-10">現在準備中</Button>
-        </div>
-        <div className="flex-1 relative w-full">
-          <div className="rounded-xl overflow-hidden aspect-[4/3] bg-gray">
-            <img className="w-full h-full object-cover" alt="掲示板" src="https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=800&auto=format&fit=crop" />
+      <div className="border-t border-border">
+        <Container className="flex flex-col md:flex-row-reverse items-center gap-[40px] md:gap-[80px] py-[60px] md:py-[120px] max-w-[1100px]">
+          <div className="flex-1">
+            <Typography variant="label" className="text-accent-light mb-3">04 / Community</Typography>
+            <Typography variant="h2" className="mb-5">質問掲示板</Typography>
+            <Typography variant="body" className="mb-[30px]">「この問題の解き方がわからない」「研究室訪問のマナーは？」<br />院試に関するあらゆる疑問を、先輩や同期と解決できるコミュニティ。</Typography>
+            <Button href="/exam/qa" variant="outline" className="px-10">質問掲示板へ →</Button>
           </div>
-        </div>
+          <div className="flex-1 relative w-full">
+            <div className="rounded-xl overflow-hidden aspect-[4/3] bg-gray">
+              <img className="w-full h-full object-cover" alt="掲示板" src="https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=800&auto=format&fit=crop" />
+            </div>
+          </div>
+        </Container>
       </div>
 
       {/* Footer CTA */}
-      <section className="bg-text text-white py-[100px] px-10 text-center">
-        <h2 className="text-[2.5rem] font-extrabold mb-5">未来を描こう</h2>
-        <p className="text-[1.1rem] opacity-80 mb-10">サービスに関するご質問や掲載のご依頼はこちらから。</p>
-        <Button href="/contact" variant="outline" className="border-white text-white hover:bg-white hover:text-black text-[1.1rem]">お問い合わせ</Button>
-      </section>
+      <Section className="bg-text text-white text-center">
+        <Container variant="narrow">
+          <Typography variant="h2" className="mb-5">未来を描こう</Typography>
+          <Typography variant="body" className="text-white opacity-80 mb-10">サービスに関するご質問や掲載のご依頼はこちらから。</Typography>
+          <Button href="/contact" variant="outline" className="border-white text-white hover:bg-white hover:text-black text-[1.1rem]">お問い合わせ</Button>
+        </Container>
+      </Section>
     </>
   );
 }

@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import Typography from "@/components/ui/Typography";
+import { Section, Container } from "@/components/ui/Section";
 
 export default function Page() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -48,17 +50,17 @@ export default function Page() {
   return (
     <main className="mt-20 md:mt-[134px] bg-[#fdfdfd] pb-20">
       {/* ヘッダーセクション：Aboutページ同様、text-centerを徹底 */}
-      <div className="py-20 px-5 text-center bg-white border-b border-border">
-        <h1 className="text-[2.5rem] font-extrabold mb-[15px] tracking-wider">Contact Us</h1>
-        <p className="text-[1rem] text-[#666] max-w-[600px] mx-auto text-center leading-[1.8]">
+      <Section spacing="none" className="py-20 px-5 text-center bg-white border-b border-border">
+        <Typography variant="h1" className="mb-[15px] tracking-wider">Contact Us</Typography>
+        <Typography variant="body" className="max-w-[600px] mx-auto text-center">
           サービスに関するご質問、希望コンテンツの掲載依頼、<br />
           大学・企業様からの提携に関するお問い合わせはこちらから承ります。
-        </p>
-      </div>
+        </Typography>
+      </Section>
 
       {/* フォームコンテナ：中央揃えを確実にするためのflex */}
-      <div className="flex justify-center w-full">
-        <div className="w-full max-w-[800px] my-[60px] bg-white p-[50px] rounded-lg shadow-[0_10px_30px_rgba(0,0,0,0.05)] md:p-[30px_20px] md:mx-[20px]">
+      <Container variant="narrow" className="flex justify-center">
+        <div className="w-full my-[60px] bg-white p-[50px] rounded-lg shadow-[0_10px_30px_rgba(0,0,0,0.05)] md:p-[30px_20px] md:mx-[20px]">
           <form onSubmit={handleSubmit}>
             
             {/* 1. お問い合わせの種類 */}
@@ -142,7 +144,7 @@ export default function Page() {
             </button>
           </form>
         </div>
-      </div>
+      </Container>
     </main>
   );
 }

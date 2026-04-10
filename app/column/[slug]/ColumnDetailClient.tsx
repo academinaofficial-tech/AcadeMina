@@ -3,6 +3,7 @@
 import { formatDate } from "@/lib/cms"; // ※ご自身の環境に合わせてパスを確認してください
 import Link from "next/link";
 import Button from "@/components/ui/Button";
+import Typography from "@/components/ui/Typography";
 
 // ==========================================
 // 📦 page.tsxから渡されるデータの型を定義
@@ -48,9 +49,9 @@ export default function ColumnDetailClient({ article }: ColumnDetailClientProps)
             {/* 2. ヘッダーセクション (タイトル → カテゴリ＆日付・著者) */}
             <header className="mb-12">
                 {/* タイトル (左寄せ) */}
-                <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight mb-8 text-gray-900">
+                <Typography variant="h1" className="text-left mb-8 text-gray-900 !leading-tight">
                     {article.title}
-                </h1>
+                </Typography>
 
                 {/* カテゴリ(左) と 日付・著者(右) を横並びに配置 */}
                 <div className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-100 pb-5">
