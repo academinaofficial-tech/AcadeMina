@@ -60,7 +60,8 @@ function InfoRow({
 
 export default function Page() {
   return (
-    <div className="mx-auto my-[72px] max-w-[880px] px-5 sm:my-[96px] sm:px-6">
+    <main className="mt-20 md:mt-[134px] min-h-screen bg-gray-50/50 pb-24">
+      <div className="mx-auto max-w-[880px] px-5 pt-12 sm:px-6 md:pt-16">
       <div className="mb-10">
         <p className="mb-3 text-[0.78rem] tracking-[0.12em] text-gray-400 uppercase">
           AcadeMina
@@ -383,5 +384,6 @@ export default function Page() {
         <p>最終改定日：2026年3月13日</p>
       </div>
     </div>
+  </main>
   );
 }

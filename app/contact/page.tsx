@@ -23,20 +23,17 @@ export default function Page() {
     };
 
     try {
-      // 最新のGASデプロイURL
-      const GAS_URL = "https://script.google.com/macros/s/AKfycbyOzef13JJVPFbjPcCz0rQeC9avtKx1ZkbGJ6___Ww8KgQ0pyrQVmMrc_WISQvFkNoU/exec";
-      
-      const queryString = new URLSearchParams(data as any).toString();
-
-      // リロードによる再送を防ぐためPOSTで送信
-      await fetch(GAS_URL, {
+      const res = await fetch("/api/contact", {
         method: "POST",
-        mode: "no-cors",
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+          "Content-Type": "application/json",
         },
-        body: queryString,
+        body: JSON.stringify(data),
       });
+
+      if (!res.ok) {
+        throw new Error("Failed to send message");
+      }
 
       alert("送信が完了しました。お問い合わせありがとうございます。");
       (e.target as HTMLFormElement).reset(); // フォームを空にする

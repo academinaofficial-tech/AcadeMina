@@ -4,11 +4,11 @@ const nextConfig = {
     return [
       // 🚨 今回追加する「近日公開」への強制リダイレクト（一時的なので permanent: false）🚨
       { source: '/lab', destination: '/coming-soon', permanent: false },
-      { source: '/exam-store', destination: '/coming-soon', permanent: false },
-      { source: '/exam-detail', destination: '/coming-soon', permanent: false },
-      { source: '/product', destination: '/coming-soon', permanent: false },
-      { source: '/cart', destination: '/coming-soon', permanent: false },
-      { source: '/checkout', destination: '/coming-soon', permanent: false },
+      // { source: '/exam-store', destination: '/coming-soon', permanent: false },
+      // { source: '/exam-detail', destination: '/coming-soon', permanent: false },
+      // { source: '/product', destination: '/coming-soon', permanent: false },
+      // { source: '/cart', destination: '/coming-soon', permanent: false },
+      // { source: '/checkout', destination: '/coming-soon', permanent: false },
 
       // 👇 以下、もともとあった設定（そのまま残します）
       { source: '/index.html', destination: '/', permanent: true },

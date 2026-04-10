@@ -11,50 +11,47 @@ export async function POST(req: Request) {
             return new NextResponse("Unauthorized", { status: 401 });
         }
         
-        const { cartIds } = await req.json();
+        const { examId } = await req.json();
 
-        if (!cartIds || !Array.isArray(cartIds) || cartIds.length === 0) {
-            return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
+        if (!examId || typeof examId !== "string") {
+            return NextResponse.json({ error: "examId is required" }, { status: 400 });
         }
 
         // データベースから最新の価格情報を取得（フロントエンドからの価格を信用しないため）
-        const exams = await prisma.exam.findMany({
-            where: {
-                id: { in: cartIds },
-            },
+        const exam = await prisma.exam.findUnique({
+            where: { id: examId },
         });
 
-        if (exams.length === 0) {
-            return NextResponse.json({ error: "Products not found" }, { status: 404 });
+        if (!exam) {
+            return NextResponse.json({ error: "Product not found" }, { status: 404 });
         }
-
-        // StripeのLine Itemsを作成
-        const lineItems = exams.map((exam) => ({
-            price_data: {
-                currency: "jpy",
-                product_data: {
-                    name: exam.title,
-                    description: exam.category,
-                    images: [
-                        exam.image
-                            ? (exam.image.startsWith("http") ? exam.image : `${process.env.NEXT_PUBLIC_APP_URL}${exam.image}`)
-                            : `${process.env.NEXT_PUBLIC_APP_URL}/placeholder.png`
-                    ],
-                },
-                unit_amount: exam.price,
-            },
-            quantity: 1,
-        }));
 
         // Checkout Sessionを作成
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
-            line_items: lineItems,
+            line_items: [
+                {
+                    price_data: {
+                        currency: "jpy",
+                        product_data: {
+                            name: exam.title,
+                            description: exam.category,
+                            images: [
+                                exam.image
+                                    ? (exam.image.startsWith("http") ? exam.image : `${process.env.NEXT_PUBLIC_APP_URL}${exam.image}`)
+                                    : `${process.env.NEXT_PUBLIC_APP_URL}/placeholder.png`
+                            ],
+                        },
+                        unit_amount: exam.price,
+                    },
+                    quantity: 1,
+                },
+            ],
             mode: "payment",
             success_url: `${process.env.NEXT_PUBLIC_APP_URL}/order-complete?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout`,
+            cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/exam/product/${examId}`,
             metadata: {
-                cartIds: cartIds.join(","),
+                cartIds: examId, // Stripe webhookとの後方互換のため同じキーを維持
                 userId: userId,
             },
         });
@@ -65,3 +62,4 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: err.message }, { status: 500 });
     }
 }
+

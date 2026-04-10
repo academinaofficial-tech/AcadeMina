@@ -6,7 +6,7 @@ type Url = string | UrlObject;
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     href?: Url;
-    variant?: "outline" | "solid";
+    variant?: "outline" | "solid" | "gray";
     className?: string;
     children: React.ReactNode;
 }
@@ -27,6 +27,9 @@ export default function Button({
         
         // B案：黒塗り ＆ フワッと浮く (よりリッチなアクセントスタイル)
         solid: "bg-slate-900 text-white shadow-lg shadow-slate-900/20 hover:bg-slate-800 hover:-translate-y-1",
+
+        // C案：グレー ＆ 無効化風 (建設中などの状態に使用)
+        gray: "bg-gray-200 text-gray-400 border-2 border-gray-200 cursor-not-allowed shadow-none",
     };
 
     const combinedClassName = `${baseStyle} ${variants[variant]} ${className}`;

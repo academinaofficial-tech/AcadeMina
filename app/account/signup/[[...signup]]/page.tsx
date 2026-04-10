@@ -18,8 +18,8 @@ export default function SignupPage() {
                         routing="path"
                         path="/account/signup"
                         signInUrl="/account/login"
-                        // 💡 ここを追加！サインアップ成功後にプロフィール入力画面へ飛ばす
-                        forceRedirectUrl="/account/setup" 
+                        // 💡 サインアップ成功後にプロフィール入力画面（オンボーディング）へ飛ばす
+                        forceRedirectUrl="/onboarding"
                         appearance={{
                             elements: {
                                 rootBox: "w-full flex justify-center",

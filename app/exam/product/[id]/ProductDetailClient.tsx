@@ -2,39 +2,46 @@
 
 import { Exam } from "@prisma/client";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import DownloadPdfButton from "@/app/mypage/DownloadPdfButton";
 
 interface ProductDetailClientProps {
     exam: Exam;
+    hasPurchased?: boolean;
 }
 
-export default function ProductDetailClient({ exam }: ProductDetailClientProps) {
-    const [cart, setCart] = useState<string[]>([]);
+export default function ProductDetailClient({ exam, hasPurchased = false }: ProductDetailClientProps) {
+    const [loading, setLoading] = useState(false);
+    const router = useRouter();
 
-    useEffect(() => {
-        const savedCart = JSON.parse(localStorage.getItem("am_cart") || "[]");
-        setCart(savedCart);
-    }, []);
+    const buyNow = async () => {
+        if (loading) return;
+        setLoading(true);
 
-    const addToCart = () => {
-        if (!cart.includes(exam.id)) {
-            const newCart = [...cart, exam.id];
-            setCart(newCart);
-            localStorage.setItem("am_cart", JSON.stringify(newCart));
-            window.dispatchEvent(new Event("cart_updated"));
-            alert("カートに追加しました！");
-        } else {
-            alert("すでにカートに入っています。");
+        try {
+            const response = await fetch("/api/checkout", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ examId: exam.id }),
+            });
+
+            const data = await response.json();
+
+            if (data.url) {
+                window.location.href = data.url;
+            } else if (response.status === 401) {
+                // 未ログインの場合はログインページへ
+                window.location.href = `/account/login?redirect_url=/exam/product/${exam.id}`;
+            } else {
+                alert("エラーが発生しました。時間を置いて再度お試しください。");
+                setLoading(false);
+            }
+        } catch (error) {
+            console.error("Checkout error:", error);
+            alert("通信エラーが発生しました。");
+            setLoading(false);
         }
-    };
-
-    const buyNow = () => {
-        if (!cart.includes(exam.id)) {
-            const newCart = [...cart, exam.id];
-            localStorage.setItem("am_cart", JSON.stringify(newCart));
-            window.dispatchEvent(new Event("cart_updated"));
-        }
-        window.location.href = "/checkout";
     };
 
     return (
@@ -64,12 +71,6 @@ export default function ProductDetailClient({ exam }: ProductDetailClientProps) 
                         <h1 className="text-3xl md:text-4xl font-extrabold leading-tight mb-6">
                             {exam.title}
                         </h1>
-                        {exam.author && (
-                            <div className="flex items-center gap-2 text-gray-500 font-medium italic">
-                                <span>By</span>
-                                <span className="text-text font-bold not-italic">{exam.author}</span>
-                            </div>
-                        )}
                     </div>
 
                     <div className="space-y-12">
@@ -84,7 +85,7 @@ export default function ProductDetailClient({ exam }: ProductDetailClientProps) 
                             <h2 className="text-xl font-extrabold mb-6 pb-2 border-b-4 border-text inline-block">学習内容</h2>
                             <ul className="grid gap-4">
                                 {exam.contents.length > 0 ? (
-                                    exam.contents.map((item: string, idx: number) => (
+                                    (exam.contents as string[]).map((item: string, idx: number) => (
                                         <li key={idx} className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
                                             <span className="text-accent text-xl font-bold">✓</span>
                                             <span className="font-bold text-gray-700">{item}</span>
@@ -95,51 +96,41 @@ export default function ProductDetailClient({ exam }: ProductDetailClientProps) 
                                 )}
                             </ul>
                         </section>
-
-                        <section>
-                            <h2 className="text-xl font-extrabold mb-6 pb-2 border-b-4 border-text inline-block">本文プレビュー</h2>
-                            <div className="bg-gray-50 border border-gray-100 rounded-2xl p-8 relative overflow-hidden">
-                                <p className="text-gray-500 leading-relaxed italic">
-                                    {exam.preview || "プレビューは利用できません。"}
-                                    <span className="ml-1 opacity-50">...（続きは購入後にご覧いただけます）</span>
-                                </p>
-                                <div className="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-gray-50 to-transparent"></div>
-                            </div>
-                        </section>
                     </div>
                 </div>
 
                 {/* Pricing / CTA Panel */}
                 <aside className="w-full md:w-[350px] shrink-0 md:sticky md:top-[160px]">
                     <div className="bg-white border-2 border-gray-100 rounded-3xl p-8 shadow-xl">
-                        <div className="mb-6">
+                        <div className="mb-8">
                             <div className="text-3xl font-black text-text mb-1">
                                 ¥{exam.price.toLocaleString()}
                             </div>
                             <div className="text-xs font-bold text-gray-400 uppercase tracking-widest">税込料金</div>
                         </div>
 
-                        <div className="space-y-4">
-                            <button
-                                onClick={addToCart}
-                                className="w-full py-5 bg-accent text-white rounded-full font-bold text-lg shadow-lg shadow-accent/20 transition-all hover:scale-[1.02] hover:brightness-110 active:scale-95"
-                            >
-                                カートにいれる
-                            </button>
+                        {hasPurchased ? (
+                            <div className="space-y-4">
+                                <div className="bg-green-50 text-green-700 font-bold px-4 py-3 rounded-xl text-center text-sm border border-green-200">
+                                    ✓ 購入済みです
+                                </div>
+                                <DownloadPdfButton examId={exam.id} hasPdfKey={!!(exam as any).pdfKey} />
+                            </div>
+                        ) : (
                             <button
                                 onClick={buyNow}
-                                className="w-full py-5 bg-text text-white rounded-full font-bold text-lg transition-all hover:opacity-90 active:scale-95"
+                                disabled={loading}
+                                className="w-full py-5 bg-accent text-white rounded-full font-bold text-lg shadow-lg shadow-accent/20 transition-all hover:scale-[1.02] hover:brightness-110 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
                             >
-                                今すぐ購入
+                                {loading ? "処理中..." : "今すぐ購入"}
                             </button>
-                        </div>
+                        )}
 
-                        <div className="mt-8 pt-8 border-t border-gray-50">
-                            <button className="w-full py-3 flex items-center justify-center gap-2 text-gray-400 font-bold hover:text-accent transition-colors">
-                                <span>♡</span>
-                                <span>お気に入りに追加</span>
-                            </button>
-                        </div>
+                        {!hasPurchased && (
+                            <p className="text-center text-xs text-gray-400 mt-4">
+                                ログインしていない場合はログイン画面へ移動します
+                            </p>
+                        )}
                     </div>
 
                     <div className="mt-8 p-6 bg-gray-50 rounded-2xl border border-gray-200">

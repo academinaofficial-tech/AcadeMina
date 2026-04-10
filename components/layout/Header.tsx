@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
@@ -8,28 +8,7 @@ import { MAIN_NAV_LINKS } from "@/lib/navigation";
 
 export default function Header() {
     const pathname = usePathname() || "";
-    const [cartCount, setCartCount] = useState(0);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-    useEffect(() => {
-        const handleStorageChange = () => {
-            try {
-                const cart = JSON.parse(localStorage.getItem('am_cart') || '[]');
-                setCartCount(cart.length);
-            } catch (e) {
-                console.error(e);
-            }
-        };
-
-        handleStorageChange();
-        window.addEventListener('storage', handleStorageChange);
-        window.addEventListener('cart_updated', handleStorageChange as EventListener);
-
-        return () => {
-            window.removeEventListener('storage', handleStorageChange);
-            window.removeEventListener('cart_updated', handleStorageChange as EventListener);
-        };
-    }, []);
 
     const isActive = (navPath: string) => {
         return pathname.includes(navPath) && pathname !== "/" ? "nav-active" : "";
@@ -44,13 +23,6 @@ export default function Header() {
                 </Link>
 
                 <div className="flex items-center gap-4 md:gap-7">
-                    <Link href="/cart" className="flex items-center text-[0.85rem] text-text transition-colors duration-200 hover:text-accent relative" title="カート">
-                        <svg viewBox="0 0 24 24" width="20" height="20" className="fill-current">
-                            <path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM7.16 14.26l.04-.12.94-1.7h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1 1 0 0020.01 4H5.21l-.94-2H1v2h2l3.6 7.59-1.35 2.44C4.52 15.37 5.48 17 7 17h12v-2H7.42c-.14 0-.25-.11-.25-.25z" />
-                        </svg>
-                        {cartCount > 0 && <span className="absolute -top-1.5 -right-2 bg-red-500 text-white text-[0.6rem] w-[14px] h-[14px] rounded-full flex items-center justify-center font-bold">{cartCount}</span>}
-                    </Link>
-
                     <div className="hidden md:block h-4 w-px bg-gray-200" />
 
                     <div className="hidden md:flex items-center gap-6">

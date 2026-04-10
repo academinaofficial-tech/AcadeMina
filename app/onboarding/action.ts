@@ -37,32 +37,34 @@ export async function submitOnboarding(formData: FormData) {
     }
 
     const themeIds = formData.getAll("themes") as string[];
+    const userEmail = user.emailAddresses[0].emailAddress;
 
     // 3. データベースに保存
     await prisma.profile.upsert({
-        where: { id: userId },
+        where: { email: userEmail },
         update: {
+            id: userId,
             university: finalUniversity,
-            faculty: finalFaculty,       // 👈 新規追加
+            faculty: finalFaculty,
             department: finalDepartment,
             grade,
             careerPath,
-            targetSchools: targetSchools, // 👈 新規追加 (JSONとして自動保存されます)
+            targetSchools: targetSchools,
             interestThemes: {
                 set: themeIds.map((id) => ({ id })),
             },
         },
         create: {
             id: userId,
-            email: user.emailAddresses[0].emailAddress,
+            email: userEmail,
             firstName: user.firstName || "",
             lastName: user.lastName || "",
             university: finalUniversity,
-            faculty: finalFaculty,       // 👈 新規追加
+            faculty: finalFaculty,
             department: finalDepartment,
             grade,
             careerPath,
-            targetSchools: targetSchools, // 👈 新規追加
+            targetSchools: targetSchools,
             interestThemes: {
                 connect: themeIds.map((id) => ({ id })),
             },

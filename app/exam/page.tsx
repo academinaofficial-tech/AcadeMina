@@ -45,7 +45,7 @@ export default function Page() {
       <div className="flex flex-col md:flex-row items-center gap-[40px] md:gap-[80px] max-w-[1100px] mx-auto py-[60px] md:py-[120px] px-5 md:px-10 border-t border-border first:border-t-0">
         <div className="flex-1">
           <div className="text-[0.8rem] font-bold text-accent-light tracking-[0.15em] uppercase mb-3">01 / Digital Store</div>
-          <h2 className="text-[1.8rem] md:text-[2.5rem] font-extrabold mb-5 leading-[1.2]">院試マスター / 教材ストア</h2>
+          <h2 className="text-[1.8rem] md:text-[2.5rem] font-extrabold mb-5 leading-[1.2]">教材ストア</h2>
           <p className="text-[1.05rem] text-[#555] leading-[2] mb-[30px]">合格者が執筆した過去問解説、体験記、研究計画書、予想問題。<br />大学院入試を突破するための「武器」を、いつでも手に入れられます。</p>
           <Button href="/exam-store" variant="outline" className="px-10">教材を探す →</Button>
         </div>
@@ -60,9 +60,9 @@ export default function Page() {
       <div className="flex flex-col md:flex-row-reverse items-center gap-[40px] md:gap-[80px] max-w-[1100px] mx-auto py-[60px] md:py-[120px] px-5 md:px-10 border-t border-border">
         <div className="flex-1">
           <div className="text-[0.8rem] font-bold text-accent-light tracking-[0.15em] uppercase mb-3">02 / Success Stories</div>
-          <h2 className="text-[1.8rem] md:text-[2.5rem] font-extrabold mb-5 leading-[1.2]">サクセスストーリー / 合格体験記</h2>
+          <h2 className="text-[1.8rem] md:text-[2.5rem] font-extrabold mb-5 leading-[1.2]">合格体験記</h2>
           <p className="text-[1.05rem] text-[#555] leading-[2] mb-[30px]">難関大学院を突破した先輩たちのリアルな軌跡。<br />独自の勉強スケジュール、研究室訪問のコツ、モチベーション維持の方法まで、生の声をお届けします。</p>
-          <Button href="/story" variant="outline" className="px-10">体験記を読む →</Button>
+          <Button variant="gray" className="px-10">現在準備中</Button>
         </div>
         <div className="flex-1 relative w-full">
           <div className="rounded-xl overflow-hidden aspect-[4/3] bg-gray">
@@ -75,9 +75,9 @@ export default function Page() {
       <div className="flex flex-col md:flex-row items-center gap-[40px] md:gap-[80px] max-w-[1100px] mx-auto py-[60px] md:py-[120px] px-5 md:px-10 border-t border-border">
         <div className="flex-1">
           <div className="text-[0.8rem] font-bold text-accent-light tracking-[0.15em] uppercase mb-3">03 / Mentoring</div>
-          <h2 className="text-[1.8rem] md:text-[2.5rem] font-extrabold mb-5 leading-[1.2]">メンターマッチ / メンター相談</h2>
+          <h2 className="text-[1.8rem] md:text-[2.5rem] font-extrabold mb-5 leading-[1.2]">メンター相談</h2>
           <p className="text-[1.05rem] text-[#555] leading-[2] mb-[30px]">現役院生にオンラインで直接相談。研究室選びのリアルな話、<br />面接対策、研究計画書のレビューまで、マンツーマンでサポート。</p>
-          <Button href="#" variant="outline" className="px-10">メンターを探す →</Button>
+          <Button variant="gray" className="px-10">現在準備中</Button>
         </div>
         <div className="flex-1 relative w-full">
           <div className="rounded-xl overflow-hidden aspect-[4/3] bg-gray">
@@ -90,9 +90,9 @@ export default function Page() {
       <div className="flex flex-col md:flex-row-reverse items-center gap-[40px] md:gap-[80px] max-w-[1100px] mx-auto py-[60px] md:py-[120px] px-5 md:px-10 border-t border-border">
         <div className="flex-1">
           <div className="text-[0.8rem] font-bold text-accent-light tracking-[0.15em] uppercase mb-3">04 / Community</div>
-          <h2 className="text-[1.8rem] md:text-[2.5rem] font-extrabold mb-5 leading-[1.2]">Q&amp;Aボード / 質問掲示板</h2>
+          <h2 className="text-[1.8rem] md:text-[2.5rem] font-extrabold mb-5 leading-[1.2]">質問掲示板</h2>
           <p className="text-[1.05rem] text-[#555] leading-[2] mb-[30px]">「この問題の解き方がわからない」「研究室訪問のマナーは？」<br />院試に関するあらゆる疑問を、先輩や同期と解決できるコミュニティ。</p>
-          <Button href="#" variant="outline" className="px-10">掲示板を見る →</Button>
+          <Button variant="gray" className="px-10">現在準備中</Button>
         </div>
         <div className="flex-1 relative w-full">
           <div className="rounded-xl overflow-hidden aspect-[4/3] bg-gray">

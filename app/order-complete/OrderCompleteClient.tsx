@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import Button from "@/components/ui/Button";
 import { useSearchParams } from "next/navigation";
+import DownloadPdfButton from "@/app/mypage/DownloadPdfButton";
 
 interface OrderCompleteClientProps {
     allExams: Exam[];
@@ -100,12 +101,7 @@ export default function OrderCompleteClient({ allExams }: OrderCompleteClientPro
                                     <div className="text-sm font-bold leading-tight mb-1">{item.title}</div>
                                     <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">PDF Content</div>
                                 </div>
-                                <button
-                                    onClick={() => alert("デモ：ファイルをダウンロードします")}
-                                    className="px-6 py-2.5 bg-accent text-white rounded-full text-xs font-bold hover:brightness-110 transition-all shadow-md active:scale-95"
-                                >
-                                    Download
-                                </button>
+                                <DownloadPdfButton examId={item.id} hasPdfKey={!!item.pdfKey} />
                             </div>
                         ))}
                     </div>

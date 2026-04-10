@@ -1,68 +1,67 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
-import { s3 } from "@/lib/s3";
+import { s3Client, BUCKET_NAME } from "@/lib/r2";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
-export const dynamic = "force-dynamic";
-
 export async function GET(
-    req: Request,
-    { params }: { params: { id: string } }
+  req: Request,
+  { params }: { params: { id: string } }
 ) {
-    try {
-        const { userId } = await auth();
-        
-        if (!userId) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-        }
-
-        const examId = params.id;
-
-        // 1. 購入履歴の確認
-        const purchase = await prisma.purchase.findFirst({
-            where: {
-                profileId: userId,
-                examId: examId,
-            },
-            include: {
-                exam: true,
-            }
-        });
-
-        if (!purchase) {
-            return NextResponse.json({ error: "Purchase not found" }, { status: 403 });
-        }
-
-        const { exam } = purchase;
-
-        // 2. PDFキーの確認
-        if (!exam.pdfKey) {
-            return NextResponse.json({ error: "PDF URL is not available yet" }, { status: 404 });
-        }
-
-        // 3. 環境変数の確認
-        const bucketName = process.env.AWS_S3_BUCKET_NAME;
-        if (!bucketName) {
-            console.error("Missing AWS_S3_BUCKET_NAME environment variable");
-            return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
-        }
-
-        // 4. Presigned URLの生成 (有効期限: 5分 = 300秒)
-        const command = new GetObjectCommand({
-            Bucket: bucketName,
-            Key: exam.pdfKey,
-            ResponseContentDisposition: `attachment; filename="${encodeURIComponent(exam.title)}.pdf"`, // ダウンロード時のファイル名指定（任意）
-        });
-
-        const signedUrl = await getSignedUrl(s3, command, { expiresIn: 300 });
-
-        // JSONでURLを返す
-        return NextResponse.json({ url: signedUrl });
-        
-    } catch (err: any) {
-        console.error("Presigned URL Generation Error:", err);
-        return NextResponse.json({ error: err.message }, { status: 500 });
+  try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const { id: examId } = await params;
+
+    // ユーザーのProfileを取得
+    const profile = await prisma.profile.findUnique({
+      where: { id: userId },
+    });
+
+    if (!profile) {
+      return NextResponse.json({ error: "Profile missing" }, { status: 404 });
+    }
+
+    // このユーザーが該当教材を購入しているかチェック
+    const hasPurchase = await prisma.purchase.findFirst({
+      where: {
+        profileId: profile.id,
+        examId: examId,
+      },
+    });
+
+    if (!hasPurchase) {
+      return NextResponse.json({ error: "購入履歴が見つかりません。" }, { status: 403 });
+    }
+
+    // 教材からpdfKeyを取得
+    const exam = await prisma.exam.findUnique({
+      where: { id: examId },
+    });
+
+    if (!exam || !exam.pdfKey) {
+      return NextResponse.json({ error: "PDFが登録されていません。" }, { status: 404 });
+    }
+
+    // Presigned URLの発行 (5分間有効)
+    const command = new GetObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: exam.pdfKey,
+    });
+
+    // 日本語ファイル名などをダウンロードさせるなら
+    // command.input.ResponseContentDisposition = `attachment; filename="download.pdf"`;
+
+    const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 300 });
+
+    return NextResponse.json({ url: signedUrl });
+
+  } catch (error: any) {
+    console.error("Presign error:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
 }

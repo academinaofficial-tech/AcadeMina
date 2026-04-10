@@ -1,0 +1,295 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+interface Department {
+  id: string;
+  name: string;
+}
+
+interface Faculty {
+  id: string;
+  name: string;
+  departments: Department[];
+}
+
+interface University {
+  id: string;
+  name: string;
+  faculties: Faculty[];
+}
+
+interface AdminExamNewClientProps {
+  hierarchy: University[];
+}
+
+export default function AdminExamNewClient({ hierarchy }: AdminExamNewClientProps) {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState("");
+
+  const [selectedUnivId, setSelectedUnivId] = useState("");
+  const [selectedFacId, setSelectedFacId] = useState("");
+  const [selectedDeptId, setSelectedDeptId] = useState("");
+  const [examType, setExamType] = useState("");
+
+  const [title, setTitle] = useState("");
+  const [isTitleEdited, setIsTitleEdited] = useState(false); // 手動編集したか
+  const [price, setPrice] = useState("");
+  const [description, setDescription] = useState("");
+  const [contentsInput, setContentsInput] = useState("");
+  const [pdfFile, setPdfFile] = useState<File | null>(null);
+
+  const selectedUniv = hierarchy.find((u) => u.id === selectedUnivId);
+  const faculties = selectedUniv?.faculties || [];
+  const selectedFac = faculties.find((f) => f.id === selectedFacId);
+  const departments = selectedFac?.departments || [];
+  const selectedDept = departments.find((d) => d.id === selectedDeptId);
+
+  // タイトル自動生成 (手動編集されていない場合のみ)
+  useEffect(() => {
+    if (isTitleEdited) return;
+
+    const parts = [
+      selectedUniv?.name,
+      selectedFac?.name,
+      selectedDept?.name,
+      examType
+    ].filter(Boolean);
+
+    setTitle(parts.join(" "));
+  }, [selectedUniv, selectedFac, selectedDept, examType, isTitleEdited]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title || !price || !examType) {
+      alert("必須項目が入力されていません。");
+      return;
+    }
+
+    setLoading(true);
+
+    const contentsArray = contentsInput
+      .split("\n")
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0);
+
+    let pdfKey = null;
+
+    try {
+      if (pdfFile) {
+        setUploadProgress("PDFをアップロード中...");
+        const formData = new FormData();
+        formData.append("file", pdfFile);
+
+        const uploadRes = await fetch("/api/admin/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!uploadRes.ok) throw new Error("ファイルのアップロードに失敗しました");
+
+        const uploadData = await uploadRes.json();
+        pdfKey = uploadData.pdfKey;
+      }
+
+      setUploadProgress("データベースに登録中...");
+
+      const response = await fetch("/api/admin/exams", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title,
+          price,
+          category: examType,
+          deptId: selectedDeptId || null,
+          description,
+          contents: contentsArray,
+          pdfKey,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
+
+      alert("教材を登録しました！");
+      router.push("/exam-store");
+      router.refresh();
+    } catch (error: any) {
+      console.error(error);
+      alert("エラーが発生しました: " + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="bg-white p-8 rounded-2xl shadow-xl space-y-8">
+
+      {/* 階層選択セクション */}
+      <div className="space-y-4 p-6 bg-gray-50 rounded-xl border">
+        <h2 className="text-xl font-bold border-b pb-2 mb-4">紐付けと自動タイトル</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-bold mb-1">大学</label>
+            <select
+              className="w-full p-3 border rounded-lg"
+              value={selectedUnivId}
+              onChange={(e) => {
+                setSelectedUnivId(e.target.value);
+                setSelectedFacId("");
+                setSelectedDeptId("");
+              }}
+            >
+              <option value="">-- 選択 --</option>
+              {hierarchy.map((u) => (
+                <option key={u.id} value={u.id}>{u.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-bold mb-1">学部</label>
+            <select
+              className="w-full p-3 border rounded-lg disabled:bg-gray-200"
+              value={selectedFacId}
+              onChange={(e) => {
+                setSelectedFacId(e.target.value);
+                setSelectedDeptId("");
+              }}
+              disabled={!selectedUnivId}
+            >
+              <option value="">-- 選択 --</option>
+              {faculties.map((f) => (
+                <option key={f.id} value={f.id}>{f.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-bold mb-1">専攻</label>
+            <select
+              className="w-full p-3 border rounded-lg disabled:bg-gray-200"
+              value={selectedDeptId}
+              onChange={(e) => setSelectedDeptId(e.target.value)}
+              disabled={!selectedFacId}
+            >
+              <option value="">-- 選択 --</option>
+              {departments.map((d) => (
+                <option key={d.id} value={d.id}>{d.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-bold mb-1 text-accent">種類 / Category <span className="text-red-500">*</span></label>
+            <select
+              className="w-full p-3 border rounded-lg border-accent/30"
+              value={examType}
+              onChange={(e) => {
+                const val = e.target.value;
+                setExamType(val);
+                // 自動で金額を入力
+                if (val === "過去問解答解説") setPrice("4980");
+                else if (val === "予想問題") setPrice("2980");
+                else if (val === "対策問題集") setPrice("1480");
+              }}
+              required
+            >
+              <option value="">-- 選択 --</option>
+              {["過去問", "予想問題", "過去問解答解説", "対策問題集"].map((type) => (
+                <option key={type} value={type}>{type}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="mt-4 pt-4 border-t">
+          <label className="block text-sm font-bold mb-2">タイトル <span className="text-red-500">*</span></label>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              required
+              className="flex-1 p-3 border rounded-lg"
+              value={title}
+              onChange={(e) => {
+                setTitle(e.target.value);
+                setIsTitleEdited(true);
+              }}
+              placeholder="選択すると自動入力されます"
+            />
+            {isTitleEdited && (
+              <button
+                type="button"
+                onClick={() => setIsTitleEdited(false)}
+                className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-sm font-bold transition-colors"
+                title="自動生成に戻す"
+              >
+                自動入力に戻す
+              </button>
+            )}
+          </div>
+          <p className="text-xs text-gray-500 mt-1">※手動で編集可能です</p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label className="block text-sm font-bold mb-1">価格 (円) <span className="text-red-500">*</span></label>
+          <input
+            type="number"
+            required
+            className="w-full p-3 border rounded-lg"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            placeholder="例: 4980"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-bold mb-1">教材PDFファイル</label>
+          <input
+            type="file"
+            accept="application/pdf"
+            className="w-full p-2 border rounded-lg bg-white"
+            onChange={(e) => setPdfFile(e.target.files?.[0] || null)}
+          />
+          <p className="text-xs text-gray-500 mt-1">※後からでも追加可能です</p>
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-bold mb-1">概要説明</label>
+        <textarea
+          className="w-full p-3 border rounded-lg h-32"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="この教材の概要を入力..."
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-bold mb-1">学習内容 (改行区切りで入力)</label>
+        <textarea
+          className="w-full p-3 border rounded-lg h-32"
+          value={contentsInput}
+          onChange={(e) => setContentsInput(e.target.value)}
+          placeholder="2021年の過去問解答&#10;2022年の過去問解答&#10;面接の頻出質問10選"
+        />
+      </div>
+
+      <div className="pt-6 border-t">
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full py-4 bg-accent text-white font-bold text-lg rounded-full hover:brightness-110 disabled:opacity-50 transition-all shadow-lg flex flex-col items-center justify-center"
+        >
+          <span>{loading ? "処理中..." : "この内容で教材を登録する"}</span>
+          {uploadProgress && <span className="text-sm font-normal opacity-80 mt-1">{uploadProgress}</span>}
+        </button>
+      </div>
+    </form>
+  );
+}

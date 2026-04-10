@@ -14,9 +14,6 @@ export default function ComingSoonPage() {
       <div className="max-w-[700px] w-full text-center space-y-8">
         {/* Icon & Badge */}
         <div className="flex flex-col items-center gap-6">
-          <div className="w-24 h-24 bg-gradient-to-tr from-accent to-blue-400 rounded-3xl flex items-center justify-center shadow-2xl shadow-accent/30 rotate-3 hover:rotate-6 transition-transform">
-            <span className="text-white text-5xl">🛠️</span>
-          </div>
           <span className="inline-block bg-accent/10 text-accent font-black text-xs px-4 py-2 rounded-full tracking-widest uppercase">
             Work in Progress
           </span>
@@ -31,16 +28,13 @@ export default function ComingSoonPage() {
             近日公開予定
           </h1>
           <p className="text-gray-500 font-bold leading-relaxed max-w-[500px] mx-auto relative z-10 text-base md:text-lg">
-            現在、この機能は<span className="text-accent underline decoration-accent/30 decoration-4 underline-offset-4">鋭意開発中</span>です。<br className="hidden md:block" />
-            皆様に最高の体験をお届けできるよう準備を進めておりますので、公開までもうしばらくお待ちください。
+            現在、このページは<span className="text-accent underline decoration-accent/30 decoration-4 underline-offset-4">鋭意開発中</span>です。<br className="hidden md:block" />
+            公開までもうしばらくお待ちください。
           </p>
 
-          <div className="mt-12 flex flex-col md:flex-row gap-4 justify-center relative z-10">
-            <Button href="/" variant="solid" className="px-8 text-sm">
+          <div className="mt-12 flex justify-center relative z-10">
+            <Button href="/" variant="outline" className="px-8 text-sm bg-white">
               トップページに戻る
-            </Button>
-            <Button href="/mypage" variant="outline" className="px-8 text-sm bg-white">
-              マイページを見る
             </Button>
           </div>
         </div>
