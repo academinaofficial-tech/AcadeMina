@@ -20,25 +20,26 @@ export default function OrderCompleteClient({ allExams }: OrderCompleteClientPro
 
     useEffect(() => {
         setMounted(true);
-        const savedOrder = JSON.parse(localStorage.getItem("am_order") || "null");
-        setOrder(savedOrder);
 
         const verifyPayment = async () => {
             const sessionId = searchParams.get("session_id");
+            if (!sessionId) return;
 
-            if (sessionId) {
-                setVerifying(true);
-                try {
-                    await fetch("/api/purchase/verify", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ session_id: sessionId }),
-                    });
-                } catch (error) {
-                    console.error("Verification failed:", error);
-                } finally {
-                    setVerifying(false);
+            setVerifying(true);
+            try {
+                const res = await fetch("/api/purchase/verify", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ session_id: sessionId }),
+                });
+                const data = await res.json();
+                if (data.examIds) {
+                    setOrder({ orderId: sessionId.slice(-8).toUpperCase(), items: data.examIds });
                 }
+            } catch (error) {
+                console.error("Verification failed:", error);
+            } finally {
+                setVerifying(false);
             }
         };
 
@@ -46,6 +47,15 @@ export default function OrderCompleteClient({ allExams }: OrderCompleteClientPro
     }, []);
 
     if (!mounted) return null;
+
+    if (verifying) {
+        return (
+            <div className="max-w-[700px] mx-auto py-24 px-5 text-center">
+                <div className="text-4xl mb-6 animate-spin">⏳</div>
+                <h1 className="text-xl font-bold text-gray-400">決済を確認中...</h1>
+            </div>
+        );
+    }
 
     if (!order) {
         return (

@@ -5,7 +5,7 @@ import OnboardingForm from "./OnboardingForm";
 
 export default async function OnboardingPage() {
     // 0. すでにプロフィールがある場合はマイページへ
-    const { userId } = auth();
+    const { userId } = await auth();
     const user = await currentUser();
 
     if (!userId || !user) redirect("/account/login");

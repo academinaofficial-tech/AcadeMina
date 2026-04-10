@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { useRouter } from "next/navigation";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
-// 選択できる時間帯
 const TIME_SLOTS = [
     "09:00-10:00", "10:00-11:00", "11:00-12:00",
     "12:00-13:00", "13:00-14:00", "14:00-15:00",
@@ -15,12 +14,252 @@ const TIME_SLOTS = [
     "18:00-19:00", "19:00-20:00", "20:00-21:00",
 ];
 
+const WEEKDAYS = ["日", "月", "火", "水", "木", "金", "土"];
+
 type PreferredSlot = { date: string; slots: string[] };
 
 const CONSULTATION_PLANS = [
     { duration: 30, price: 1980, label: "30分" },
     { duration: 60, price: 2980, label: "60分" },
 ] as const;
+
+function formatDateJp(dateStr: string) {
+    const d = new Date(dateStr + "T00:00:00");
+    return `${d.getMonth() + 1}月${d.getDate()}日（${WEEKDAYS[d.getDay()]}）`;
+}
+
+function CalendarPicker({
+    preferredSlots,
+    setPreferredSlots,
+}: {
+    preferredSlots: PreferredSlot[];
+    setPreferredSlots: (slots: PreferredSlot[]) => void;
+}) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const [calYear, setCalYear] = useState(today.getFullYear());
+    const [calMonth, setCalMonth] = useState(today.getMonth()); // 0-indexed
+    const [activeDate, setActiveDate] = useState<string | null>(null);
+
+    const toDateStr = (y: number, m: number, d: number) =>
+        `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+
+    const isSelected = (dateStr: string) => preferredSlots.some((s) => s.date === dateStr);
+    const isPast = (y: number, m: number, d: number) =>
+        new Date(y, m, d) < today;
+
+    const prevMonth = () => {
+        if (calMonth === 0) { setCalYear(calYear - 1); setCalMonth(11); }
+        else setCalMonth(calMonth - 1);
+    };
+    const nextMonth = () => {
+        if (calMonth === 11) { setCalYear(calYear + 1); setCalMonth(0); }
+        else setCalMonth(calMonth + 1);
+    };
+
+    // Can't go before current month
+    const canGoPrev = calYear > today.getFullYear() || calMonth > today.getMonth();
+
+    const firstDay = new Date(calYear, calMonth, 1).getDay(); // 0=Sun
+    const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+
+    const toggleDate = (dateStr: string) => {
+        if (isSelected(dateStr)) {
+            // deselect
+            setPreferredSlots(preferredSlots.filter((s) => s.date !== dateStr));
+            if (activeDate === dateStr) setActiveDate(null);
+        } else {
+            // select
+            const newSlots = [...preferredSlots, { date: dateStr, slots: [] }]
+                .sort((a, b) => a.date.localeCompare(b.date));
+            setPreferredSlots(newSlots);
+            setActiveDate(dateStr);
+        }
+    };
+
+    const toggleTimeSlot = (slot: string) => {
+        if (!activeDate) return;
+        setPreferredSlots(
+            preferredSlots.map((s) =>
+                s.date === activeDate
+                    ? {
+                        ...s,
+                        slots: s.slots.includes(slot)
+                            ? s.slots.filter((t) => t !== slot)
+                            : [...s.slots, slot],
+                    }
+                    : s
+            )
+        );
+    };
+
+    const activeSlotData = preferredSlots.find((s) => s.date === activeDate);
+
+    // Build calendar grid cells
+    const cells: Array<{ day: number | null; dateStr: string | null }> = [];
+    for (let i = 0; i < firstDay; i++) cells.push({ day: null, dateStr: null });
+    for (let d = 1; d <= daysInMonth; d++) {
+        cells.push({ day: d, dateStr: toDateStr(calYear, calMonth, d) });
+    }
+
+    return (
+        <div className="space-y-4">
+            {/* Calendar */}
+            <div className="bg-gray-50 border rounded-2xl p-5">
+                {/* Month navigation */}
+                <div className="flex items-center justify-between mb-4">
+                    <button
+                        type="button"
+                        onClick={prevMonth}
+                        disabled={!canGoPrev}
+                        className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 disabled:opacity-30 transition-colors"
+                    >
+                        ‹
+                    </button>
+                    <span className="font-bold text-sm">
+                        {calYear}年{calMonth + 1}月
+                    </span>
+                    <button
+                        type="button"
+                        onClick={nextMonth}
+                        className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 transition-colors"
+                    >
+                        ›
+                    </button>
+                </div>
+
+                {/* Weekday headers */}
+                <div className="grid grid-cols-7 mb-2">
+                    {WEEKDAYS.map((w, i) => (
+                        <div
+                            key={w}
+                            className={`text-center text-xs font-bold py-1 ${i === 0 ? "text-red-400" : i === 6 ? "text-blue-400" : "text-gray-400"}`}
+                        >
+                            {w}
+                        </div>
+                    ))}
+                </div>
+
+                {/* Day cells */}
+                <div className="grid grid-cols-7 gap-1">
+                    {cells.map((cell, idx) => {
+                        if (!cell.day || !cell.dateStr) {
+                            return <div key={idx} />;
+                        }
+                        const past = isPast(calYear, calMonth, cell.day);
+                        const selected = isSelected(cell.dateStr);
+                        const isActive = activeDate === cell.dateStr;
+                        const isToday = cell.dateStr === toDateStr(today.getFullYear(), today.getMonth(), today.getDate());
+                        const dow = (firstDay + cell.day - 1) % 7;
+
+                        return (
+                            <button
+                                key={cell.dateStr}
+                                type="button"
+                                disabled={past}
+                                onClick={() => {
+                                    toggleDate(cell.dateStr!);
+                                    if (!isSelected(cell.dateStr!)) setActiveDate(cell.dateStr);
+                                }}
+                                className={`
+                                    relative aspect-square flex items-center justify-center rounded-xl text-sm font-medium transition-all
+                                    ${past ? "opacity-25 cursor-not-allowed" : "cursor-pointer"}
+                                    ${selected && isActive ? "bg-text text-white shadow-md scale-105" : ""}
+                                    ${selected && !isActive ? "bg-text/20 text-text font-bold" : ""}
+                                    ${!selected && !past ? "hover:bg-gray-200" : ""}
+                                    ${isToday && !selected ? "ring-2 ring-text/40" : ""}
+                                    ${dow === 0 && !selected ? "text-red-400" : ""}
+                                    ${dow === 6 && !selected ? "text-blue-400" : ""}
+                                `}
+                            >
+                                {cell.day}
+                                {selected && (
+                                    <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-current opacity-60" />
+                                )}
+                            </button>
+                        );
+                    })}
+                </div>
+            </div>
+
+            {/* Hint */}
+            {preferredSlots.length === 0 && (
+                <p className="text-sm text-gray-400 text-center">希望する日付をタップしてください（複数選択可）</p>
+            )}
+
+            {/* Selected dates as tabs */}
+            {preferredSlots.length > 0 && (
+                <div>
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">選択した日付</p>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                        {preferredSlots.map((s) => (
+                            <button
+                                key={s.date}
+                                type="button"
+                                onClick={() => setActiveDate(s.date)}
+                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-bold transition-all border ${
+                                    activeDate === s.date
+                                        ? "bg-text text-white border-text"
+                                        : "bg-white text-gray-700 border-gray-200 hover:border-text"
+                                }`}
+                            >
+                                {formatDateJp(s.date)}
+                                {s.slots.length > 0 && (
+                                    <span className={`text-xs px-1.5 py-0.5 rounded-full font-bold ${activeDate === s.date ? "bg-white/20" : "bg-accent/10 text-accent"}`}>
+                                        {s.slots.length}
+                                    </span>
+                                )}
+                                <span
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setPreferredSlots(preferredSlots.filter((x) => x.date !== s.date));
+                                        if (activeDate === s.date) setActiveDate(null);
+                                    }}
+                                    className="ml-0.5 opacity-50 hover:opacity-100 text-xs"
+                                >
+                                    ×
+                                </span>
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Time slots for active date */}
+                    {activeDate && (
+                        <div className="bg-white border rounded-xl p-4">
+                            <p className="text-sm font-bold mb-3">
+                                {formatDateJp(activeDate)} の希望時間帯
+                                <span className="text-xs text-gray-400 font-normal ml-2">（複数選択可）</span>
+                            </p>
+                            <div className="grid grid-cols-3 gap-2">
+                                {TIME_SLOTS.map((time) => {
+                                    const chosen = activeSlotData?.slots.includes(time);
+                                    return (
+                                        <button
+                                            key={time}
+                                            type="button"
+                                            onClick={() => toggleTimeSlot(time)}
+                                            className={`text-xs px-2 py-2 rounded-lg border font-medium transition-all text-center ${
+                                                chosen
+                                                    ? "bg-text text-white border-text"
+                                                    : "bg-gray-50 text-gray-600 border-gray-200 hover:border-text hover:bg-white"
+                                            }`}
+                                        >
+                                            {time}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                            {activeSlotData?.slots.length === 0 && (
+                                <p className="text-xs text-gray-400 mt-3 text-center">時間帯を1つ以上選択してください</p>
+                            )}
+                        </div>
+                    )}
+                </div>
+            )}
+        </div>
+    );
+}
 
 function ApplyForm({
     type,
@@ -38,36 +277,8 @@ function ApplyForm({
     const [message, setMessage] = useState("");
     const [file, setFile] = useState<File | null>(null);
     const [preferredSlots, setPreferredSlots] = useState<PreferredSlot[]>([]);
-    const [selectedDate, setSelectedDate] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-
-    // カレンダー：日付追加
-    const addDate = () => {
-        if (!selectedDate) return;
-        if (preferredSlots.find((s) => s.date === selectedDate)) return;
-        setPreferredSlots([...preferredSlots, { date: selectedDate, slots: [] }]);
-        setSelectedDate("");
-    };
-
-    const removeDate = (date: string) => {
-        setPreferredSlots(preferredSlots.filter((s) => s.date !== date));
-    };
-
-    const toggleSlot = (date: string, slot: string) => {
-        setPreferredSlots(
-            preferredSlots.map((s) =>
-                s.date === date
-                    ? {
-                        ...s,
-                        slots: s.slots.includes(slot)
-                            ? s.slots.filter((t) => t !== slot)
-                            : [...s.slots, slot],
-                    }
-                    : s
-            )
-        );
-    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -93,9 +304,7 @@ function ApplyForm({
             if (!setupIntent?.payment_method) throw new Error("カードの保存に失敗しました");
 
             // 3. ファイルアップロード（添削の場合）
-            let documentUrl: string | undefined;
             if (type === "REVIEW" && file) {
-                // 申込レコードを先に作成してからアップロード
                 const applyRes = await fetch("/api/mentor/apply", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -103,6 +312,7 @@ function ApplyForm({
                         type,
                         message,
                         paymentMethodId: setupIntent.payment_method,
+                        stripeCustomerId: siData.customerId,
                     }),
                 });
                 const applyData = await applyRes.json();
@@ -133,6 +343,7 @@ function ApplyForm({
                     preferredSlots: type === "CONSULTATION" ? preferredSlots : undefined,
                     message,
                     paymentMethodId: setupIntent.payment_method,
+                    stripeCustomerId: siData.customerId,
                 }),
             });
             const applyData = await applyRes.json();
@@ -145,9 +356,6 @@ function ApplyForm({
             setLoading(false);
         }
     };
-
-    // 今日以降の日付のみ選択可能
-    const today = new Date().toISOString().split("T")[0];
 
     return (
         <form onSubmit={handleSubmit} className="space-y-8">
@@ -174,63 +382,10 @@ function ApplyForm({
                     <label className="block text-sm font-bold mb-3">
                         希望日時 <span className="text-red-500">*</span>
                     </label>
-                    <div className="flex gap-2 mb-4">
-                        <input
-                            type="date"
-                            min={today}
-                            value={selectedDate}
-                            onChange={(e) => setSelectedDate(e.target.value)}
-                            className="border rounded-lg p-2 flex-1"
-                        />
-                        <button
-                            type="button"
-                            onClick={addDate}
-                            disabled={!selectedDate}
-                            className="px-4 py-2 bg-text text-white rounded-lg font-bold disabled:opacity-40"
-                        >
-                            追加
-                        </button>
-                    </div>
-
-                    {preferredSlots.length === 0 && (
-                        <p className="text-sm text-gray-400">希望日を追加してください（複数選択可）</p>
-                    )}
-
-                    <div className="space-y-4">
-                        {preferredSlots.map((slot) => (
-                            <div key={slot.date} className="bg-white border rounded-xl p-4">
-                                <div className="flex justify-between items-center mb-3">
-                                    <span className="font-bold">{slot.date}</span>
-                                    <button
-                                        type="button"
-                                        onClick={() => removeDate(slot.date)}
-                                        className="text-gray-400 hover:text-red-500 text-sm"
-                                    >
-                                        削除
-                                    </button>
-                                </div>
-                                <div className="flex flex-wrap gap-2">
-                                    {TIME_SLOTS.map((time) => (
-                                        <button
-                                            key={time}
-                                            type="button"
-                                            onClick={() => toggleSlot(slot.date, time)}
-                                            className={`text-xs px-3 py-1.5 rounded-full border font-medium transition-colors ${
-                                                slot.slots.includes(time)
-                                                    ? "bg-text text-white border-text"
-                                                    : "bg-white text-gray-600 border-gray-200 hover:border-text"
-                                            }`}
-                                        >
-                                            {time}
-                                        </button>
-                                    ))}
-                                </div>
-                                {slot.slots.length === 0 && (
-                                    <p className="text-xs text-gray-400 mt-2">時間帯を選択してください</p>
-                                )}
-                            </div>
-                        ))}
-                    </div>
+                    <CalendarPicker
+                        preferredSlots={preferredSlots}
+                        setPreferredSlots={setPreferredSlots}
+                    />
                 </div>
             )}
 
@@ -320,7 +475,6 @@ export default function MentorApplyClient({
                 <h1 className="text-[2rem] md:text-[2.5rem] font-extrabold mb-4">
                     面談・研究計画書添削
                 </h1>
-                {/* 東大・東京科学大の強調 */}
                 <div className="inline-flex items-center gap-2 bg-black text-white text-sm font-bold px-5 py-2 rounded-full mb-4">
                     東京大学・東京科学大学の現役学生によるサポート
                 </div>

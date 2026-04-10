@@ -41,6 +41,12 @@ export default function AdminExamNewClient({ hierarchy }: AdminExamNewClientProp
   const [contentsInput, setContentsInput] = useState("");
   const [pdfFile, setPdfFile] = useState<File | null>(null);
 
+  const CATEGORY_IMAGES: Record<string, string> = {
+    "過去問解答解説": "/exam-categories/past-exam-solutions.png",
+    "予想問題": "/exam-categories/practice-questions.png",
+    "対策問題集": "/exam-categories/exam-prep-workbook.png",
+  };
+
   const selectedUniv = hierarchy.find((u) => u.id === selectedUnivId);
   const faculties = selectedUniv?.faculties || [];
   const selectedFac = faculties.find((f) => f.id === selectedFacId);
@@ -107,6 +113,7 @@ export default function AdminExamNewClient({ hierarchy }: AdminExamNewClientProp
           description,
           contents: contentsArray,
           pdfKey,
+          image: CATEGORY_IMAGES[examType] || null,
         }),
       });
 
@@ -199,7 +206,7 @@ export default function AdminExamNewClient({ hierarchy }: AdminExamNewClientProp
               required
             >
               <option value="">-- 選択 --</option>
-              {["過去問", "予想問題", "過去問解答解説", "対策問題集"].map((type) => (
+              {["予想問題", "過去問解答解説", "対策問題集"].map((type) => (
                 <option key={type} value={type}>{type}</option>
               ))}
             </select>

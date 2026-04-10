@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { type, price: priceOverride, preferredSlots, message, paymentMethodId } = body;
+    const { type, price: priceOverride, preferredSlots, message, paymentMethodId, stripeCustomerId: passedCustomerId } = body;
 
     if (!type || !paymentMethodId) {
         return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -40,25 +40,28 @@ export async function POST(req: Request) {
         finalPrice = servicePrice.price;
     }
 
-    // Stripe Customerを作成（またはすでに存在する場合は取得）
+    // setup-intentで作成したCustomerIDを優先使用
     let stripeCustomerId: string;
-    const existingRequests = await prisma.mentorRequest.findFirst({
-        where: { profileId, stripeCustomerId: { not: null } },
-        select: { stripeCustomerId: true },
-    });
-
-    if (existingRequests?.stripeCustomerId) {
-        stripeCustomerId = existingRequests.stripeCustomerId;
+    if (passedCustomerId) {
+        stripeCustomerId = passedCustomerId;
     } else {
-        const customer = await stripe.customers.create({
-            email: profile.email,
-            name: `${profile.lastName} ${profile.firstName}`,
+        const existingRequests = await prisma.mentorRequest.findFirst({
+            where: { profileId, stripeCustomerId: { not: null } },
+            select: { stripeCustomerId: true },
         });
-        stripeCustomerId = customer.id;
+        if (existingRequests?.stripeCustomerId) {
+            stripeCustomerId = existingRequests.stripeCustomerId;
+        } else {
+            const customer = await stripe.customers.create({
+                email: profile.email,
+                name: `${profile.lastName} ${profile.firstName}`,
+            });
+            stripeCustomerId = customer.id;
+        }
     }
 
-    // カードをCustomerに紐付け
-    await stripe.paymentMethods.attach(paymentMethodId, { customer: stripeCustomerId });
+    // SetupIntentで既にCustomerに紐付いているのでattachは不要
+    // デフォルト支払い方法として設定するだけ
     await stripe.customers.update(stripeCustomerId, {
         invoice_settings: { default_payment_method: paymentMethodId },
     });

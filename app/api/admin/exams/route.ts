@@ -19,6 +19,7 @@ export async function POST(req: Request) {
             description,
             contents,
             image,
+            pdfKey,
         } = body;
 
         if (!title || price === undefined || !category) {
@@ -34,6 +35,7 @@ export async function POST(req: Request) {
                 description: description || "",
                 contents: contents || [],
                 image: image || null,
+                pdfKey: pdfKey || null,
             },
         });
 
