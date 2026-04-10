@@ -23,9 +23,8 @@ export const metadata: Metadata = {
   },
 };
 
-// ==========================================
-// 画面表示用コンポーネント（変更なし）
-// ==========================================
+export const revalidate = 60; // 60秒ごとに裏側でキャッシュを最新化する（DBアクセス負荷を激減）
+
 export default async function Page() {
   const exams = await prisma.exam.findMany({
     orderBy: { createdAt: "desc" },

@@ -86,9 +86,8 @@ model Exam {
   category    String
   image       String?
   description String?
-  author      String?
   contents    String[]
-  preview     String?
+  pdfKey      String?     // AWS S3 / Cloudflare R2 object key
   deptId      String?
   department  Department? @relation(fields: [deptId], references: [id], onDelete: SetNull)
   purchases   Purchase[]

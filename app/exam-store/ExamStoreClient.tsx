@@ -59,37 +59,11 @@ export default function ExamStoreClient({ initialExams }: ExamStoreClientProps) 
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState<{ tag: string; cat: string }[]>([]);
-  const [cart, setCart] = useState<string[]>([]);
-  const [isCartOpen, setIsCartOpen] = useState(false);
   const [priceRange, setPriceRange] = useState({ min: 0, max: 100000 });
 
   const [selectedUniversity, setSelectedUniversity] = useState("");
   const [selectedFaculty, setSelectedFaculty] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState("");
-
-  useEffect(() => {
-    const savedCart = JSON.parse(localStorage.getItem("am_cart") || "[]");
-    setCart(savedCart);
-  }, []);
-
-  const saveCart = (newCart: string[]) => {
-    setCart(newCart);
-    localStorage.setItem("am_cart", JSON.stringify(newCart));
-    window.dispatchEvent(new Event("cart_updated"));
-  };
-
-  const addToCart = (id: string) => {
-    if (!cart.includes(id)) {
-      saveCart([...cart, id]);
-      setIsCartOpen(true);
-    }
-  };
-
-  const removeFromCart = (index: number) => {
-    const newCart = [...cart];
-    newCart.splice(index, 1);
-    saveCart(newCart);
-  };
 
   const addTag = (tag: string) => {
     if (!selectedTags.includes(tag)) {
@@ -189,11 +163,6 @@ export default function ExamStoreClient({ initialExams }: ExamStoreClientProps) 
     selectedFaculty,
     selectedDepartment,
   ]);
-
-  const cartTotal = cart.reduce((total, id) => {
-    const exam = initialExams.find((e) => e.id === id);
-    return total + (exam?.price || 0);
-  }, 0);
 
   const handleResetFilters = () => {
     setSelectedTags([]);
@@ -359,23 +328,22 @@ export default function ExamStoreClient({ initialExams }: ExamStoreClientProps) 
               const school = getSchoolData(exam);
 
               return (
-                <div
+                <Link
+                  href={`/exam/product/${exam.id}`}
                   key={exam.id}
-                  className="bg-white border rounded-xl overflow-hidden hover:shadow-xl transition-all group"
+                  className="bg-white border rounded-xl overflow-hidden hover:shadow-xl transition-all group block"
                 >
-                  <Link href={`/exam/product/${exam.id}`}>
-                    <div
-                      className="h-48 bg-gray-200 bg-cover bg-center"
-                      style={{ backgroundImage: `url(${exam.image || "/placeholder.png"})` }}
-                    />
-                  </Link>
+                  <div
+                    className="h-48 bg-gray-200 bg-cover bg-center"
+                    style={{ backgroundImage: `url(${exam.image || "/placeholder.png"})` }}
+                  />
 
                   <div className="p-5">
                     <div className="text-xs font-bold text-accent uppercase mb-2">
                       {exam.category}
                     </div>
 
-                    <h3 className="font-bold text-lg mb-3 line-clamp-2 h-14">{exam.title}</h3>
+                    <h3 className="font-bold text-lg mb-3 line-clamp-2 h-14 group-hover:text-accent transition-colors">{exam.title}</h3>
 
                     {(school.university || school.faculty || school.department) && (
                       <div className="flex flex-wrap gap-2 mb-4">
@@ -397,19 +365,16 @@ export default function ExamStoreClient({ initialExams }: ExamStoreClientProps) 
                       </div>
                     )}
 
-                    <div className="flex justify-between items-center">
-                      <span className="text-xl font-extrabold">
+                    <div className="flex justify-between items-center mt-auto">
+                      <span className="text-xl font-extrabold group-hover:text-accent transition-colors">
                         ¥{exam.price.toLocaleString()}
                       </span>
-                      <button
-                        onClick={() => addToCart(exam.id)}
-                        className="bg-text text-white px-4 py-2 rounded-lg font-bold hover:bg-accent transition-colors"
-                      >
-                        カートに追加
-                      </button>
+                      <span className="bg-text text-white px-4 py-2 rounded-lg font-bold group-hover:bg-accent transition-colors block text-center">
+                        詳細を見る
+                      </span>
                     </div>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>
@@ -422,69 +387,6 @@ export default function ExamStoreClient({ initialExams }: ExamStoreClientProps) 
         </div>
       </div>
 
-      {isCartOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-[2000]"
-          onClick={() => setIsCartOpen(false)}
-        />
-      )}
-
-      <div
-        className={`fixed top-0 right-0 w-full md:w-[400px] h-screen bg-white z-[2001] shadow-2xl transition-transform duration-300 ${isCartOpen ? "translate-x-0" : "translate-x-full"
-          }`}
-      >
-        <div className="p-6 border-b flex justify-between items-center">
-          <h2 className="text-xl font-bold">カート</h2>
-          <button onClick={() => setIsCartOpen(false)} className="text-3xl">
-            &times;
-          </button>
-        </div>
-
-        <div className="p-6 overflow-y-auto h-[calc(100vh-200px)]">
-          {cart.length === 0 ? (
-            <p className="text-center text-gray-400 mt-10">カートは空です。</p>
-          ) : (
-            <div className="space-y-4">
-              {cart.map((id, index) => {
-                const exam = initialExams.find((e) => e.id === id);
-                return (
-                  <div key={id} className="flex gap-4 p-3 border rounded-lg">
-                    <div
-                      className="w-16 h-16 bg-gray-100 rounded bg-cover"
-                      style={{ backgroundImage: `url(${exam?.image || ""})` }}
-                    />
-                    <div className="flex-1">
-                      <div className="text-sm font-bold line-clamp-1">{exam?.title}</div>
-                      <div className="font-bold text-accent">
-                        ¥{exam?.price.toLocaleString()}
-                      </div>
-                      <button
-                        onClick={() => removeFromCart(index)}
-                        className="text-xs text-gray-400 hover:text-red-500"
-                      >
-                        削除
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-
-        <div className="p-6 border-t absolute bottom-0 w-full bg-white">
-          <div className="flex justify-between text-xl font-bold mb-6">
-            <span>合計</span>
-            <span>¥{cartTotal.toLocaleString()}</span>
-          </div>
-          <Link
-            href="/cart"
-            className="block w-full bg-accent text-white text-center py-4 rounded-full font-bold text-lg hover:brightness-110"
-          >
-            購入手続きへ進む
-          </Link>
-        </div>
-      </div>
     </>
   );
 }

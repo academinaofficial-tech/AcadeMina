@@ -1,28 +1,26 @@
-import { prisma } from "@/lib/prisma";
-import CheckoutClient from "./CheckoutClient";
-import { currentUser } from "@clerk/nextjs/server";
-import type { Metadata } from "next";
+import Link from "next/link";
 
-export const metadata: Metadata = {
-  title: "購入手続き｜大学院受験教材の決済・情報入力ページ",
-  description:
-    "選択した大学院受験教材の購入手続きを行うページです。必要情報の入力と決済を完了し、過去問や対策教材をすぐに利用できる状態に進めます。",
+export const metadata = {
+  title: "購入キャンセル | AcadeMina",
 };
 
-export default async function Page() {
-  const user = await currentUser();
-  const exams = await prisma.exam.findMany();
-
-  let profile = null;
-  if (user) {
-    profile = await prisma.profile.findUnique({
-      where: { id: user.id },
-    });
-  }
-
+export default function Page() {
   return (
-    <main className="mt-20 md:mt-[134px] min-h-screen bg-gray-50/50">
-      <CheckoutClient allExams={exams} initialProfile={profile} />
+    <main className="mt-20 md:mt-[134px] min-h-screen bg-gray-50/50 flex items-center justify-center">
+      <div className="max-w-[500px] mx-auto py-24 px-5 text-center">
+        <div className="text-6xl mb-8">↩️</div>
+        <h1 className="text-2xl font-bold text-gray-700 mb-4">購入をキャンセルしました</h1>
+        <p className="text-gray-500 mb-10">
+          決済がキャンセルされました。<br />
+          引き続き教材をご覧いただけます。
+        </p>
+        <Link
+          href="/exam-store"
+          className="inline-block bg-text text-white py-4 px-10 rounded-full font-bold hover:bg-gray-800 transition-colors"
+        >
+          教材ストアへ戻る
+        </Link>
+      </div>
     </main>
   );
 }

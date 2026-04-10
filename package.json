@@ -10,6 +10,8 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1014.0",
+    "@aws-sdk/s3-request-presigner": "^3.1014.0",
     "@clerk/localizations": "^1.26.15",
     "@clerk/nextjs": "^5.7.5",
     "@prisma/client": "^5.22.0",
@@ -17,11 +19,13 @@
     "@stripe/stripe-js": "^9.0.1",
     "@tailwindcss/postcss": "^4.2.1",
     "@vercel/blob": "^2.3.2",
-    "next": "14.2.5",
+    "next": "^14.2.35",
     "prisma": "^5.22.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "stripe": "^20.4.1"
+    "resend": "^6.10.0",
+    "stripe": "^20.4.1",
+    "svix": "^1.90.0"
   },
   "devDependencies": {
     "@types/node": "^20.14.10",
@@ -29,7 +33,7 @@
     "@types/react-dom": "18.3.0",
     "autoprefixer": "^10.4.27",
     "eslint": "8.57.0",
-    "eslint-config-next": "14.2.5",
+    "eslint-config-next": "^14.2.35",
     "postcss": "^8.5.8",
     "tailwindcss": "^4.2.1",
     "ts-node": "^10.9.2",

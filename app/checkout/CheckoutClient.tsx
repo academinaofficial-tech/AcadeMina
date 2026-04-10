@@ -121,7 +121,7 @@ export default function CheckoutClient({ allExams, initialProfile }: CheckoutCli
                                     readOnly
                                     className="w-5 h-5 accent-accent"
                                 />
-                                <span className="font-bold">クレジットカード（Stripe決済）</span>
+                                <span className="font-bold">クレジットカード（）</span>
                                 <div className="ml-auto flex gap-1">
                                     {["VISA", "MC", "AMEX", "JCB"].map(logo => (
                                         <span key={logo} className="bg-gray-100 text-[9px] font-black px-1.5 py-0.5 rounded text-gray-500">{logo}</span>
@@ -132,7 +132,7 @@ export default function CheckoutClient({ allExams, initialProfile }: CheckoutCli
                         <div className="mt-8 p-6 bg-blue-50/30 rounded-2xl border border-blue-100 text-center">
                             <p className="text-sm font-bold text-blue-700/70 leading-relaxed">
                                 「決済画面に進む」ボタンを押すと、<br />
-                                安全なStripe決済ページへ移動します。
+                                決済ページへ移動します。
                             </p>
                         </div>
                     </section>

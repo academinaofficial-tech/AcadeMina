@@ -67,15 +67,8 @@ export async function getArticles(options: any = {}) {
         if (!res.ok) throw new Error(`CMS API Error: ${res.status}`);
         return await res.json();
     } catch (e: any) {
-        console.warn('CMS fetch failed:', e.message);
-        
-        // 🚨 修正箇所：Vercel（本番環境）ではダミーデータを返さず、あえてエラーにしてビルドを止める
-        if (process.env.VERCEL || process.env.NODE_ENV === 'production') {
-            throw new Error(`[Fatal] Failed to fetch articles from microCMS: ${e.message}`);
-        }
-        
-        // ローカル開発環境の時だけダミーデータを返す
-        return _getMockData(options);
+        console.error('CMS fetch failed:', e.message);
+        return { contents: [], totalCount: 0 };
     }
 }
 
@@ -109,14 +102,8 @@ export async function getArticleById(id: string) {
         if (!res.ok) throw new Error(`CMS API Error: ${res.status}`);
         return await res.json();
     } catch (e: any) {
-        console.warn(`CMS fetch failed for ID ${id}:`, e.message);
-        
-        // 🚨 修正箇所：本番環境ではエラーを投げる
-        if (process.env.VERCEL || process.env.NODE_ENV === 'production') {
-            throw new Error(`[Fatal] Failed to fetch article by ID from microCMS: ${e.message}`);
-        }
-        
-        return _mockArticles.find(a => a.id === id) || _mockArticles[0];
+        console.error(`CMS fetch failed for ID ${id}:`, e.message);
+        return null;
     }
 }
 
@@ -134,10 +121,10 @@ export async function getSchools() {
             headers: { 'X-MICROCMS-API-KEY': CMS_CONFIG.API_KEY },
             next: { revalidate: 60 }
         });
-        
+
         if (!res.ok) throw new Error(`CMS API Error: ${res.status}`);
         let data = await res.json();
-        
+
         allSchools = [...data.contents];
         totalCount = data.totalCount;
 
@@ -145,15 +132,15 @@ export async function getSchools() {
         while (allSchools.length < totalCount) {
             offset += limit;
             url = `${CMS_CONFIG.BASE_URL}/schools?limit=${limit}&offset=${offset}`;
-            
+
             res = await fetch(url, {
                 headers: { 'X-MICROCMS-API-KEY': CMS_CONFIG.API_KEY },
                 next: { revalidate: 60 }
             });
-            
+
             if (!res.ok) throw new Error(`CMS API Error: ${res.status}`);
             data = await res.json();
-            
+
             allSchools = [...allSchools, ...data.contents];
         }
 
@@ -161,13 +148,13 @@ export async function getSchools() {
 
     } catch (e: any) {
         console.warn('CMS fetch failed for schools:', e.message);
-        
+
         // 🚨 修正箇所：本番環境ではエラーを投げる
         if (process.env.VERCEL || process.env.NODE_ENV === 'production') {
             throw new Error(`[Fatal] Failed to fetch schools from microCMS: ${e.message}`);
         }
-        
-        return { contents: [], totalCount: 0 }; 
+
+        return { contents: [], totalCount: 0 };
     }
 }
 
@@ -184,22 +171,22 @@ export async function getArticleBySlug(slug: string) {
             headers: { 'X-MICROCMS-API-KEY': CMS_CONFIG.API_KEY },
             next: { revalidate: 60 }
         });
-        
+
         if (!res.ok) throw new Error(`CMS API Error: ${res.status}`);
-        
+
         const data = await res.json();
-        
+
         // filtersで検索した場合、結果は contents 配列で返ってくるので、最初の1件を返す
         return data.contents[0] || null;
 
     } catch (e: any) {
         console.warn(`CMS fetch failed for slug ${slug}:`, e.message);
-        
+
         // 🚨 修正箇所：本番環境ではエラーを投げる
         if (process.env.VERCEL || process.env.NODE_ENV === 'production') {
             throw new Error(`[Fatal] Failed to fetch article by slug from microCMS: ${e.message}`);
         }
-        
+
         // モックデータから探す場合（検証用）
         return _mockArticles.find((a: any) => a.slug === slug) || _mockArticles[0];
     }

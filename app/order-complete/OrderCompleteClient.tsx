@@ -3,7 +3,9 @@
 import { Exam } from "@prisma/client";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import Button from "@/components/ui/Button";
 import { useSearchParams } from "next/navigation";
+import DownloadPdfButton from "@/app/mypage/DownloadPdfButton";
 
 interface OrderCompleteClientProps {
     allExams: Exam[];
@@ -50,9 +52,9 @@ export default function OrderCompleteClient({ allExams }: OrderCompleteClientPro
             <div className="max-w-[700px] mx-auto py-24 px-5 text-center">
                 <div className="text-6xl mb-8">🤔</div>
                 <h1 className="text-2xl font-bold text-gray-400 mb-10">注文情報が見つかりませんでした。</h1>
-                <Link href="/exam-store" className="inline-block bg-text text-white py-4 px-10 rounded-full font-bold">
+                <Button href="/exam-store" variant="solid">
                     教材ストアへ戻る
-                </Link>
+                </Button>
             </div>
         );
     }
@@ -99,24 +101,19 @@ export default function OrderCompleteClient({ allExams }: OrderCompleteClientPro
                                     <div className="text-sm font-bold leading-tight mb-1">{item.title}</div>
                                     <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">PDF Content</div>
                                 </div>
-                                <button
-                                    onClick={() => alert("デモ：ファイルをダウンロードします")}
-                                    className="px-6 py-2.5 bg-accent text-white rounded-full text-xs font-bold hover:brightness-110 transition-all shadow-md active:scale-95"
-                                >
-                                    Download
-                                </button>
+                                <DownloadPdfButton examId={item.id} hasPdfKey={!!item.pdfKey} />
                             </div>
                         ))}
                     </div>
                 </div>
 
                 <div className="flex flex-col md:flex-row gap-4 justify-center">
-                    <Link href="/mypage" className="bg-text text-white py-4 px-10 rounded-full font-bold shadow-lg hover:brightness-110 transition-all">
+                    <Button href="/mypage" variant="solid">
                         マイページで確認する
-                    </Link>
-                    <Link href="/exam-store" className="bg-white text-gray-400 py-4 px-10 rounded-full font-bold border border-gray-100 hover:border-gray-300 transition-all">
+                    </Button>
+                    <Button href="/exam-store" variant="outline">
                         教材ストアに戻る
-                    </Link>
+                    </Button>
                 </div>
             </div>
 
