@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 
 export default async function ExamDetailPage({ params }: { params: { id: string } }) {
     const { userId } = await auth();
-    if (!userId) redirect(`/account/login`);
+    if (!userId) redirect(`/account/login?redirect_url=/exam/product/${params.id}`);
 
     const profile = await prisma.profile.findUnique({ where: { id: userId } });
     if (!profile) redirect(`/onboarding?redirect=/exam/product/${params.id}`);
