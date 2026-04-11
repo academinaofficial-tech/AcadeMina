@@ -159,35 +159,39 @@ export async function getSchools() {
 }
 
 export async function getArticleBySlug(slug: string) {
-    // 💡 ID指定ではなく、filtersクエリを使って「slugフィールドが一致するもの」を探します
-    const params = new URLSearchParams({
-        filters: `slug[equals]${slug}`,
-    });
-
-    const url = `${CMS_CONFIG.BASE_URL}/${CMS_CONFIG.ENDPOINT}?${params}`;
-
     try {
-        const res = await fetch(url, {
+        // まずslugフィールドで検索
+        const filterParams = new URLSearchParams({ filters: `slug[equals]${slug}` });
+        const filterUrl = `${CMS_CONFIG.BASE_URL}/${CMS_CONFIG.ENDPOINT}?${filterParams}`;
+
+        const filterRes = await fetch(filterUrl, {
             headers: { 'X-MICROCMS-API-KEY': CMS_CONFIG.API_KEY },
             next: { revalidate: 60 }
         });
 
-        if (!res.ok) throw new Error(`CMS API Error: ${res.status}`);
+        if (!filterRes.ok) throw new Error(`CMS API Error: ${filterRes.status}`);
 
-        const data = await res.json();
+        const filterData = await filterRes.json();
+        if (filterData.contents[0]) return filterData.contents[0];
 
-        // filtersで検索した場合、結果は contents 配列で返ってくるので、最初の1件を返す
-        return data.contents[0] || null;
+        // slugで見つからない場合はIDで直接取得を試みる
+        const idUrl = `${CMS_CONFIG.BASE_URL}/${CMS_CONFIG.ENDPOINT}/${slug}`;
+        const idRes = await fetch(idUrl, {
+            headers: { 'X-MICROCMS-API-KEY': CMS_CONFIG.API_KEY },
+            next: { revalidate: 60 }
+        });
+
+        if (idRes.ok) return await idRes.json();
+
+        return null;
 
     } catch (e: any) {
         console.warn(`CMS fetch failed for slug ${slug}:`, e.message);
 
-        // 🚨 修正箇所：本番環境ではエラーを投げる
         if (process.env.VERCEL || process.env.NODE_ENV === 'production') {
             throw new Error(`[Fatal] Failed to fetch article by slug from microCMS: ${e.message}`);
         }
 
-        // モックデータから探す場合（検証用）
         return _mockArticles.find((a: any) => a.slug === slug) || _mockArticles[0];
     }
 }
