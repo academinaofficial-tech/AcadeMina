@@ -67,21 +67,24 @@ export async function POST(req: Request) {
   }
 
   if (eventType === 'user.updated') {
-      const { id, email_addresses, primary_email_address_id } = evt.data
-      
-      if (id && email_addresses && primary_email_address_id) {
-          const primaryEmailObj = email_addresses.find(e => e.id === primary_email_address_id);
+      const { id, email_addresses, primary_email_address_id, first_name, last_name } = evt.data
+
+      if (id) {
+          const primaryEmailObj = email_addresses?.find(e => e.id === primary_email_address_id);
           const email = primaryEmailObj?.email_address;
-          if (email) {
-              try {
-                  await prisma.profile.update({
-                      where: { id: id },
-                      data: { email: email }
-                  });
-                  console.log(`Successfully updated email for profile ID: ${id}`);
-              } catch (error) {
-                  console.log(`Profile for ID ${id} not found to update email.`);
-              }
+
+          try {
+              await prisma.profile.update({
+                  where: { id },
+                  data: {
+                      ...(email && { email }),
+                      ...(first_name !== undefined && { firstName: first_name ?? "" }),
+                      ...(last_name !== undefined && { lastName: last_name ?? "" }),
+                  },
+              });
+              console.log(`Successfully updated profile for ID: ${id}`);
+          } catch (error) {
+              console.log(`Profile for ID ${id} not found to update.`);
           }
       }
   }
