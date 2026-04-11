@@ -49,7 +49,7 @@ export default function Page() {
         <div className="flex-1">
           <div className="text-[0.8rem] font-bold text-accent-light tracking-[0.15em] uppercase mb-3">01 / Digital Store</div>
           <h2 className="text-[1.8rem] md:text-[2.5rem] font-extrabold mb-5 leading-[1.2]">院試マスター / 教材ストア</h2>
-          <p className="text-[1.05rem] text-[#555] leading-[2] mb-[30px]">合格者が執筆した過去問解説、体験記、研究計画書、予想問題。<br />大学院入試を突破するための「武器」を、いつでも手に入れられます。</p>
+          <p className="text-[1.05rem] text-[#555] leading-[2] mb-[30px]">過去問の傾向を徹底分析した、オリジナルの予想問題・対策問題集・過去問解答解説の3種類を提供。<br />付け焼き刃ではない、本質的な対策で合格をつかみにいく。</p>
           <Link className="inline-block px-[36px] py-[14px] bg-text text-white rounded-full font-bold text-[0.95rem] transition-all duration-300 hover:bg-accent hover:opacity-100 hover:-translate-y-[2px]" href="/exam-store">教材を探す →</Link>
         </div>
         <div className="flex-1 relative w-full">
