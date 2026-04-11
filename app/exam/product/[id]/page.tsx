@@ -10,9 +10,16 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
         where: { id: params.id },
         include: { department: { include: { faculty: { include: { university: true } } } } },
     });
+
+    const uni = exam?.department?.faculty?.university?.name ?? "";
+    const fac = exam?.department?.faculty?.name ?? "";
+    const prefix = [uni, fac].filter(Boolean).join(" ");
+    const suffix = exam?.description ? exam.description.slice(0, 100) + (exam.description.length > 100 ? "…" : "") : "院試対策教材の詳細・購入ページです。";
+    const description = prefix ? `${prefix}の院試対策教材。${suffix}` : suffix;
+
     return {
         title: exam?.title ? `${exam.title} | AcadeMina` : "教材詳細 | AcadeMina",
-        description: exam?.description || "大学院受験の過去問・対策教材詳細ページです。",
+        description,
     };
 }
 
