@@ -51,13 +51,12 @@ export default function NewsDetailClient({ article }: NewsDetailClientProps) {
 
                 {/* 🌟 2. 本文：白背景のカードにして読みやすさを極限まで高める */}
                 <div className="bg-white p-8 md:p-12 rounded-3xl shadow-sm border border-gray-200 mb-16">
-                    <div className="column-content">
-                        <div 
-                            dangerouslySetInnerHTML={{ 
-                                __html: article.content || "<p>お知らせの内容は現在準備中です。</p>" 
-                            }} 
-                        />
-                    </div>
+                    <div
+                        className="text-gray-700 text-[1rem] leading-[2] whitespace-pre-wrap break-words [&_a]:text-accent [&_a]:underline [&_a]:underline-offset-4 [&_a]:font-semibold [&_a:hover]:opacity-70"
+                        dangerouslySetInnerHTML={{
+                            __html: article.content || "お知らせの内容は現在準備中です。"
+                        }}
+                    />
                 </div>
 
                 {/* 🌟 3. フッター：一覧に戻るリンク（ボタン風） */}

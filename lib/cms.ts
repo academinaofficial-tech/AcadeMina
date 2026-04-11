@@ -159,28 +159,38 @@ export async function getSchools() {
 }
 
 export async function getArticleBySlug(slug: string) {
+    // Next.jsのparamsが二重エンコードされている場合があるため正規化する
+    let normalizedSlug = slug;
+    try { normalizedSlug = decodeURIComponent(slug); } catch {}
+
     try {
         // まずslugフィールドで検索
-        const filterParams = new URLSearchParams({ filters: `slug[equals]${slug}` });
-        const filterUrl = `${CMS_CONFIG.BASE_URL}/${CMS_CONFIG.ENDPOINT}?${filterParams}`;
+        const filterUrl = `${CMS_CONFIG.BASE_URL}/${CMS_CONFIG.ENDPOINT}?filters=slug[equals]${encodeURIComponent(normalizedSlug)}`;
+        console.log('[getArticleBySlug] normalizedSlug:', normalizedSlug);
+        console.log('[getArticleBySlug] filterUrl:', filterUrl);
 
         const filterRes = await fetch(filterUrl, {
             headers: { 'X-MICROCMS-API-KEY': CMS_CONFIG.API_KEY },
-            next: { revalidate: 60 }
+            cache: 'no-store',
         });
 
+        console.log('[getArticleBySlug] filterRes status:', filterRes.status);
         if (!filterRes.ok) throw new Error(`CMS API Error: ${filterRes.status}`);
 
         const filterData = await filterRes.json();
+        console.log('[getArticleBySlug] filterData.contents.length:', filterData.contents?.length);
         if (filterData.contents[0]) return filterData.contents[0];
 
         // slugで見つからない場合はIDで直接取得を試みる
-        const idUrl = `${CMS_CONFIG.BASE_URL}/${CMS_CONFIG.ENDPOINT}/${slug}`;
+        const idUrl = `${CMS_CONFIG.BASE_URL}/${CMS_CONFIG.ENDPOINT}/${encodeURIComponent(normalizedSlug)}`;
+        console.log('[getArticleBySlug] idUrl:', idUrl);
+
         const idRes = await fetch(idUrl, {
             headers: { 'X-MICROCMS-API-KEY': CMS_CONFIG.API_KEY },
-            next: { revalidate: 60 }
+            cache: 'no-store',
         });
 
+        console.log('[getArticleBySlug] idRes status:', idRes.status);
         if (idRes.ok) return await idRes.json();
 
         return null;
