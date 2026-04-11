@@ -9,9 +9,10 @@ import DownloadPdfButton from "@/app/mypage/DownloadPdfButton";
 interface ProductDetailClientProps {
     exam: Exam;
     hasPurchased?: boolean;
+    isAdmin?: boolean;
 }
 
-export default function ProductDetailClient({ exam, hasPurchased = false }: ProductDetailClientProps) {
+export default function ProductDetailClient({ exam, hasPurchased = false, isAdmin = false }: ProductDetailClientProps) {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
@@ -48,12 +49,22 @@ export default function ProductDetailClient({ exam, hasPurchased = false }: Prod
         <div className="bg-white min-h-screen">
             {/* Breadcrumb */}
             <div className="py-4 px-5 md:px-10 text-xs text-gray-400 bg-gray-50 border-b">
-                <div className="max-w-[1100px] mx-auto flex items-center gap-2">
-                    <Link href="/" className="hover:text-accent">TOP</Link>
-                    <span>&gt;</span>
-                    <Link href="/exam-store" className="hover:text-accent">教材ストア</Link>
-                    <span>&gt;</span>
-                    <span className="text-gray-600 font-medium truncate">{exam.title}</span>
+                <div className="max-w-[1100px] mx-auto flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                        <Link href="/" className="hover:text-accent">TOP</Link>
+                        <span>&gt;</span>
+                        <Link href="/exam-store" className="hover:text-accent">教材ストア</Link>
+                        <span>&gt;</span>
+                        <span className="text-gray-600 font-medium truncate">{exam.title}</span>
+                    </div>
+                    {isAdmin && (
+                        <Link
+                            href={`/admin/exams/${exam.id}/edit`}
+                            className="text-xs font-bold px-3 py-1.5 border border-gray-300 rounded-full hover:border-accent hover:text-accent transition-colors"
+                        >
+                            編集
+                        </Link>
+                    )}
                 </div>
             </div>
 

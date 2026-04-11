@@ -1,4 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
 import { redirect, notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import type { Metadata } from "next";
@@ -30,14 +31,16 @@ export default async function ExamDetailPage({ params }: { params: { id: string 
     });
     if (!exam) notFound();
 
-    const purchase = await prisma.purchase.findFirst({
-        where: { profileId: userId, examId: params.id },
-    });
+    const [purchase, user] = await Promise.all([
+        prisma.purchase.findFirst({ where: { profileId: userId, examId: params.id } }),
+        currentUser(),
+    ]);
     const hasPurchased = !!purchase;
+    const isAdmin = (user?.publicMetadata as any)?.role === "admin";
 
     return (
         <main className="mt-20 md:mt-[134px]">
-            <ProductDetailClient exam={exam} hasPurchased={hasPurchased} />
+            <ProductDetailClient exam={exam} hasPurchased={hasPurchased} isAdmin={isAdmin} />
         </main>
     );
 }
