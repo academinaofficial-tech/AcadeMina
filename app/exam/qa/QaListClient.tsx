@@ -18,10 +18,11 @@ type Question = {
 export default function QaListClient({
     initialQuestions,
     categories,
+    currentUserId,
 }: {
     initialQuestions: Question[];
     categories: Category[];
-    currentUserId: string;
+    currentUserId: string | null;
 }) {
     const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
 
@@ -35,7 +36,7 @@ export default function QaListClient({
             {/* 質問投稿ボタン */}
             <div className="flex justify-end mb-8">
                 <Link
-                    href="/exam/qa/new"
+                    href={currentUserId ? "/exam/qa/new" : "/account/login?redirect_url=/exam/qa/new"}
                     className="inline-flex items-center gap-2 bg-text text-white px-6 py-3 rounded-full font-bold text-sm hover:opacity-80 transition-opacity"
                 >
                     <span className="text-lg leading-none">+</span> 質問を投稿する

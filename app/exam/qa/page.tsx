@@ -5,7 +5,6 @@ import QaListClient from "./QaListClient";
 
 export default async function QaPage() {
     const { userId } = await auth();
-    if (!userId) redirect("/account/login");
 
     const [categories, questions] = await Promise.all([
         prisma.qaCategory.findMany({ orderBy: { order: "asc" } }),

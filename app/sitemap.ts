@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
 import { getArticles } from '@/lib/cms';
+import { prisma } from '@/lib/prisma';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = 'https://www.academina.com';
@@ -11,6 +12,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         '',
         '/about',
         '/exam',
+        '/exam/mentor',
+        '/exam/qa',
         '/exam-store',
         '/column',
         '/news',
@@ -67,5 +70,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         };
     });
 
-    return [...staticPages, ...dynamicPages];
+    // 商材詳細ページ
+    const exams = await prisma.exam.findMany({ select: { id: true, updatedAt: true } });
+    const examPages: MetadataRoute.Sitemap = exams.map((exam) => ({
+        url: `${baseUrl}/exam/product/${exam.id}`,
+        lastModified: exam.updatedAt,
+        changeFrequency: 'monthly' as const,
+        priority: 0.7,
+    }));
+
+    return [...staticPages, ...dynamicPages, ...examPages];
 }

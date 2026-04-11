@@ -18,10 +18,6 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 
 export default async function ExamDetailPage({ params }: { params: { id: string } }) {
     const { userId } = await auth();
-    if (!userId) redirect(`/account/login?redirect_url=/exam/product/${params.id}`);
-
-    const profile = await prisma.profile.findUnique({ where: { id: userId } });
-    if (!profile) redirect(`/onboarding?redirect=/exam/product/${params.id}`);
 
     const exam = await prisma.exam.findUnique({
         where: { id: params.id },
@@ -31,12 +27,17 @@ export default async function ExamDetailPage({ params }: { params: { id: string 
     });
     if (!exam) notFound();
 
-    const [purchase, user] = await Promise.all([
-        prisma.purchase.findFirst({ where: { profileId: userId, examId: params.id } }),
-        currentUser(),
-    ]);
-    const hasPurchased = !!purchase;
-    const isAdmin = (user?.publicMetadata as any)?.role === "admin";
+    let hasPurchased = false;
+    let isAdmin = false;
+
+    if (userId) {
+        const [purchase, user] = await Promise.all([
+            prisma.purchase.findFirst({ where: { profileId: userId, examId: params.id } }),
+            currentUser(),
+        ]);
+        hasPurchased = !!purchase;
+        isAdmin = (user?.publicMetadata as any)?.role === "admin";
+    }
 
     return (
         <main className="mt-20 md:mt-[134px]">
