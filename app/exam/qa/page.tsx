@@ -2,6 +2,12 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import QaListClient from "./QaListClient";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "大学院受験Q&A掲示板｜院試の疑問を先輩・仲間に質問",
+    description: "大学院受験に関する疑問・質問を投稿できる掲示板。研究室選び、研究計画書の書き方、院試勉強法、TOEIC・英語対策まで、先輩や仲間からの回答が届きます。AcadeMinaのQ&Aボードで院試の悩みを解決しましょう。",
+};
 
 export default async function QaPage() {
     const { userId } = await auth();

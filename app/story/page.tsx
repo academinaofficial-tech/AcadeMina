@@ -24,7 +24,10 @@ export default async function Page() {
     return (
         <main className="mt-20 md:mt-[134px] bg-gray-50/30 min-h-screen">
             <section className="pt-20 pb-16 px-10 text-center bg-white border-b border-gray-100">
-                <h1 className="text-5xl font-extrabold mb-4 tracking-tight">Success Stories</h1>
+                <h1 className="text-5xl font-extrabold mb-4 tracking-tight">
+                  Success Stories
+                  <span className="sr-only">｜大学院合格体験記</span>
+                </h1>
                 <p className="text-lg text-gray-500 max-w-2xl mx-auto leading-relaxed">
                     難関大学院を突破した先輩たちのリアルな軌跡。<br />
                     志望校の体験記を絞り込んで、合格へのヒントを見つけましょう。

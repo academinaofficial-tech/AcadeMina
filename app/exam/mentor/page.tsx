@@ -3,8 +3,8 @@ import MentorApplyClient from "./MentorApplyClient";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "面談・研究計画書添削｜AcadeMina",
-    description: "大学院受験に向けた面談相談・研究計画書添削サービス。完了後払いで安心してご利用いただけます。",
+    title: "大学院受験メンター相談・研究計画書添削｜現役院生にオンラインで相談｜AcadeMina",
+    description: "大学院受験に向けた面談相談・研究計画書添削サービス。志望校選び、研究室へのアプローチ、研究計画書の添削まで、現役院生がオンラインでサポート。完了後払いで安心してご利用いただけます。",
 };
 
 export default async function MentorPage() {
