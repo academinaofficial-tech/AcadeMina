@@ -79,7 +79,7 @@ export default function Page() {
         <div className="flex-1">
           <div className="text-[0.8rem] font-bold text-accent-light tracking-[0.15em] uppercase mb-3">03 / Mentoring</div>
           <h2 className="text-[1.8rem] md:text-[2.5rem] font-extrabold mb-5 leading-[1.2]">メンター面談・研究計画書添削</h2>
-          <p className="text-[1.05rem] text-[#555] leading-[2] mb-[30px]">現役院生にオンラインで直接相談。研究室選びのリアルな話、<br />面接対策、研究計画書のレビューまで、マンツーマンでサポート。</p>
+          <p className="text-[1.05rem] text-[#555] leading-[2] mb-[30px]">現役院生によるオンライン面談と研究計画書添削。<br />志望校選び・面接対策・研究計画書の書き方まで、マンツーマンでサポート。</p>
           <Link href="/exam/mentor" className="inline-block px-[36px] py-[14px] bg-text text-white rounded-full font-bold text-[0.95rem] hover:bg-accent transition-colors">申し込む →</Link>
         </div>
         <div className="flex-1 relative w-full">
