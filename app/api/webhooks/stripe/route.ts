@@ -16,25 +16,18 @@ export async function POST(req: Request) {
       throw new Error("STRIPE_WEBHOOK_SECRET is missing");
     }
 
-    event = stripe.webhooks.constructEvent(
-      body,
-      signature,
-      webhookSecret
-    );
+    event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
   } catch (err: any) {
     console.error(`Webhook Action Error: ${err.message}`);
     return new NextResponse(`Webhook Error: ${err.message}`, { status: 400 });
   }
 
-  // 決済完了イベントのハンドリング
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
-    
-    // 購入したユーザーID（Checkout作成時にmetadataにuser_idを含める必要があります）
-    // ※現在は無いため、セッション情報から顧客を特定できるか要確認ですが、
-    // ここでは安全に実装するため、checkout.route.ts に修正が必要です。
+
     const userId = session.metadata?.userId;
     const cartIds = session.metadata?.cartIds?.split(",") || [];
+    const couponCode = session.metadata?.couponCode;
 
     if (!userId) {
       console.error("No userId found in session metadata");
@@ -47,28 +40,34 @@ export async function POST(req: Request) {
     }
 
     try {
-      // 重複登録を防ぐため、存在しない場合のみ作成
-      await Promise.all(
-        cartIds.map(async (examId) => {
-          const existing = await prisma.purchase.findFirst({
-            where: {
-              profileId: userId,
-              examId: examId,
-            },
-          });
+      // 重複処理防止: このセッションで購入済みかチェック
+      const existingPurchase = await prisma.purchase.findFirst({
+        where: { stripeId: session.id },
+      });
 
-          if (!existing) {
-            await prisma.purchase.create({
+      if (!existingPurchase) {
+        // 購入レコードを一括作成
+        await Promise.all(
+          cartIds.map((examId) =>
+            prisma.purchase.create({
               data: {
                 profileId: userId,
-                examId: examId,
+                examId,
                 stripeId: session.id,
+                couponCode: couponCode ?? null,
               },
-            });
-            console.log(`Created purchase: profileId=${userId}, examId=${examId}`);
-          }
-        })
-      );
+            })
+          )
+        );
+
+        // クーポン使用カウントをインクリメント
+        if (couponCode) {
+          await prisma.coupon.update({
+            where: { code: couponCode },
+            data: { usedCount: { increment: 1 } },
+          });
+        }
+      }
     } catch (dbError) {
       console.error("Database Error during webhook processing:", dbError);
       return new NextResponse("Database Error", { status: 500 });

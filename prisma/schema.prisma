@@ -96,13 +96,28 @@ model Exam {
 }
 
 model Purchase {
-  id        String   @id @default(cuid())
-  profileId String
-  profile   Profile  @relation(fields: [profileId], references: [id])
-  examId    String
-  exam      Exam     @relation(fields: [examId], references: [id])
-  stripeId  String?
-  createdAt DateTime @default(now())
+  id          String   @id @default(cuid())
+  profileId   String
+  profile     Profile  @relation(fields: [profileId], references: [id])
+  examId      String
+  exam        Exam     @relation(fields: [examId], references: [id])
+  stripeId    String?
+  couponCode  String?
+  createdAt   DateTime @default(now())
+}
+
+model Coupon {
+  id            String    @id @default(cuid())
+  code          String    @unique
+  discountType  String    // "PERCENT" | "FIXED"
+  discountValue Int       // % または 円引き
+  minAmount     Int       @default(0)
+  maxUses       Int?      // null = 無制限
+  usedCount     Int       @default(0)
+  expiresAt     DateTime?
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 }
 
 model Lab {

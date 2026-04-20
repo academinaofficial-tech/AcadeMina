@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import DownloadPdfButton from "@/app/mypage/DownloadPdfButton";
+import { useCartStore } from "@/lib/cartStore";
 
 interface ProductDetailClientProps {
     exam: Exam;
@@ -15,34 +16,17 @@ interface ProductDetailClientProps {
 export default function ProductDetailClient({ exam, hasPurchased = false, isAdmin = false }: ProductDetailClientProps) {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
+    const { addItem, isInCart } = useCartStore();
+    const inCart = isInCart(exam.id);
 
-    const buyNow = async () => {
-        if (loading) return;
-        setLoading(true);
-
-        try {
-            const response = await fetch("/api/checkout", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ examId: exam.id }),
-            });
-
-            const data = await response.json();
-
-            if (data.url) {
-                window.location.href = data.url;
-            } else if (response.status === 401) {
-                // 未ログインの場合はログインページへ
-                window.location.href = `/account/login?redirect_url=/exam/product/${exam.id}`;
-            } else {
-                alert("エラーが発生しました。時間を置いて再度お試しください。");
-                setLoading(false);
-            }
-        } catch (error) {
-            console.error("Checkout error:", error);
-            alert("通信エラーが発生しました。");
-            setLoading(false);
-        }
+    const handleAddToCart = () => {
+        addItem({
+            examId: exam.id,
+            title: exam.title,
+            price: exam.price,
+            image: exam.image,
+        });
+        router.push("/cart");
     };
 
     return (
@@ -128,19 +112,17 @@ export default function ProductDetailClient({ exam, hasPurchased = false, isAdmi
                                 <DownloadPdfButton examId={exam.id} hasPdfKey={!!(exam as any).pdfKey} />
                             </div>
                         ) : (
-                            <button
-                                onClick={buyNow}
-                                disabled={loading}
-                                className="w-full py-5 bg-accent text-white rounded-full font-bold text-lg shadow-lg shadow-accent/20 transition-all hover:scale-[1.02] hover:brightness-110 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
-                            >
-                                {loading ? "処理中..." : "今すぐ購入"}
-                            </button>
-                        )}
-
-                        {!hasPurchased && (
-                            <p className="text-center text-xs text-gray-400 mt-4">
-                                ログインしていない場合はログイン画面へ移動します
-                            </p>
+                            <div className="space-y-3">
+                                <button
+                                    onClick={handleAddToCart}
+                                    className="w-full py-5 bg-accent text-white rounded-full font-bold text-lg shadow-lg shadow-accent/20 transition-all hover:scale-[1.02] hover:brightness-110 active:scale-95"
+                                >
+                                    {inCart ? "カートを見る →" : "カートに追加"}
+                                </button>
+                                <p className="text-center text-xs text-gray-400">
+                                    カートでクーポンを適用できます
+                                </p>
+                            </div>
                         )}
                     </div>
 
