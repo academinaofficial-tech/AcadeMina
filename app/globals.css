@@ -8,11 +8,15 @@
   --color-border: var(--gray-border);
   /* bg-text を有効にするための定義 */
   --color-text: var(--text-color); 
-  
+
   --font-sans: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
 }
 
 /* カスタムユーティリティの再定義 */
+@utility z-header { z-index: 1000; }
+@utility z-overlay { z-index: 1100; }
+@utility z-menu { z-index: 1200; }
+
 @utility bg-text { background-color: var(--text-color); }
 @utility text-text { color: var(--text-color); }
 @utility border-border { border-color: var(--gray-border); }

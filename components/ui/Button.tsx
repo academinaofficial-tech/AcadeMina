@@ -1,15 +1,30 @@
 import React from "react";
 import Link from "next/link";
 import { UrlObject } from "url";
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 type Url = string | UrlObject;
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    href?: Url;
+type ButtonBaseProps = {
     variant?: "outline" | "solid" | "gray";
     className?: string;
     children: React.ReactNode;
-}
+};
+
+type ButtonAsButtonProps = ButtonBaseProps & React.ButtonHTMLAttributes<HTMLButtonElement> & {
+    href?: never;
+};
+
+type ButtonAsLinkProps = ButtonBaseProps & React.AnchorHTMLAttributes<HTMLAnchorElement> & {
+    href: Url;
+};
+
+export type ButtonProps = ButtonAsButtonProps | ButtonAsLinkProps;
 
 export default function Button({
     href,
@@ -32,12 +47,12 @@ export default function Button({
         gray: "bg-gray-200 text-gray-400 border-2 border-gray-200 cursor-not-allowed shadow-none",
     };
 
-    const combinedClassName = `${baseStyle} ${variants[variant]} ${className}`;
+    const combinedClassName = cn(baseStyle, variants[variant], className);
 
     // href が渡された場合は Next.js の Link としてレンダリングする
     if (href) {
         return (
-            <Link href={href} className={combinedClassName}>
+            <Link href={href} className={combinedClassName} {...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}>
                 {children}
             </Link>
         );
@@ -45,7 +60,7 @@ export default function Button({
 
     // href がない場合は通常の button としてレンダリングする
     return (
-        <button className={combinedClassName} {...props}>
+        <button className={combinedClassName} {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}>
             {children}
         </button>
     );

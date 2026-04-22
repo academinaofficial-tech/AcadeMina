@@ -2,10 +2,28 @@
 
 import { Lab, University, Department } from "@prisma/client";
 import Link from "next/link";
+import Image from "next/image";
 
 interface LabWithRelations extends Lab {
     university: University | null;
     department: Department | null;
+}
+
+interface LabStats {
+    gender: number;
+    international: number;
+    working: number;
+}
+
+interface LabPaper {
+    title: string;
+    summary: string;
+    link: string;
+}
+
+interface LabContact {
+    prof: string;
+    assistant: string;
 }
 
 interface LabDetailClientProps {
@@ -13,18 +31,24 @@ interface LabDetailClientProps {
 }
 
 export default function LabDetailClient({ lab }: LabDetailClientProps) {
-    const stats = (lab.stats as any) || { gender: 0, international: 0, working: 0 };
-    const papers = (lab.papers as any[]) || [];
-    const contact = (lab.contact as any) || { prof: "", assistant: "" };
+    const stats = (lab.stats as unknown as LabStats) || { gender: 0, international: 0, working: 0 };
+    const papers = (lab.papers as unknown as LabPaper[]) || [];
+    const contact = (lab.contact as unknown as LabContact) || { prof: "", assistant: "" };
 
     return (
         <div className="bg-white min-h-screen">
             {/* Hero Section */}
-            <section
-                className="h-[50vh] relative bg-cover bg-center"
-                style={{ backgroundImage: `url(${lab.heroImage})` }}
-            >
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20 flex items-end py-16 px-5 md:px-10">
+            <section className="h-[50vh] relative overflow-hidden bg-gray-900">
+                {lab.heroImage && (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                        src={lab.heroImage}
+                        alt="Hero"
+                        loading="lazy"
+                        className="absolute inset-0 w-full h-full object-cover object-center"
+                    />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20 flex items-end py-16 px-5 md:px-10 z-10">
                     <div className="max-w-[1000px] mx-auto w-full text-white">
                         <div className="text-sm md:text-lg font-bold opacity-90 mb-2">
                             {lab.universityName || lab.university?.name}
@@ -57,6 +81,7 @@ export default function LabDetailClient({ lab }: LabDetailClientProps) {
                             <Link
                                 href={lab.website}
                                 target="_blank"
+                                rel="noopener noreferrer"
                                 className="inline-block bg-text text-white py-4 px-10 rounded-full font-bold transition-all hover:scale-105"
                             >
                                 Visit Official Website ↗
@@ -105,7 +130,7 @@ export default function LabDetailClient({ lab }: LabDetailClientProps) {
                     <div className="space-y-8">
                         {papers.length > 0 ? (
                             papers.map((paper, idx) => (
-                                <div key={idx} className="pb-8 border-b border-gray-100 last:border-0">
+                                <div key={paper.title || idx} className="pb-8 border-b border-gray-100 last:border-0">
                                     <span className="text-xl font-bold mb-3 block text-text">
                                         {paper.title}
                                     </span>
@@ -115,6 +140,7 @@ export default function LabDetailClient({ lab }: LabDetailClientProps) {
                                     <Link
                                         href={paper.link}
                                         target="_blank"
+                                        rel="noopener noreferrer"
                                         className="text-sm text-accent font-bold hover:underline inline-flex items-center gap-1"
                                     >
                                         Read Paper <span className="text-lg">→</span>
@@ -134,10 +160,14 @@ export default function LabDetailClient({ lab }: LabDetailClientProps) {
                     </h2>
                     <div className="flex flex-col md:flex-row gap-10 items-center md:items-start bg-white border border-gray-100 p-10 rounded-3xl shadow-sm">
                         <div className="min-w-[150px] text-center">
-                            <div
-                                className="w-32 h-32 rounded-full mx-auto mb-4 bg-gray-100 bg-cover border-4 border-gray-50 shadow-inner"
-                                style={{ backgroundImage: `url(${lab.profImage})` }}
-                            />
+                            <div className="w-32 h-32 rounded-full mx-auto mb-4 bg-gray-100 border-4 border-gray-50 shadow-inner overflow-hidden flex items-center justify-center">
+                                {lab.profImage ? (
+                                    /* eslint-disable-next-line @next/next/no-img-element */
+                                    <img src={lab.profImage} alt={lab.profName || "Professor"} loading="lazy" className="w-full h-full object-cover" />
+                                ) : (
+                                    <span className="text-gray-300 text-xs">No Image</span>
+                                )}
+                            </div>
                             <div className="font-extrabold text-lg">{lab.profName}</div>
                             <div className="text-xs text-gray-400 font-bold uppercase mt-1">Professor</div>
                         </div>

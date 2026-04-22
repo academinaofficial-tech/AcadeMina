@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { MAIN_NAV_LINKS } from "@/lib/navigation";
@@ -10,16 +11,31 @@ export default function Header() {
     const pathname = usePathname() || "";
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+    useEffect(() => {
+        if (isMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [isMenuOpen]);
+
+    useEffect(() => {
+        setIsMenuOpen(false);
+    }, [pathname]);
+
     const isActive = (navPath: string) => {
         return pathname.includes(navPath) && pathname !== "/" ? "nav-active" : "";
     };
 
     return (
-        <header className="fixed top-0 left-0 w-full z-[1000] shadow-sm">
+        <header className="fixed top-0 left-0 w-full z-header shadow-sm">
             {/* Upper Tier: Main Utility Bar (White) */}
             <div className="h-20 bg-white flex justify-between items-center px-5 md:px-10 border-b border-gray-100">
                 <Link href="/" className="flex items-center transition-opacity duration-300 hover:opacity-70">
-                    <img src="/images/icon.png" alt="AcadeMina" className="h-[40px] md:h-[48px] w-auto rounded-[10px]" />
+                    <Image src="/images/icon.png" alt="AcadeMina" width={180} height={48} className="h-[40px] md:h-[48px] w-auto rounded-[10px]" />
                 </Link>
 
                 <div className="flex items-center gap-4 md:gap-7">
@@ -40,7 +56,7 @@ export default function Header() {
                         </SignedIn>
                     </div>
 
-                    <div className="flex flex-col gap-[5px] cursor-pointer z-[1200] md:hidden group" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                    <div className="flex flex-col gap-[5px] cursor-pointer z-menu md:hidden group" onClick={() => setIsMenuOpen(!isMenuOpen)}>
                         <span className={`block w-6 h-[2.5px] transition-all duration-300 ${isMenuOpen ? "bg-white rotate-45 translate-y-[7.5px]" : "bg-text"}`} />
                         <span className={`block w-6 h-[2.5px] transition-all duration-300 ${isMenuOpen ? "bg-white opacity-0" : "bg-text"}`} />
                         <span className={`block w-6 h-[2.5px] transition-all duration-300 ${isMenuOpen ? "bg-white -rotate-45 -translate-y-[7.5px]" : "bg-text"}`} />
@@ -65,7 +81,7 @@ export default function Header() {
 
             {/* Mobile Menu Overlay */}
             {isMenuOpen && (
-                <div className="md:hidden fixed inset-0 bg-text z-[1100] pt-28 px-10">
+                <div className="md:hidden fixed inset-0 bg-text z-overlay pt-28 px-10">
                     <nav className="flex flex-col gap-10 text-white">
                         {MAIN_NAV_LINKS.map((link) => (
                             <Link key={link.href} href={link.href} onClick={() => setIsMenuOpen(false)} className="text-2xl font-bold">
