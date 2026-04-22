@@ -4,6 +4,7 @@ import AppProviders from "@/components/providers/AppProviders";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 const notoSansJP = Noto_Sans_JP({
   subsets: ["latin"],
@@ -133,6 +134,9 @@ export default function RootLayout({
           {children}
           <Footer />
         </body>
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+        )}
       </html>
     </AppProviders>
   );
