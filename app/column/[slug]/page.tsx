@@ -9,7 +9,7 @@ import ColumnDetailClient from "./ColumnDetailClient";
 type ColumnArticle = {
   id: string;
   title: string;
-  metaDescription: string;
+  meta_description: string;
   eyecatch?: { url: string; width: number; height: number };
   slug: string;
   content: string;
@@ -46,10 +46,10 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
   return {
     title: `${article.title} | AcadeMina`,
-    description: article.metaDescription, // メタディスクリプション反映
+    description: article.meta_description, // メタディスクリプション反映
     openGraph: {
       title: `${article.title} | AcadeMina`,
-      description: article.metaDescription,
+      description: article.meta_description,
       images: article.eyecatch ? [article.eyecatch.url] : [],
     },
   };
@@ -78,7 +78,7 @@ export default async function ColumnDetailPage({ params }: { params: { slug: str
       logo: { "@type": "ImageObject", url: "https://www.academina.com/images/icon.png" },
     },
     ...(article.eyecatch ? { image: article.eyecatch.url } : {}),
-    ...(article.metaDescription ? { description: article.metaDescription } : {}),
+    ...(article.meta_description ? { description: article.meta_description } : {}),
   };
 
   return (
