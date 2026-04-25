@@ -16,7 +16,6 @@ const isPublicRoute = createRouteMatcher([
     "/cart",
     "/api/webhooks/clerk",
     "/api/coupons/validate",
-    "/api/admin/setup-db",
     "/account/login(.*)",
     "/account/signup(.*)",
     "/onboarding",
