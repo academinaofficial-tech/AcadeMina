@@ -6,30 +6,31 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const articleSlug = params.slug;
   const article = await getArticleBySlug(articleSlug);
 
-  const title = article?.title || "合格体験記";
+  const metaTitle = article?.meta_title || article?.title || "合格体験記";
   const school = article?.school_info || article;
   const descParts = [
     school?.university,
     school?.faculty,
     school?.major,
   ].filter(Boolean).join(" ");
-  const description = descParts
-    ? `${descParts}への合格体験記。${title} | AcadeMina`
-    : `${title} | 大学院合格者の体験記 | AcadeMina`;
+  const fallbackDescription = descParts
+    ? `${descParts}への合格体験記。${article?.title} | AcadeMina`
+    : `${article?.title} | 大学院合格者の体験記 | AcadeMina`;
+  const metaDescription = article?.meta_description || fallbackDescription;
   const ogImage = article?.eyecatch?.url;
 
   return {
-    title: `${title} | AcadeMina`,
-    description,
+    title: `${metaTitle} | AcadeMina`,
+    description: metaDescription,
     openGraph: {
-      title: `${title} | AcadeMina`,
-      description,
+      title: `${metaTitle} | AcadeMina`,
+      description: metaDescription,
       ...(ogImage ? { images: [{ url: ogImage }] } : {}),
     },
     twitter: {
       card: "summary_large_image",
-      title: `${title} | AcadeMina`,
-      description,
+      title: `${metaTitle} | AcadeMina`,
+      description: metaDescription,
       ...(ogImage ? { images: [ogImage] } : {}),
     },
   };
