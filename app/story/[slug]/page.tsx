@@ -6,7 +6,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const articleSlug = params.slug;
   const article = await getArticleBySlug(articleSlug);
 
-  const metaTitle = article?.meta_title || article?.title || "合格体験記";
+  const metaTitle = article?.title || "合格体験記";
   const school = article?.school_info || article;
   const descParts = [
     school?.university,
