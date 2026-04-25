@@ -102,7 +102,6 @@ model Purchase {
   examId      String
   exam        Exam     @relation(fields: [examId], references: [id])
   stripeId    String?
-  couponCode  String?
   createdAt   DateTime @default(now())
 }
 

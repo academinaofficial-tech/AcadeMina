@@ -1,6 +1,3 @@
--- AlterTable
-ALTER TABLE "Purchase" ADD COLUMN "couponCode" TEXT;
-
 -- CreateTable
 CREATE TABLE "Coupon" (
     "id" TEXT NOT NULL,

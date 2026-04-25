@@ -54,7 +54,6 @@ export async function POST(req: Request) {
                 profileId: userId,
                 examId,
                 stripeId: session.id,
-                couponCode: couponCode ?? null,
               },
             })
           )
