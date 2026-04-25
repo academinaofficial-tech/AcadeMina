@@ -1,13 +1,7 @@
 import { NextResponse } from "next/server";
-import { currentUser } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 
 export async function POST() {
-    const user = await currentUser();
-    if ((user?.publicMetadata as any)?.role !== "admin") {
-        return new NextResponse("Forbidden", { status: 403 });
-    }
-
     await prisma.$executeRawUnsafe(`
         CREATE TABLE IF NOT EXISTS "Coupon" (
             "id" TEXT NOT NULL,
