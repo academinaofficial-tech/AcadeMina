@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { Prisma } from "@prisma/client";
+import { useCartStore } from "@/lib/cartStore";
 
 type ExamWithRelations = Prisma.ExamGetPayload<{
   include: {
@@ -56,6 +57,7 @@ const masterTags = [
 ];
 
 export default function ExamStoreClient({ initialExams }: ExamStoreClientProps) {
+  const { addItem, isInCart } = useCartStore();
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState<{ tag: string; cat: string }[]>([]);
@@ -326,24 +328,28 @@ export default function ExamStoreClient({ initialExams }: ExamStoreClientProps) 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredExams.map((exam) => {
               const school = getSchoolData(exam);
+              const inCart = isInCart(exam.id);
 
               return (
-                <Link
-                  href={`/exam/product/${exam.id}`}
+                <div
                   key={exam.id}
-                  className="bg-white border rounded-xl overflow-hidden hover:shadow-xl transition-all group block"
+                  className="bg-white border rounded-xl overflow-hidden hover:shadow-xl transition-all group flex flex-col"
                 >
-                  <div
-                    className="h-48 bg-gray-200 bg-cover bg-center"
-                    style={{ backgroundImage: `url(${exam.image || "/placeholder.png"})` }}
-                  />
+                  <Link href={`/exam/product/${exam.id}`} className="block">
+                    <div
+                      className="h-48 bg-gray-200 bg-cover bg-center"
+                      style={{ backgroundImage: `url(${exam.image || "/placeholder.png"})` }}
+                    />
+                  </Link>
 
-                  <div className="p-5">
+                  <div className="p-5 flex flex-col flex-1">
                     <div className="text-xs font-bold text-accent uppercase mb-2">
                       {exam.category}
                     </div>
 
-                    <h3 className="font-bold text-lg mb-3 line-clamp-2 h-14 group-hover:text-accent transition-colors">{exam.title}</h3>
+                    <Link href={`/exam/product/${exam.id}`}>
+                      <h3 className="font-bold text-lg mb-3 line-clamp-2 h-14 group-hover:text-accent transition-colors">{exam.title}</h3>
+                    </Link>
 
                     {(school.university || school.faculty || school.department) && (
                       <div className="flex flex-wrap gap-2 mb-4">
@@ -365,16 +371,31 @@ export default function ExamStoreClient({ initialExams }: ExamStoreClientProps) 
                       </div>
                     )}
 
-                    <div className="flex justify-between items-center mt-auto">
-                      <span className="text-xl font-extrabold group-hover:text-accent transition-colors">
+                    <div className="mt-auto pt-4">
+                      <span className="text-xl font-extrabold block mb-3">
                         ¥{exam.price.toLocaleString()}
                       </span>
-                      <span className="bg-text text-white px-4 py-2 rounded-lg font-bold group-hover:bg-accent transition-colors block text-center">
-                        詳細を見る
-                      </span>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => addItem({ examId: exam.id, title: exam.title, price: exam.price, image: exam.image })}
+                          className={`flex-1 py-2 rounded-lg text-sm font-bold border-2 transition-colors ${
+                            inCart
+                              ? "border-accent text-accent bg-accent/5"
+                              : "border-gray-200 text-gray-600 hover:border-accent hover:text-accent"
+                          }`}
+                        >
+                          {inCart ? "✓ 追加済み" : "+ カートに追加"}
+                        </button>
+                        <Link
+                          href={`/exam/product/${exam.id}`}
+                          className="flex-1 py-2 rounded-lg text-sm font-bold bg-text text-white text-center hover:bg-accent transition-colors"
+                        >
+                          詳細を見る
+                        </Link>
+                      </div>
                     </div>
                   </div>
-                </Link>
+                </div>
               );
             })}
           </div>
