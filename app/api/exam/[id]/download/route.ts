@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import { s3Client, BUCKET_NAME } from "@/lib/r2";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
@@ -17,25 +17,31 @@ export async function GET(
 
     const { id: examId } = await params;
 
-    // ユーザーのProfileを取得
-    const profile = await prisma.profile.findUnique({
-      where: { id: userId },
-    });
+    // 管理者は購入チェックをスキップ
+    const user = await currentUser();
+    const isAdmin = (user?.publicMetadata as any)?.role === "admin";
 
-    if (!profile) {
-      return NextResponse.json({ error: "Profile missing" }, { status: 404 });
-    }
+    if (!isAdmin) {
+      // ユーザーのProfileを取得
+      const profile = await prisma.profile.findUnique({
+        where: { id: userId },
+      });
 
-    // このユーザーが該当教材を購入しているかチェック
-    const hasPurchase = await prisma.purchase.findFirst({
-      where: {
-        profileId: profile.id,
-        examId: examId,
-      },
-    });
+      if (!profile) {
+        return NextResponse.json({ error: "Profile missing" }, { status: 404 });
+      }
 
-    if (!hasPurchase) {
-      return NextResponse.json({ error: "購入履歴が見つかりません。" }, { status: 403 });
+      // このユーザーが該当教材を購入しているかチェック
+      const hasPurchase = await prisma.purchase.findFirst({
+        where: {
+          profileId: profile.id,
+          examId: examId,
+        },
+      });
+
+      if (!hasPurchase) {
+        return NextResponse.json({ error: "購入履歴が見つかりません。" }, { status: 403 });
+      }
     }
 
     // 教材からpdfKeyを取得
