@@ -6,6 +6,7 @@ const adminMenus = [
   {
     category: "教材",
     items: [
+      { href: "/admin/exams", label: "教材一覧", description: "全教材の確認・PDF閲覧・編集" },
       { href: "/admin/exams/new", label: "教材を追加", description: "新しい教材・PDFをアップロード" },
     ],
   },
